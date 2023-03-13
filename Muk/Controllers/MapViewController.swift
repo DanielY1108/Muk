@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MapViewController.swift
 //  Muk
 //
 //  Created by JINSEOK on 2023/03/13.
@@ -7,13 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class MapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
     }
 
-
 }
-
