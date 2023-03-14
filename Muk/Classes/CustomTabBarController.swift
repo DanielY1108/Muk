@@ -29,7 +29,7 @@ final class CustomTabBarController: UITabBarController {
     func configUI() {
         tabBar.unselectedItemTintColor = .gray
         tabBar.tintColor = .systemBlue
-        tabBar.backgroundColor = UIColor(white: 0.2, alpha: 0.5)
+        tabBar.backgroundColor = UIColor(white: 1, alpha: 0.7)
         
         tabBar.layer.cornerRadius = tabBar.frame.height * 0.6
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner,
@@ -54,6 +54,9 @@ final class CustomTabBarController: UITabBarController {
             tabBarFrame.size.height = tabBarHeight
             tabBarFrame.origin.y = (view.frame.size.height - tabBarHeight) - tabBarHeight/3
         }
+        
+        tabBar.layer.borderWidth = 0.1
+        
         
         tabBar.frame = tabBarFrame
     }
