@@ -9,69 +9,88 @@ import UIKit
 
 final class CustomTabBarController: UITabBarController {
     
+    // MARK: - Properties
+    
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configUI()
-        setupTabBarController()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        // 너비만 수정가능, 높이 수정 시(아이콘을 중간으로 위치를 시키기 위해 origin.y 위치를 수동으로 변경해줘야 함)
-        setupTabBarSize(emptyWidth: 50, height: 80)
+        setupTabBar()
+
+        setupTabBarItems()
     }
     
     // MARK: - Setup
-    
-    func configUI() {
-        tabBar.unselectedItemTintColor = .gray
-        tabBar.tintColor = .systemBlue
-        tabBar.backgroundColor = UIColor(white: 1, alpha: 0.7)
+    func setupTabBar() {
+        // CAShapeLayer 객체 생성
+        let layer = CAShapeLayer()
         
-        tabBar.layer.cornerRadius = tabBar.frame.height * 0.6
-        tabBar.layer.maskedCorners = [.layerMinXMinYCorner,
-                                      .layerMinXMaxYCorner,
-                                      .layerMaxXMinYCorner,
-                                      .layerMaxXMaxYCorner]
-    }
-    
-    func setupTabBarSize(emptyWidth: CGFloat, height: CGFloat = 80) {
-        let tabBarWidth: CGFloat = view.frame.size.width - emptyWidth
-        let tabBarHeight: CGFloat = height
+        // tab bar layer 세팅
+        let x: CGFloat = 50                                       // x 축으로 이동한 거리 (여백)
+        let width: CGFloat = tabBar.bounds.width - (x * 2)        // 크기: 탭바의 너비(390) - (여백 * 2)
+        let height: CGFloat = 60                                  // 높이를 설정
+        let y: CGFloat = (tabBar.bounds.midY - 5.5) - height / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
         
-        var tabBarFrame = tabBar.frame
-        tabBarFrame.size.width = tabBarWidth
-        tabBarFrame.origin.x = (view.frame.size.width - tabBarWidth) / 2
+        // 알약 모양으로 UIBezierPath 생성
+        let path = UIBezierPath(roundedRect: CGRect(x: x,
+                                                    y: y,
+                                                    width: width,
+                                                    height: height),
+                                cornerRadius: height / 2).cgPath
+        layer.path = path
 
-        // iPhoneX 일 경우 대응(height = 667, 기본 탭바 사이즈가 다른 것 같다.)
-        if view.frame.size.height == 667 {
-            tabBarFrame.size.height = tabBarHeight - 20
-            tabBarFrame.origin.y = (view.frame.size.height - tabBarHeight)
-        } else {
-            tabBarFrame.size.height = tabBarHeight
-            tabBarFrame.origin.y = (view.frame.size.height - tabBarHeight) - tabBarHeight/3
-        }
+        layer.fillColor = HexCode.tabBarBackground.color.cgColor
         
-        tabBar.layer.borderWidth = 0.1
+        // tab bar layer 그림자 설정
+        layer.shadowColor = HexCode.selected.color.cgColor
+        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)  // 밑면 그림자 크기
+        layer.shadowRadius = 5.0                              // 흐려지는 반경
+        layer.shadowOpacity = 0.5                             // 불투명도 (0 ~ 1)
         
+        // tab bar layer 삽입: addSublayer대신 insertSublayer(0번째 Sublayer에 대치) 사용
+        tabBar.layer.insertSublayer(layer, at: 0)
         
-        tabBar.frame = tabBarFrame
+        // tab bar items 세팅
+        tabBar.itemWidth = width / 5
+        tabBar.itemPositioning = .centered
+        
+        // 틴트 컬러 설정
+        tabBar.tintColor = HexCode.selected.color
+        tabBar.unselectedItemTintColor = HexCode.unselected.color
     }
     
-    func setupTabBarController() {
+    
+    func setupTabBarItems() {
         let mapViewController = MapViewController()
-        mapViewController.tabBarItem.image = UIImage(systemName: "globe")
+        mapViewController.tabBarItem.image = UIImage(named: "globe")
+        mapViewController.tabBarItem.selectedImage = UIImage(named: "globe.fill")
         
-        let listViewController = ListViewController()
-        listViewController.tabBarItem.image = UIImage(systemName: "list.bullet.rectangle.fill")
+        let listViewController = AddListViewController()
+        listViewController.tabBarItem.image = UIImage(named: "add.fill")
         
         let userViewController = UserViewController()
-        userViewController.tabBarItem.image = UIImage(systemName: "person.fill")
+        userViewController.tabBarItem.image = UIImage(named: "user")
+        userViewController.tabBarItem.selectedImage = UIImage(named: "user.fill")
         
         viewControllers = [mapViewController, listViewController, userViewController]
     }
     
 }
+
+
+
+// MARK: - PreView
+import SwiftUI
+
+#if DEBUG
+struct PreView: PreviewProvider {
+    static var previews: some View {
+        // 사용할 뷰 컨트롤러를 넣어주세요
+        CustomTabBarController()
+            .toPreview()
+    }
+}
+#endif
+
+
+
