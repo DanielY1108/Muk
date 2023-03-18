@@ -10,15 +10,13 @@ import UIKit
 enum TabBarItem {
     case mapVC
     case userVC
-    case addListVC
     
     var image: UIImage {
         switch self {
         case .mapVC:
-            return UIImage(named: "globe")!
+            guard let image = UIImage(named: "globe") else { return UIImage() }
+            return image.resized(to: CGSize(width: 27, height: 27))
         case .userVC:
-            return UIImage(named: "add.fill")!
-        case .addListVC:
             return UIImage(named: "user")!
         }
     }
@@ -26,12 +24,10 @@ enum TabBarItem {
     var selectedImage: UIImage {
         switch self {
         case .mapVC:
-            return UIImage(named: "globe.fill")!
+            guard let image = UIImage(named: "globe.fill") else { return UIImage() }
+            return image.resized(to: CGSize(width: 27, height: 27))
         case .userVC:
-            return UIImage(named: "add.fill")!
-        case .addListVC:
             return UIImage(named: "user.fill")!
-
         }
     }
 }

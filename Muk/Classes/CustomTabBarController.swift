@@ -79,7 +79,7 @@ final class CustomTabBarController: UITabBarController {
     // add 버튼 세팅
     func addMiddleButton() {
         
-        // 현재 버튼을 네이게이션 아이템 대신 사용하므로 클릭을 방지한다.
+        // 만든 버튼을 네이게이션 아이템 대신 사용할 것이므로 미리 클릭을 방지.
         DispatchQueue.main.async {
             if let items = self.tabBar.items {
                 items[1].isEnabled = false
@@ -93,7 +93,7 @@ final class CustomTabBarController: UITabBarController {
         // layout 설정
         middleButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            // 왜 중간정렬이 될까???
+            // FIXME: - 왜 중간정렬이 될까요?? 운 좋게 떨어진건가? 수정 요망
             $0.top.equalToSuperview()
             $0.width.height.equalTo(size)
         }
@@ -119,15 +119,15 @@ final class CustomTabBarController: UITabBarController {
     // 탭바에 뷰컨트롤러 연결
     func setupTabBarItems() {
         let mapViewController = MapViewController()
-        mapViewController.tabBarItem.image = UIImage(named: "globe")
-        mapViewController.tabBarItem.selectedImage = UIImage(named: "globe.fill")
+        mapViewController.tabBarItem.image = TabBarItem.mapVC.image
+        mapViewController.tabBarItem.selectedImage = TabBarItem.mapVC.selectedImage
         
         let listViewController = AddListViewController()
         //        listViewController.tabBarItem.image = UIImage(named: "add.fill")
         
         let userViewController = UserViewController()
-        userViewController.tabBarItem.image = UIImage(named: "user")
-        userViewController.tabBarItem.selectedImage = UIImage(named: "user.fill")
+        userViewController.tabBarItem.image = TabBarItem.userVC.image
+        userViewController.tabBarItem.selectedImage = TabBarItem.userVC.image
         
         viewControllers = [mapViewController, listViewController, userViewController]
     }

@@ -20,6 +20,7 @@
 		655E376F29C199E500FBACAE /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E376E29C199E500FBACAE /* UIColor.swift */; };
 		655E377229C19A9E00FBACAE /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* TabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
+		65FAE68629C624C5006D1038 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAE68529C624C5006D1038 /* UIImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		655E376E29C199E500FBACAE /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		655E377129C19A9E00FBACAE /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
+		65FAE68529C624C5006D1038 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				655E376E29C199E500FBACAE /* UIColor.swift */,
 				6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */,
+				65FAE68529C624C5006D1038 /* UIImage.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */,
+				65FAE68629C624C5006D1038 /* UIImage.swift in Sources */,
 				655E377229C19A9E00FBACAE /* TabBarItem.swift in Sources */,
 				655E376F29C199E500FBACAE /* UIColor.swift in Sources */,
 				6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */,
