@@ -15,9 +15,9 @@ final class CustomTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTabBar()
-
+        
         setupTabBarItems()
+        setupTabBar()
     }
     
     // MARK: - Setup
@@ -91,6 +91,7 @@ struct PreView: PreviewProvider {
     }
 }
 #endif
+
 
 
 
