@@ -11,17 +11,20 @@ import SnapKit
 final class CustomTabBarController: UITabBarController {
     
     // MARK: - Properties
+    var buttonTapped = false  // 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
+        
+    // 버튼 생성
     let middleButton: UIButton = {
         let button = UIButton()
         // 현재 심볼 이미지를 변형(size, font 등)
-        let configuation = UIImage.SymbolConfiguration(pointSize: 20,
+        let configuation = UIImage.SymbolConfiguration(pointSize: 18,
                                                        weight: .heavy,
                                                        scale: .large)
         
         button.setImage(UIImage(systemName: "plus", withConfiguration: configuation),
                         for: .normal)
         
-        
+        // 버튼 색상
         button.tintColor = HexCode.unselected.color
         button.backgroundColor = HexCode.selected.color
         return button
@@ -43,7 +46,7 @@ final class CustomTabBarController: UITabBarController {
         
         // tab bar layer 세팅
         let x: CGFloat = 50                                       // x 축으로 이동한 거리 (여백)
-        let width: CGFloat = self.tabBar.bounds.width - (x * 2)        // 크기: 탭바의 너비(390) - (여백 * 2)
+        let width: CGFloat = self.tabBar.bounds.width - (x * 2)   // 크기: 탭바의 너비(390) - (여백 * 2)
         let height: CGFloat = 60                                  // 높이를 설정
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - height / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
         // 알약 모양으로 UIBezierPath 생성
@@ -53,7 +56,7 @@ final class CustomTabBarController: UITabBarController {
                                                     height: height),
                                 cornerRadius: height / 2).cgPath
         layer.path = path
-        
+  
         layer.fillColor = HexCode.tabBarBackground.color.cgColor
         
         // tab bar layer 그림자 설정
@@ -79,7 +82,7 @@ final class CustomTabBarController: UITabBarController {
     // add 버튼 세팅
     func addMiddleButton() {
         
-        // 만든 버튼을 네이게이션 아이템 대신 사용할 것이므로 미리 클릭을 방지.
+        // 네이게이션 아이템 대신 버튼을 사용할 것이므로 비활성화 시켜 클릭을 방지.
         DispatchQueue.main.async {
             if let items = self.tabBar.items {
                 items[1].isEnabled = false
@@ -89,31 +92,70 @@ final class CustomTabBarController: UITabBarController {
         tabBar.addSubview(middleButton)
         
         let size: CGFloat = 38
-        
+        let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - size / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
+
         // layout 설정
         middleButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            // FIXME: - 왜 중간정렬이 될까요?? 운 좋게 떨어진건가? 수정 요망
-            $0.top.equalToSuperview()
+            // 왜 top으로 설정하면 중간 정렬이 될까요?
+            $0.top.equalToSuperview().offset(y)
             $0.width.height.equalTo(size)
         }
         
         // 버튼 모양 설정
         middleButton.layer.cornerRadius = size / 2
-        middleButton.layer.masksToBounds = false
+        
+        // 강조 처리 끄기(클릭 시 회색)
+        middleButton.adjustsImageWhenHighlighted = false
         
         // 버튼 그림자 설정
         middleButton.layer.shadowColor = HexCode.selected.color.cgColor
         middleButton.layer.shadowOffset = CGSize(width: 0, height: 1)
         middleButton.layer.shadowOpacity = 0.5
-        middleButton.layer.shadowRadius = 10
+        middleButton.layer.shadowRadius = 1
         
         // 버튼 동작 생성
         middleButton.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
     }
     
     @objc func buttonHandler(sender: UIButton) {
-        
+    
+        if buttonTapped == false {
+            
+            UIView.animate(withDuration: 0.3) {
+                // pi = 180°, 4로 나눠준다면 45° 회전
+                let transform = CGAffineTransform(a: 2.0, b: 0.0, c: 0.0, d: 5.0, tx: 0.0, ty: 0.0)
+                self.middleButton.transform = transform.rotated(by: .pi / 4.0)
+                // 버튼 색상 설정
+                self.middleButton.tintColor = HexCode.selected.color
+                self.middleButton.backgroundColor = HexCode.unselected.color
+                
+                // 버튼 테두리 설정
+                self.middleButton.layer.borderWidth = 4
+                self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
+                
+                self.buttonTapped = true
+                
+                // TODO: - 버큰 클릭 시 할 작업을 추가해야 함
+                
+            }
+        } else {
+            
+            UIView.animate(withDuration: 0.3) {
+                self.middleButton.transform = CGAffineTransform(rotationAngle: 0)
+                // 버튼 색상 설정
+                self.middleButton.tintColor = HexCode.unselected.color
+                self.middleButton.backgroundColor = HexCode.selected.color
+                
+                // 버튼 테두리 설정
+                self.middleButton.layer.borderWidth = 0
+                
+                self.buttonTapped = false
+                
+                // TODO: - 버큰 취소 시 할 작업을 추가해야 함
+
+            }
+        }
     }
     
     // 탭바에 뷰컨트롤러 연결
@@ -148,6 +190,7 @@ struct PreView: PreviewProvider {
     }
 }
 #endif
+
 
 
 
