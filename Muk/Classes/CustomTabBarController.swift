@@ -124,8 +124,8 @@ final class CustomTabBarController: UITabBarController {
             
             UIView.animate(withDuration: 0.3) {
                 // pi = 180°, 4로 나눠준다면 45° 회전
-                let transform = CGAffineTransform(a: 2.0, b: 0.0, c: 0.0, d: 5.0, tx: 0.0, ty: 0.0)
-                self.middleButton.transform = transform.rotated(by: .pi / 4.0)
+                let transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+                self.middleButton.transform = transform
                 // 버튼 색상 설정
                 self.middleButton.tintColor = HexCode.selected.color
                 self.middleButton.backgroundColor = HexCode.unselected.color
@@ -136,13 +136,13 @@ final class CustomTabBarController: UITabBarController {
                 
                 self.buttonTapped = true
                 
-                // TODO: - 버큰 클릭 시 할 작업을 추가해야 함
+                // TODO: - 버튼 클릭 시 할 작업을 추가해야 함
                 
             }
         } else {
             
             UIView.animate(withDuration: 0.3) {
-                self.middleButton.transform = CGAffineTransform(rotationAngle: 0)
+                self.middleButton.transform = CGAffineTransform.identity
                 // 버튼 색상 설정
                 self.middleButton.tintColor = HexCode.unselected.color
                 self.middleButton.backgroundColor = HexCode.selected.color
@@ -152,7 +152,7 @@ final class CustomTabBarController: UITabBarController {
                 
                 self.buttonTapped = false
                 
-                // TODO: - 버큰 취소 시 할 작업을 추가해야 함
+                // TODO: - 버튼 취소 시 할 작업을 추가해야 함
 
             }
         }
