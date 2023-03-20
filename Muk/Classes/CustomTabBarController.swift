@@ -161,17 +161,16 @@ final class CustomTabBarController: UITabBarController {
     // 탭바에 뷰컨트롤러 연결
     func setupTabBarItems() {
         let mapViewController = MapViewController()
-        mapViewController.tabBarItem.image = TabBarItem.mapVC.image
-        mapViewController.tabBarItem.selectedImage = TabBarItem.mapVC.selectedImage
+        mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.image
+        mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.filledImage
         
-        let listViewController = AddListViewController()
-        //        listViewController.tabBarItem.image = UIImage(named: "add.fill")
+        let addViewController = UIViewController()
         
         let userViewController = UserViewController()
-        userViewController.tabBarItem.image = TabBarItem.userVC.image
-        userViewController.tabBarItem.selectedImage = TabBarItem.userVC.image
+        userViewController.tabBarItem.image = SettingTabBarItem.userVC.image
+        userViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
         
-        viewControllers = [mapViewController, listViewController, userViewController]
+        viewControllers = [mapViewController, addViewController, userViewController]
     }
     
 }

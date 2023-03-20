@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum TabBarItem {
+enum SettingTabBarItem {
     case mapVC
     case userVC
     
@@ -21,7 +21,7 @@ enum TabBarItem {
         }
     }
     
-    var selectedImage: UIImage {
+    var filledImage: UIImage {
         switch self {
         case .mapVC:
             guard let image = UIImage(named: "globe.fill") else { return UIImage() }
