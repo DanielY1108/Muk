@@ -94,7 +94,6 @@
 		6523D84D29BF52BF005EFBFF /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				6523D86129BF625A005EFBFF /* CustomTabBarController.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -117,6 +116,7 @@
 		6523D85129BF52E9005EFBFF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6523D86129BF625A005EFBFF /* CustomTabBarController.swift */,
 				6523D85329BF53EE005EFBFF /* MapViewController.swift */,
 				6523D85F29BF5AFD005EFBFF /* UserViewController.swift */,
 			);
