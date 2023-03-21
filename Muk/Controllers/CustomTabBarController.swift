@@ -12,13 +12,8 @@ final class CustomTabBarController: UITabBarController {
     
     // MARK: - Properties
     
-    // pop 버튼 정보
-    var popButtons = [UIButton]()
-    var popButtonOptions = [
-        PopButtonOption(name: "A", image: UIImage(systemName: "trash")!),
-        PopButtonOption(name: "Add", image: UIImage(systemName: "plus")!),
-        PopButtonOption(name: "", image: UIImage(systemName: "eraser")!),
-    ]
+    // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
+    var popButtons = PopButtons()
     
     var buttonTapped = false  // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
     
@@ -145,10 +140,12 @@ final class CustomTabBarController: UITabBarController {
                 self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
                 
                 self.buttonTapped = true
-                
-                // TODO: - 버튼 클릭 시 할 작업을 추가해야 함
-                self.setupPopButton(count: self.popButtonOptions.count, radius: 70)
             }
+            
+            // TODO: - 버튼 클릭 시 할 작업을 추가해야 함
+            let popButtonCount = self.popButtons.options.count
+            self.setupPopButton(count: popButtonCount, radius: 72)
+
         } else {
             
             UIView.animate(withDuration: 0.3) {
@@ -161,10 +158,10 @@ final class CustomTabBarController: UITabBarController {
                 self.middleButton.layer.borderWidth = 0
                 
                 self.buttonTapped = false
-                
-                // TODO: - 버튼 취소 시 할 작업을 추가해야 함
-                self.removePopButton()
             }
+            
+            // TODO: - 버튼 취소 시 할 작업을 추가해야 함
+            self.removePopButton()
         }
     }
     
@@ -176,10 +173,10 @@ final class CustomTabBarController: UITabBarController {
         for i in 0 ..< count {
             
             let button = UIFactory.createPopButton(size: 38, isTapped: self.buttonTapped)
-            
+
             self.view.addSubview(button)
-            self.popButtons.append(button)
-            
+            self.popButtons.buttons.append(button)
+
             // 버튼 태그
             button.tag = i
             
@@ -191,13 +188,13 @@ final class CustomTabBarController: UITabBarController {
             
             button.snp.makeConstraints {
                 $0.centerX.equalTo(self.tabBar).offset(-x)
-                // 중간 버튼 레이아웃도 top으로 중간을 잡았으므로 여기서도 top으로
+                // top으로 중간 버튼 레이아웃을 잡았으므로 여기서도 top으로 설정
                 $0.top.equalTo(self.tabBar).offset(-y)
             }
             
-            button.setImage(popButtonOptions[i].image, for: .normal)
+            button.setImage(popButtons.options[i].image, for: .normal)
             
-            // 팝 버튼이 가장 앞쪽으로 위치하게 만듬
+            // pop 버튼이 가장 앞쪽으로 위치하게 만듬
             self.view.bringSubviewToFront(button)
             
             button.addTarget(self, action: #selector(popButtonHandler), for: .touchUpInside)
@@ -208,23 +205,24 @@ final class CustomTabBarController: UITabBarController {
         
         switch sender.tag {
         case 0:
-            print(1)
+            print("Trash")
         case 1:
-            print(2)
+            print("Add")
         default:
-            print(3)
+            print("Edit")
         }
     }
     
     func removePopButton() {
         
-        for button in self.popButtons {
+        let popButtons = self.popButtons.buttons
+        
+        for button in popButtons {
             
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
                 button.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
             } completion: { _ in
                 button.removeFromSuperview()
-                
             }
         }
     }
@@ -260,6 +258,7 @@ struct PreView: PreviewProvider {
     }
 }
 #endif
+
 
 
 
