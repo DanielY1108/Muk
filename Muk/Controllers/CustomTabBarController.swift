@@ -11,8 +11,17 @@ import SnapKit
 final class CustomTabBarController: UITabBarController {
     
     // MARK: - Properties
-    var buttonTapped = false  // 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
-        
+    
+    // pop 버튼 정보
+    var popButtons = [UIButton]()
+    var popButtonOptions = [
+        PopButtonOption(name: "A", image: UIImage(systemName: "trash")!),
+        PopButtonOption(name: "Add", image: UIImage(systemName: "plus")!),
+        PopButtonOption(name: "", image: UIImage(systemName: "eraser")!),
+    ]
+    
+    var buttonTapped = false  // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
+    
     // 버튼 생성
     let middleButton: UIButton = {
         let button = UIButton()
@@ -40,6 +49,7 @@ final class CustomTabBarController: UITabBarController {
     }
     
     // MARK: - Setup
+    // 탭바를 설정
     func setupTabBar() {
         // CAShapeLayer 객체 생성
         let layer = CAShapeLayer()
@@ -56,14 +66,14 @@ final class CustomTabBarController: UITabBarController {
                                                     height: height),
                                 cornerRadius: height / 2).cgPath
         layer.path = path
-  
+        
         layer.fillColor = HexCode.tabBarBackground.color.cgColor
         
         // tab bar layer 그림자 설정
         layer.shadowColor = HexCode.selected.color.cgColor
-        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)  // 밑면 그림자 크기
+        layer.shadowOffset = CGSize(width: 0.0, height: -1.0)  // 밑면 그림자 크기
         layer.shadowRadius = 5.0                              // 흐려지는 반경
-        layer.shadowOpacity = 0.5                             // 불투명도 (0 ~ 1)
+        layer.shadowOpacity = 0.9                             // 불투명도 (0 ~ 1)
         
         // tab bar layer 삽입: addSublayer대신 insertSublayer(0번째 Sublayer에 대치) 사용
         self.tabBar.layer.insertSublayer(layer, at: 0)
@@ -76,11 +86,11 @@ final class CustomTabBarController: UITabBarController {
         self.tabBar.tintColor = HexCode.selected.color
         self.tabBar.unselectedItemTintColor = HexCode.unselected.color
         
-        addMiddleButton()
+        setupMiddleButton()
     }
     
     // add 버튼 세팅
-    func addMiddleButton() {
+    func setupMiddleButton() {
         
         // 네이게이션 아이템 대신 버튼을 사용할 것이므로 비활성화 시켜 클릭을 방지.
         DispatchQueue.main.async {
@@ -91,9 +101,9 @@ final class CustomTabBarController: UITabBarController {
         
         tabBar.addSubview(middleButton)
         
-        let size: CGFloat = 38
+        let size: CGFloat = 40
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - size / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
-
+        
         // layout 설정
         middleButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -111,18 +121,18 @@ final class CustomTabBarController: UITabBarController {
         // 버튼 그림자 설정
         middleButton.layer.shadowColor = HexCode.selected.color.cgColor
         middleButton.layer.shadowOffset = CGSize(width: 0, height: 1)
-        middleButton.layer.shadowOpacity = 0.5
-        middleButton.layer.shadowRadius = 1
+        middleButton.layer.shadowOpacity = 0.9
+        middleButton.layer.shadowRadius = 5
         
         // 버튼 동작 생성
         middleButton.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
     }
     
     @objc func buttonHandler(sender: UIButton) {
-    
+        
         if buttonTapped == false {
             
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.5) {
                 // pi = 180°, 4로 나눠준다면 45° 회전
                 let transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
                 self.middleButton.transform = transform
@@ -137,7 +147,7 @@ final class CustomTabBarController: UITabBarController {
                 self.buttonTapped = true
                 
                 // TODO: - 버튼 클릭 시 할 작업을 추가해야 함
-                
+                self.setupPopButton(count: self.popButtonOptions.count, radius: 70)
             }
         } else {
             
@@ -153,7 +163,68 @@ final class CustomTabBarController: UITabBarController {
                 self.buttonTapped = false
                 
                 // TODO: - 버튼 취소 시 할 작업을 추가해야 함
-
+                self.removePopButton()
+            }
+        }
+    }
+    
+    // pop 버튼 셋팅
+    func setupPopButton(count: Int, radius: CGFloat) {
+        // 45° 마다 배치
+        let degrees: CGFloat = 45
+        
+        for i in 0 ..< count {
+            
+            let button = UIFactory.createPopButton(size: 38, isTapped: self.buttonTapped)
+            
+            self.view.addSubview(button)
+            self.popButtons.append(button)
+            
+            // 버튼 태그
+            button.tag = i
+            
+            // 1° = (π / 180) rad
+            // x = cos(a) * r = cos(각도) * 반지름
+            // y = sin(a) * r = sin(각도) * 반지름
+            let x = cos(degrees * CGFloat(i+1) * .pi/180) * radius
+            let y = sin(degrees * CGFloat(i+1) * .pi/180) * radius
+            
+            button.snp.makeConstraints {
+                $0.centerX.equalTo(self.tabBar).offset(-x)
+                // 중간 버튼 레이아웃도 top으로 중간을 잡았으므로 여기서도 top으로
+                $0.top.equalTo(self.tabBar).offset(-y)
+            }
+            
+            button.setImage(popButtonOptions[i].image, for: .normal)
+            
+            // 팝 버튼이 가장 앞쪽으로 위치하게 만듬
+            self.view.bringSubviewToFront(button)
+            
+            button.addTarget(self, action: #selector(popButtonHandler), for: .touchUpInside)
+        }
+    }
+    
+    @objc func popButtonHandler(sender: UIButton) {
+        
+        switch sender.tag {
+        case 0:
+            print(1)
+        case 1:
+            print(2)
+        default:
+            print(3)
+        }
+    }
+    
+    func removePopButton() {
+        
+        for button in self.popButtons {
+            
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                button.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            } completion: { _ in
+                button.removeFromSuperview()
+                
             }
         }
     }

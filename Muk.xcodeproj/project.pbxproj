@@ -20,6 +20,8 @@
 		655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
 		65FAE68629C624C5006D1038 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAE68529C624C5006D1038 /* UIImage.swift */; };
+		65FF0DCE29C891A200ACF031 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FF0DCD29C891A200ACF031 /* UIFactory.swift */; };
+		65FF0DD229C8B4A400ACF031 /* PopButtonOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FF0DD129C8B4A400ACF031 /* PopButtonOption.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
 		65FAE68529C624C5006D1038 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		65FF0DCD29C891A200ACF031 /* UIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFactory.swift; sourceTree = "<group>"; };
+		65FF0DD129C8B4A400ACF031 /* PopButtonOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopButtonOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +98,7 @@
 		6523D84D29BF52BF005EFBFF /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				65FF0DCD29C891A200ACF031 /* UIFactory.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -109,6 +114,7 @@
 		6523D85029BF52D7005EFBFF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				65FF0DD129C8B4A400ACF031 /* PopButtonOption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -228,10 +234,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65FF0DD229C8B4A400ACF031 /* PopButtonOption.swift in Sources */,
 				6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */,
 				65FAE68629C624C5006D1038 /* UIImage.swift in Sources */,
 				655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */,
 				655E376F29C199E500FBACAE /* UIColor.swift in Sources */,
+				65FF0DCE29C891A200ACF031 /* UIFactory.swift in Sources */,
 				6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */,
 				6523D86029BF5AFD005EFBFF /* UserViewController.swift in Sources */,
 				6523D85429BF53EE005EFBFF /* MapViewController.swift in Sources */,
