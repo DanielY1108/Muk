@@ -84,10 +84,29 @@ final class CustomTabBarController: UITabBarController {
         setupMiddleButton()
     }
     
+    // 탭바에 뷰 컨트롤러 연결
+    func setupTabBarItems() {
+        let mapViewController = MapViewController()
+        mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.image
+        mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.filledImage
+        
+        let addViewController = UIViewController()
+        
+        let userViewController = UserViewController()
+        userViewController.tabBarItem.image = SettingTabBarItem.userVC.image
+        userViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
+        
+        viewControllers = [mapViewController, addViewController, userViewController]
+    }
+    
+}
+
+// MARK: - 중간(add) 버튼 세팅
+extension CustomTabBarController {
     // add 버튼 세팅
     func setupMiddleButton() {
         
-        // 네이게이션 아이템 대신 버튼을 사용할 것이므로 비활성화 시켜 클릭을 방지.
+        // 네이게이션 아이템 대신 버튼을 사용할 것이므로, 비활성화 시켜 클릭을 방지.
         DispatchQueue.main.async {
             if let items = self.tabBar.items {
                 items[1].isEnabled = false
@@ -142,7 +161,7 @@ final class CustomTabBarController: UITabBarController {
                 self.buttonTapped = true
             }
             
-            // TODO: - 버튼 클릭 시 할 작업을 추가해야 함
+            // 버튼 클릭 시 할 작업 (pop 버튼 생성)
             let popButtonCount = self.popButtons.options.count
             self.setupPopButton(count: popButtonCount, radius: 72)
 
@@ -160,11 +179,14 @@ final class CustomTabBarController: UITabBarController {
                 self.buttonTapped = false
             }
             
-            // TODO: - 버튼 취소 시 할 작업을 추가해야 함
+            // 버튼 취소 시 할 작업 (pop 버튼 제거)
             self.removePopButton()
         }
     }
-    
+}
+
+// MARK: - pop 버튼 세팅
+extension CustomTabBarController {
     // pop 버튼 셋팅
     func setupPopButton(count: Int, radius: CGFloat) {
         // 45° 마다 배치
@@ -213,6 +235,7 @@ final class CustomTabBarController: UITabBarController {
         }
     }
     
+    // pop 버튼 삭제
     func removePopButton() {
         
         let popButtons = self.popButtons.buttons
@@ -226,20 +249,4 @@ final class CustomTabBarController: UITabBarController {
             }
         }
     }
-    
-    // 탭바에 뷰컨트롤러 연결
-    func setupTabBarItems() {
-        let mapViewController = MapViewController()
-        mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.image
-        mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.filledImage
-        
-        let addViewController = UIViewController()
-        
-        let userViewController = UserViewController()
-        userViewController.tabBarItem.image = SettingTabBarItem.userVC.image
-        userViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
-        
-        viewControllers = [mapViewController, addViewController, userViewController]
-    }
-    
 }
