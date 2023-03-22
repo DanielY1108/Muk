@@ -243,24 +243,3 @@ final class CustomTabBarController: UITabBarController {
     }
     
 }
-
-
-
-// MARK: - PreView
-import SwiftUI
-
-#if DEBUG
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        // 사용할 뷰 컨트롤러를 넣어주세요
-        CustomTabBarController()
-            .toPreview()
-    }
-}
-#endif
-
-
-
-
-
-

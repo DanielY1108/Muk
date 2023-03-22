@@ -36,6 +36,13 @@ class UIFactory {
         // 기본 스케일 0으로 시작해야 애니메이션 처리
         button.bounds.size = CGSize(width: 0, height: 0)
         button.transform = CGAffineTransform(scaleX: 0, y: 0)
+        
+        // 그림자
+        button.layer.shadowColor = HexCode.selected.color.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 1)
+        button.layer.shadowOpacity = 0.9
+        button.layer.shadowRadius = 5
+
 
         // 조건문: 버튼을 클릭 시 (애니메이션 동작)
         if isTapped {
@@ -54,18 +61,3 @@ class UIFactory {
     }
     
 }
-
-
-// MARK: - PreView
-import SwiftUI
-
-#if DEBUG
-struct PreView1: PreviewProvider {
-    static var previews: some View {
-        // 사용할 뷰 컨트롤러를 넣어주세요
-        CustomTabBarController()
-            .toPreview()
-    }
-}
-#endif
-
