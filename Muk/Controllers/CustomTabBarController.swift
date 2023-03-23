@@ -50,9 +50,9 @@ final class CustomTabBarController: UITabBarController {
         let layer = CAShapeLayer()
         
         // tab bar layer 세팅
-        let x: CGFloat = 50                                       // x 축으로 이동한 거리 (여백)
+        let x: CGFloat = 70                                       // x 축으로 이동한 거리 (여백)
         let width: CGFloat = self.tabBar.bounds.width - (x * 2)   // 크기: 탭바의 너비(390) - (여백 * 2)
-        let height: CGFloat = 60                                  // 높이를 설정
+        let height: CGFloat = 50                                  // 높이를 설정
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - height / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
         // 알약 모양으로 UIBezierPath 생성
         let path = UIBezierPath(roundedRect: CGRect(x: x,
@@ -163,7 +163,7 @@ extension CustomTabBarController {
             
             // 버튼 클릭 시 할 작업 (pop 버튼 생성)
             let popButtonCount = self.popButtons.options.count
-            self.setupPopButton(count: popButtonCount, radius: 76)
+            self.setupPopButton(count: popButtonCount, radius: 72)
 
         } else {
             
