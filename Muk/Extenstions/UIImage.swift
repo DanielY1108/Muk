@@ -9,6 +9,16 @@ import UIKit
 
 extension UIImage {
     
+    /// 이미지의 틴트 색 변경을 위한 설정
+    ///
+    /// - Parameter named: 사용할 이미지 이름
+    /// - Returns: alwaysTemplate 허용한  UIImage
+    static func imageWithRenderingModeAlwaysTemplate(named: String) -> UIImage? {
+        let image = UIImage(named: named)?.withRenderingMode(.alwaysTemplate)
+        let imageView = UIImageView(image: image)
+        return imageView.image
+    }
+    
     /// 불러온 이미지 사이즈 변경 (Compact 버전)
     /// - Parameter size: 이미지 사이즈 설정
     /// - Returns: 재설정한 이미지

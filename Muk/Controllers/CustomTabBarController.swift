@@ -163,7 +163,7 @@ extension CustomTabBarController {
             
             // 버튼 클릭 시 할 작업 (pop 버튼 생성)
             let popButtonCount = self.popButtons.options.count
-            self.setupPopButton(count: popButtonCount, radius: 72)
+            self.setupPopButton(count: popButtonCount, radius: 76)
 
         } else {
             
@@ -227,11 +227,11 @@ extension CustomTabBarController {
         
         switch sender.tag {
         case 0:
-            print("Trash")
+            print("Search")
         case 1:
-            print("Add")
+            print("Current Location")
         default:
-            print("Edit")
+            print("Pin")
         }
     }
     
