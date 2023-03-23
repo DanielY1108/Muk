@@ -14,9 +14,9 @@ class UIFactory {
     
     private init() {}
     
-    /// 팝업버튼 생성
+    /// Pop 버튼 생성
     /// - Parameters:
-    ///   - size: 지름
+    ///   - size: 크기 (지름)
     ///   - isTapped: 버튼 클릭 여부 (Bool)
     /// - Returns: UIButton
     class func createPopButton(size: CGFloat ,isTapped: Bool) -> UIButton {
@@ -29,12 +29,11 @@ class UIFactory {
         button.snp.makeConstraints {
             $0.width.height.equalTo(size)
         }
-
+        
         // 원으로 만들기
         button.layer.cornerRadius = size / 2
         
-        // 기본 스케일 0으로 시작해야 애니메이션 처리
-        button.bounds.size = CGSize(width: 0, height: 0)
+        // ⭐️ 처음(기본) 값을 0으로 해줘야 점점 커지는 애니메이션이 가능
         button.transform = CGAffineTransform(scaleX: 0, y: 0)
         
         // 그림자
@@ -42,8 +41,8 @@ class UIFactory {
         button.layer.shadowOffset = CGSize(width: 0, height: 1)
         button.layer.shadowOpacity = 0.9
         button.layer.shadowRadius = 5
-
-
+        
+        
         // 조건문: 버튼을 클릭 시 (애니메이션 동작)
         if isTapped {
             
@@ -60,4 +59,36 @@ class UIFactory {
         return button
     }
     
+    
+    /// 현재 위치 버튼 생성
+    /// - Parameter size: 크기 (지름)
+    /// - Returns: UIButton
+    class func createCurrentLocationButton(size: CGFloat) -> UIButton {
+        
+        let button = UIButton(type: .custom)
+        
+        //        let image = UIImage(named: "currentLocation")
+        let image = UIImage(named: "currentLocation")
+        let resizedImage = image?.resized(to: CGSize(width: size - 5, height: size - 5),
+                                          tintColor: HexCode.selected.color)
+        
+        button.setImage(resizedImage, for: .normal)
+        
+        button.backgroundColor = HexCode.unselected.color
+        
+        button.snp.makeConstraints {
+            $0.width.height.equalTo(size)
+        }
+        
+        button.layer.cornerRadius = size / 2
+        
+        button.layer.shadowColor = HexCode.selected.color.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 1)
+        button.layer.shadowOpacity = 0.9
+        button.layer.shadowRadius = 5
+        
+        return button
+    }
+    
 }
+

@@ -11,13 +11,42 @@ import MapKit
 
 final class MapViewController: UIViewController {
     
+    // MARK: - Properties
     let mapView = MKMapView()
+    
+    
+    // MARK: - LifeCycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupMapView()
+        setupCurrnetLocationButton()
     }
+    
+}
+
+// MARK: - MapViewController 설정들
+extension MapViewController {
+    
+    func setupCurrnetLocationButton() {
+        let currentLocationButton = UIFactory.createCurrentLocationButton(size: 40)
+        
+        self.view.addSubview(currentLocationButton)
+        
+        
+        currentLocationButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(17)
+            $0.bottom.equalToSuperview().inset(120)
+        }
+        
+        currentLocationButton.addTarget(self, action: #selector(currentLocationHandelr), for: .touchUpInside)
+    }
+    
+    @objc func currentLocationHandelr(sender: UIButton) {
+        print("Current Location")
+    }
+    
     
 }
 
@@ -27,6 +56,7 @@ final class MapViewController: UIViewController {
 // 3. 파이어 베이스로 해야 되나?(이건 나중에 업데이트 시키고) realm으로 데이터 저장만 하자
 
 // MARK: - MapKit 설정들
+
 extension MapViewController: MKMapViewDelegate {
     
     // mapview 셋팅
