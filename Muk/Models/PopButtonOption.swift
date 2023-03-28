@@ -17,7 +17,7 @@ struct PopButtons {
             // 버튼에 들어가야 할 기능
             // 1. 위치를 검색하여 리스트 작성, 2. 현재 위치에서 리스트 작성, 3. 지도에 직접 핀으로 선택해서 리스트 작성
             PopButtonOption(name: "Search", image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "addSearch")!),
-            PopButtonOption(name: "Current Location", image: UIImage(systemName: "plus")!),
+            PopButtonOption(name: "Current Location", image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "currentLocationPin")!),
             PopButtonOption(name: "Pin", image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "addPin")!)
             ]
     }

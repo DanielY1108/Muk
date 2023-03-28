@@ -68,7 +68,7 @@ class UIFactory {
         let button = UIButton(type: .custom)
         
         //        let image = UIImage(named: "currentLocation")
-        let image = UIImage(named: "currentLocation")
+        let image = UIImage(named: "currentLocation_v1")
         let resizedImage = image?.resized(to: CGSize(width: size - 5, height: size - 5),
                                           tintColor: HexCode.selected.color)
         
