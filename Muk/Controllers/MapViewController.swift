@@ -12,8 +12,21 @@ import MapKit
 final class MapViewController: UIViewController {
     
     // MARK: - Properties
-    let mapView = MKMapView()
+    private let mapView = MKMapView()
     
+    private let locationManager = CLLocationManager()
+    
+    private var currentCoordinate: CLLocationCoordinate2D?
+    
+    private var allAnnotaions: [MKAnnotation]?
+    
+    private var displayedAnnotations: [MKAnnotation]? {
+        didSet {
+            if let newAnnotations = displayedAnnotations {
+                mapView.addAnnotations(newAnnotations)
+            }
+        }
+    }
     
     // MARK: - LifeCycles
     
@@ -22,6 +35,7 @@ final class MapViewController: UIViewController {
         
         setupMapView()
         setupCurrnetLocationButton()
+        setupLocation()
     }
     
 }
@@ -29,11 +43,11 @@ final class MapViewController: UIViewController {
 // MARK: - MapViewController 설정들
 extension MapViewController {
     
-    func setupCurrnetLocationButton() {
+    // 현재 위치 버튼 생성
+    private func setupCurrnetLocationButton() {
         let currentLocationButton = UIFactory.createCurrentLocationButton(size: 40)
         
         self.view.addSubview(currentLocationButton)
-        
         
         currentLocationButton.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(17)
@@ -43,24 +57,29 @@ extension MapViewController {
         currentLocationButton.addTarget(self, action: #selector(currentLocationHandelr), for: .touchUpInside)
     }
     
-    @objc func currentLocationHandelr(sender: UIButton) {
+    @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
+        
+        guard let coordinaite = currentCoordinate else {
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        let region = MKCoordinateRegion(center: coordinaite,
+                                        latitudinalMeters: 3000,
+                                        longitudinalMeters: 3000)
+        
+        self.mapView.setRegion(region, animated: true)
     }
-    
     
 }
 
-// 해야할 일
-// 1. 현재 위치 받아오기
-// 2. 현재 위치 버튼 만들기 (방법있는데 1. 네비게이션 아이템에 올리는 방법..., 2. 버튼 만들기)
-// 3. 파이어 베이스로 해야 되나?(이건 나중에 업데이트 시키고) realm으로 데이터 저장만 하자
-
-// MARK: - MapKit 설정들
+// MARK: - MapKit 설정 & 델리게이트
 
 extension MapViewController: MKMapViewDelegate {
     
     // mapview 셋팅
-    func setupMapView() {
+    private func setupMapView() {
         
         mapView.delegate = self
         
@@ -70,116 +89,97 @@ extension MapViewController: MKMapViewDelegate {
             $0.edges.equalToSuperview()
         }
         
-        // 위치 설정
-        // 아마 이건 처음에 위치 설정하면 그곳으로 보내줘야 할 듯
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.27543611,
-                                                      longitude: 127.4432194)
-        
-        // 지도의 범위 (작을수록 홛개)
-        let span = MKCoordinateSpan(latitudeDelta: 0.05,
-                                    longitudeDelta: 0.05)
-        
-        // 화면 중간에 나타날 지점(centerCoordinate), 지도의 영역 설정(작을수록 영역을 확대)
-        mapView.setRegion(MKCoordinateRegion(center: centerCoordinate,
-                                             span: span),
-                          animated: false)
-        
-        // 사용자 위치 보기
         mapView.showsUserLocation = true
-        
-        // 회전 가능 여부
         mapView.isRotateEnabled = false
         
-        //mapView:didChangeUserTrackingMode:animated: 를사용해야함 (네비게이션 사용해야 됨)
-        let buttonItem = MKUserTrackingBarButtonItem(mapView: mapView)
-        self.navigationItem.rightBarButtonItem = buttonItem
-        
-       
-
-        // 줌 가능 여부
-        // mapView.zoomEnabled = false
-        // 스크롤 가능 여부
-        // mapView.scrollEnabled = false
-        // 각도 가능 여부
-        // mapView.pitchEnabled = false
-        
-        addCustomPin()
+        registerMapAnnotationViews()
+        centerMapOnKorea()
+        addAnnotation()
     }
     
-    // TODO: - 함수를 재사용가능하게 만들어야 됨! 리턴 값으로 받던 아니면 그냥 수정하던 일단 생각해보자.
-    // 핀 설정
-    private func addCustomPin() {
-        let pin = MKPointAnnotation()
-        pin.coordinate = CLLocationCoordinate2D(latitude: 37.27543611,
-                                                longitude: 127.4432194)
-        pin.title = "음식점"
-        pin.subtitle = "핫도그를 파는 곳"
-        mapView.addAnnotation(pin)
+    // 한국 중심으로 지도를 시작
+    private func centerMapOnKorea() {
+        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.6)
+        let span = MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
+        mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: true)
     }
     
-    // 커스텀 핀(어노테이션)을 구현하는 delegate 메서드
+    // annotation 추가
+    private func addAnnotation() {
+        //        let annotation1 = CustomAnnotation(title: "My Home",
+        //                                          coordinate: CLLocationCoordinate2D(latitude: 37.2719952,
+        //                                                                             longitude: 127.4348221))
+        //        annotation1.imageName = "myProfile"
+        //
+        //        allAnnotaions = [annotation1]
+        //        displayedAnnotations = allAnnotaions
+    }
+    
+    // 재사용을 위해 식별자 생성
+    private func registerMapAnnotationViews() {
+        mapView.register(CustomAnnotationView.self, forAnnotationViewWithReuseIdentifier: NSStringFromClass(CustomAnnotationView.self))
+    }
+    
+    // 만들어 둔 식별자를 갖고 Annotation view 생성
+    private func setupAnnotationView(for annotation: CustomAnnotation, on mapView: MKMapView) -> MKAnnotationView {
+        return mapView.dequeueReusableAnnotationView(withIdentifier: NSStringFromClass(CustomAnnotationView.self), for: annotation)
+    }
+    
+    // annotation view 커스터마이징
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        //        guard !(annotation is MKUserLocation) else {
-        //            return nil
-        //        }
+        // 현재 위치 표시(점)도 일종에 어노테이션이기 때문에, 이 처리를 안하게 되면, 유저 위치 어노테이션도 변경 된다.
+        guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
         
-        var annotaionView = mapView.dequeueReusableAnnotationView(withIdentifier: "Custom")
+        var annotationView: MKAnnotationView?
         
-        if annotaionView == nil {
-            // 어노테이션을 생성
-            annotaionView = MKAnnotationView(annotation: annotation,
-                                             reuseIdentifier: "Custom")
-            // 핀(어노테이션)을 클릭 시 정보(callout)창을 나오게함
-            // 콜아웃 대신에 밑에다가 콜렉션 뷰를 한개 만들어서 누르면 나오게 만드는것도 좋을 듯
-            // 나중에 클릭하면 이미지도 커지게 만들자.
-            annotaionView?.canShowCallout = true
-            
-            // TODO: - 여기서 버튼을 클릭하면 정보를 바꿀 수 있게 해야겠다.
-            // 그럴려면 일단 버튼을 edit 이미지로 수정 후 작업
-            let button = UIButton(type: .detailDisclosure)
-            
-            annotaionView?.rightCalloutAccessoryView = button
-            
-        } else {
-            annotaionView?.annotation = annotation
+        if let customAnnotation = annotation as? CustomAnnotation {
+            annotationView = setupAnnotationView(for: customAnnotation, on: mapView)
         }
         
-        annotaionView?.image = UIImage(named: "globe.fill")
-        
-        return annotaionView
+        return annotationView
     }
     
-    // 어노테이션의 콜아웃에 있는 버튼을 설정
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        
-        
-    }
-    
-    
-    // 어노테이션 클릭 시
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // 애니메이션을 주자
-        UIView.animate(withDuration: 0.2) {
-            view.transform = CGAffineTransform(scaleX: 2, y: 2)
+        // 유저 어노테이션 클릭 시 동작 안하게 만듬
+        guard !(view.annotation is MKUserLocation) else {
+            mapView.deselectAnnotation(view.annotation, animated: false)
+            return
         }
         
-        // 기본 어노테이션의 콜아웃은 별로니 아래쪽에 콜랙션뷰로 정보창을 띄우면 될 듯 (레이아웃 생각해보자)
-        // 그럴려면 그 핀에 대한 정보가 필요하겠네 어떻게 불러오지?
-        
+        print("어노테이션이 클릭 됨")
+    }
+}
+
+
+// MARK: - 위치 설정 & 델리게이트
+extension MapViewController: CLLocationManagerDelegate {
+    
+    func setupLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
     }
     
-    // 어노테이션 클릭 취소 시
-    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        
-        UIView.animate(withDuration: 0.1) {
-            view.transform = CGAffineTransform(scaleX: 1, y: 1)
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+            debugPrint("Location Auth: Allow")
+            
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+            debugPrint("Location Auth: denied")
+            
+        default:
+            print("위치 서비스를 허용하지 않음")
         }
-        
-        // 위에서 만든 정보창도 사라지게 해야된다.
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentCoordinate = locations[0].coordinate
     }
     
 }
-
 
 // MARK: - PreView 읽기
 import SwiftUI
@@ -193,3 +193,5 @@ struct PreView1: PreviewProvider {
     }
 }
 #endif
+
+
