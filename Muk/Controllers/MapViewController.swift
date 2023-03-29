@@ -66,8 +66,8 @@ extension MapViewController {
         }
         
         let region = MKCoordinateRegion(center: coordinaite,
-                                        latitudinalMeters: 3000,
-                                        longitudinalMeters: 3000)
+                                        latitudinalMeters: 1000,
+                                        longitudinalMeters: 1000)
         
         self.mapView.setRegion(region, animated: true)
     }
