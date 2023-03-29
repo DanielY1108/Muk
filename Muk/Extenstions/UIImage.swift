@@ -15,8 +15,19 @@ extension UIImage {
     /// - Returns: alwaysTemplate 허용한  UIImage
     static func imageWithRenderingModeAlwaysTemplate(named: String) -> UIImage? {
         let image = UIImage(named: named)?.withRenderingMode(.alwaysTemplate)
-        let imageView = UIImageView(image: image)
-        return imageView.image
+        return image
+    }
+    
+    /// 불러온 이미지 사이즈 변경 (Compact 버전)
+    /// - Parameter size: 이미지 사이즈 설정
+    /// - Parameter tintColor: 틴트 컬러 설정
+    /// - Returns: 재설정한 이미지
+    func resized(to size: CGSize, tintColor: UIColor) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            // 적용할 tint 색상 설정
+            tintColor.setFill()
+            withRenderingMode(.alwaysTemplate).draw(in: CGRect(origin: .zero, size: size))
+        }
     }
     
     /// 불러온 이미지 사이즈 변경 (Compact 버전)

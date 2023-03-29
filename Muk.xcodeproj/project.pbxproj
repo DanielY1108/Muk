@@ -16,6 +16,12 @@
 		6523D86029BF5AFD005EFBFF /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D85F29BF5AFD005EFBFF /* UserViewController.swift */; };
 		6523D86229BF625A005EFBFF /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D86129BF625A005EFBFF /* CustomTabBarController.swift */; };
 		6523D86529BF629A005EFBFF /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6523D86429BF629A005EFBFF /* SnapKit */; };
+		6533F9AD29D1680400C66394 /* CustomAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */; };
+		6533F9AF29D1684D00C66394 /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9AE29D1684D00C66394 /* CustomAnnotation.swift */; };
+		6533F9B129D333D400C66394 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9B029D333D400C66394 /* SearchService.swift */; };
+		6533F9B329D3352900C66394 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9B229D3352900C66394 /* String.swift */; };
+		6533F9B529D403EA00C66394 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9B429D403EA00C66394 /* Platform.swift */; };
+		6533F9B729D46E3F00C66394 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9B629D46E3F00C66394 /* Location.swift */; };
 		655E376F29C199E500FBACAE /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E376E29C199E500FBACAE /* UIColor.swift */; };
 		655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
@@ -35,6 +41,12 @@
 		6523D85929BF566D005EFBFF /* SecureAPIKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SecureAPIKeys.plist; sourceTree = "<group>"; };
 		6523D85F29BF5AFD005EFBFF /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		6523D86129BF625A005EFBFF /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotationView.swift; sourceTree = "<group>"; };
+		6533F9AE29D1684D00C66394 /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
+		6533F9B029D333D400C66394 /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
+		6533F9B229D3352900C66394 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		6533F9B429D403EA00C66394 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
+		6533F9B629D46E3F00C66394 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		655E376E29C199E500FBACAE /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
@@ -61,6 +73,7 @@
 				655E376E29C199E500FBACAE /* UIColor.swift */,
 				65FAE68529C624C5006D1038 /* UIImage.swift */,
 				6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */,
+				6533F9B229D3352900C66394 /* String.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -90,6 +103,7 @@
 				65105DF029C1996F003A9F18 /* Extenstions */,
 				6523D84F29BF52CF005EFBFF /* Networking */,
 				6523D85029BF52D7005EFBFF /* Models */,
+				6533F9AB29D167E900C66394 /* Views */,
 				6523D85129BF52E9005EFBFF /* Controllers */,
 			);
 			path = Muk;
@@ -107,6 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				6523D85929BF566D005EFBFF /* SecureAPIKeys.plist */,
+				6533F9B429D403EA00C66394 /* Platform.swift */,
+				6533F9B029D333D400C66394 /* SearchService.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -114,7 +130,9 @@
 		6523D85029BF52D7005EFBFF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6533F9B629D46E3F00C66394 /* Location.swift */,
 				65FF0DD129C8B4A400ACF031 /* PopButtonOption.swift */,
+				6533F9AE29D1684D00C66394 /* CustomAnnotation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -147,6 +165,14 @@
 				6523D84429BF526E005EFBFF /* LaunchScreen.storyboard */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		6533F9AB29D167E900C66394 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		655E377029C19A7B00FBACAE /* Helper */ = {
@@ -234,16 +260,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6533F9B329D3352900C66394 /* String.swift in Sources */,
 				65FF0DD229C8B4A400ACF031 /* PopButtonOption.swift in Sources */,
 				6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */,
 				65FAE68629C624C5006D1038 /* UIImage.swift in Sources */,
+				6533F9AF29D1684D00C66394 /* CustomAnnotation.swift in Sources */,
 				655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */,
+				6533F9B129D333D400C66394 /* SearchService.swift in Sources */,
 				655E376F29C199E500FBACAE /* UIColor.swift in Sources */,
 				65FF0DCE29C891A200ACF031 /* UIFactory.swift in Sources */,
 				6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */,
 				6523D86029BF5AFD005EFBFF /* UserViewController.swift in Sources */,
 				6523D85429BF53EE005EFBFF /* MapViewController.swift in Sources */,
 				6523D86229BF625A005EFBFF /* CustomTabBarController.swift in Sources */,
+				6533F9AD29D1680400C66394 /* CustomAnnotationView.swift in Sources */,
+				6533F9B529D403EA00C66394 /* Platform.swift in Sources */,
+				6533F9B729D46E3F00C66394 /* Location.swift in Sources */,
 				6523D83C29BF526D005EFBFF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

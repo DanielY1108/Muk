@@ -13,12 +13,12 @@ final class CustomTabBarController: UITabBarController {
     // MARK: - Properties
     
     // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
-    var popButtons = PopButtons()
+    private var popButtons = PopButtons()
     
-    var buttonTapped = false  // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
+    private var buttonTapped = false  // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
     
     // 버튼 생성
-    let middleButton: UIButton = {
+    private let middleButton: UIButton = {
         let button = UIButton()
         // 현재 심볼 이미지를 변형(size, font 등)
         let configuation = UIImage.SymbolConfiguration(pointSize: 18,
@@ -39,20 +39,28 @@ final class CustomTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupTabBarItems()
         setupTabBar()
     }
     
     // MARK: - Setup
     // 탭바를 설정
-    func setupTabBar() {
+    private func setupTabBar() {
+        setupTabBarItems()
+        setupTabBarUI()
+        setupMiddleButton()
+
+        self.delegate = self
+    }
+    
+    // 탭바 UI 설정
+    private func setupTabBarUI() {
         // CAShapeLayer 객체 생성
         let layer = CAShapeLayer()
         
         // tab bar layer 세팅
-        let x: CGFloat = 50                                       // x 축으로 이동한 거리 (여백)
+        let x: CGFloat = 70                                       // x 축으로 이동한 거리 (여백)
         let width: CGFloat = self.tabBar.bounds.width - (x * 2)   // 크기: 탭바의 너비(390) - (여백 * 2)
-        let height: CGFloat = 60                                  // 높이를 설정
+        let height: CGFloat = 50                                  // 높이를 설정
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - height / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
         // 알약 모양으로 UIBezierPath 생성
         let path = UIBezierPath(roundedRect: CGRect(x: x,
@@ -80,12 +88,10 @@ final class CustomTabBarController: UITabBarController {
         // 틴트 컬러 설정
         self.tabBar.tintColor = HexCode.selected.color
         self.tabBar.unselectedItemTintColor = HexCode.unselected.color
-        
-        setupMiddleButton()
     }
     
     // 탭바에 뷰 컨트롤러 연결
-    func setupTabBarItems() {
+    private func setupTabBarItems() {
         let mapViewController = MapViewController()
         mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.image
         mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.filledImage
@@ -96,15 +102,35 @@ final class CustomTabBarController: UITabBarController {
         userViewController.tabBarItem.image = SettingTabBarItem.userVC.image
         userViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
         
-        viewControllers = [mapViewController, addViewController, userViewController]
+        self.viewControllers = [mapViewController, addViewController, userViewController]
     }
     
+}
+
+// MARK: - 탭바 컨트롤러 델리게이트
+extension CustomTabBarController: UITabBarControllerDelegate {
+    // 탭바를 클릭 했을 때 중간버튼 동작 안하게 만들고 만약 UserVC를 선택 시 "X"로 변경되는 애니메이션 처리
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        
+        middleButtonAnimationEnd()
+        
+        switch viewController {
+        case self.viewControllers?.first:
+            middleButton.isEnabled = true
+        case self.viewControllers?.last:
+            middleButton.isEnabled = false
+            middleButtonAnimationStart()
+        default: break
+        }
+    
+        return true
+    }
 }
 
 // MARK: - 중간(add) 버튼 세팅
 extension CustomTabBarController {
     // add 버튼 세팅
-    func setupMiddleButton() {
+    private func setupMiddleButton() {
         
         // 네이게이션 아이템 대신 버튼을 사용할 것이므로, 비활성화 시켜 클릭을 방지.
         DispatchQueue.main.async {
@@ -113,7 +139,7 @@ extension CustomTabBarController {
             }
         }
         
-        tabBar.addSubview(middleButton)
+        self.tabBar.addSubview(middleButton)
         
         let size: CGFloat = 40
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - size / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
@@ -139,66 +165,78 @@ extension CustomTabBarController {
         middleButton.layer.shadowRadius = 5
         
         // 버튼 동작 생성
-        middleButton.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
+        middleButton.addTarget(self, action: #selector(middleButtonHandler), for: .touchUpInside)
     }
     
-    @objc func buttonHandler(sender: UIButton) {
+    @objc func middleButtonHandler(sender: UIButton) {
         
         if buttonTapped == false {
+            // 버튼 클릭 시 할 작업 - pop 버튼 생성, 시작 애니메이션
+            middleButtonAnimationStart()
             
-            UIView.animate(withDuration: 0.5) {
-                // pi = 180°, 4로 나눠준다면 45° 회전
-                let transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
-                self.middleButton.transform = transform
-                // 버튼 색상 설정
-                self.middleButton.tintColor = HexCode.selected.color
-                self.middleButton.backgroundColor = HexCode.unselected.color
-                
-                // 버튼 테두리 설정
-                self.middleButton.layer.borderWidth = 4
-                self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
-                
-                self.buttonTapped = true
-            }
-            
-            // 버튼 클릭 시 할 작업 (pop 버튼 생성)
             let popButtonCount = self.popButtons.options.count
-            self.setupPopButton(count: popButtonCount, radius: 76)
-
+            self.setupPopButton(count: popButtonCount, radius: 72)
+            
         } else {
-            
-            UIView.animate(withDuration: 0.3) {
-                self.middleButton.transform = CGAffineTransform.identity
-                // 버튼 색상 설정
-                self.middleButton.tintColor = HexCode.unselected.color
-                self.middleButton.backgroundColor = HexCode.selected.color
-                
-                // 버튼 테두리 설정
-                self.middleButton.layer.borderWidth = 0
-                
-                self.buttonTapped = false
-            }
-            
-            // 버튼 취소 시 할 작업 (pop 버튼 제거)
-            self.removePopButton()
+            // 버튼 취소 시 할 작업 - pop 버튼 제거, 끝 애니메이션
+            middleButtonAnimationEnd()
         }
     }
+    
+    // 중간 버튼 시작 애니메이션
+    private func middleButtonAnimationStart() {
+        
+        UIView.animate(withDuration: 0.5) {
+            // pi = 180°, 4로 나눠준다면 45° 회전
+            let transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+            self.middleButton.transform = transform
+            // 버튼 색상 설정
+            self.middleButton.tintColor = HexCode.selected.color
+            self.middleButton.backgroundColor = HexCode.unselected.color
+            
+            // 버튼 테두리 설정
+            self.middleButton.layer.borderWidth = 4
+            self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
+            
+            self.buttonTapped = true
+        }
+    }
+    
+    // 중간 버튼 끝 애니메이션
+    private func middleButtonAnimationEnd() {
+        
+        UIView.animate(withDuration: 0.3) {
+            self.middleButton.transform = CGAffineTransform.identity
+            // 버튼 색상 설정
+            self.middleButton.tintColor = HexCode.unselected.color
+            self.middleButton.backgroundColor = HexCode.selected.color
+            
+            // 버튼 테두리 설정
+            self.middleButton.layer.borderWidth = 0
+            
+            self.buttonTapped = false
+        }
+        
+        // 버튼 취소 시 할 작업 (pop 버튼 제거)
+        self.removePopButton()
+    }
+    
 }
 
 // MARK: - pop 버튼 세팅
 extension CustomTabBarController {
     // pop 버튼 셋팅
-    func setupPopButton(count: Int, radius: CGFloat) {
+    private func setupPopButton(count: Int, radius: CGFloat) {
         // 45° 마다 배치
         let degrees: CGFloat = 45
         
         for i in 0 ..< count {
             
             let button = UIFactory.createPopButton(size: 38, isTapped: self.buttonTapped)
-
+            
             self.view.addSubview(button)
             self.popButtons.buttons.append(button)
-
+            
             // 버튼 태그
             button.tag = i
             
@@ -236,7 +274,7 @@ extension CustomTabBarController {
     }
     
     // pop 버튼 삭제
-    func removePopButton() {
+    private func removePopButton() {
         
         let popButtons = self.popButtons.buttons
         
