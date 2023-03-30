@@ -19,15 +19,27 @@ final class CustomTabBarController: UITabBarController {
     
     // 버튼 생성
     private let middleButton: UIButton = {
-        let button = UIButton()
         // 현재 심볼 이미지를 변형(size, font 등)
-        let configuation = UIImage.SymbolConfiguration(pointSize: 18,
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18,
                                                        weight: .heavy,
                                                        scale: .large)
         
-        button.setImage(UIImage(systemName: "plus", withConfiguration: configuation),
-                        for: .normal)
+        let button = UIButton(configuration: .plain())
         
+        // configurationUpdateHandler: 버튼의 상태가 변경될 때 호출 되는 클로저
+        // 강조 처리 끄기(클릭 시 회색) ios 15 부터는 adjustsImageWhenHighlighted 사용 불가
+        // 대신 configurationUpdateHandler를 통해서 Highlight 설정을 해줘야 함.
+        // isHighlighted는 UIButton의 상태(State)를 변경하는 것이므로 직접 버튼에 설정은 불가능하다 (핸들러를 통해서 작업 해줘야 함)
+        button.configurationUpdateHandler = { btn in
+            var config = btn.configuration
+            // 이미지 설정
+            config?.image = UIImage(systemName: "plus", withConfiguration: imageConfig)
+            // 하이라이트
+            btn.isHighlighted = false
+            
+            btn.configuration = config
+        }
+
         // 버튼 색상
         button.tintColor = HexCode.unselected.color
         button.backgroundColor = HexCode.selected.color
@@ -155,9 +167,6 @@ extension CustomTabBarController {
         // 버튼 모양 설정
         middleButton.layer.cornerRadius = size / 2
         
-        // 강조 처리 끄기(클릭 시 회색)
-        middleButton.adjustsImageWhenHighlighted = false
-        
         // 버튼 그림자 설정
         middleButton.layer.shadowColor = HexCode.selected.color.cgColor
         middleButton.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -268,6 +277,8 @@ extension CustomTabBarController {
             print("Search")
         case 1:
             print("Current Location")
+            let diaryVC = DiaryViewController()
+            self.present(diaryVC, animated: true)
         default:
             print("Pin")
         }
