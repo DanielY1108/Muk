@@ -90,5 +90,91 @@ class UIFactory {
         return button
     }
     
+    // 다이어리 label 생성
+    class func createDiaryLabel(title text: String, style: UIFont.TextStyle = .headline) -> UILabel {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: style)
+        label.text = text
+        label.textAlignment = .center
+    
+        return label
+    }
+    
+    // 다이어리 textView 생성
+    class func createDiaryTextView(placeHolder: String) -> UITextView {
+        let textView = UITextView()
+        textView.font = .preferredFont(forTextStyle: .subheadline)
+        textView.layer.cornerRadius = 10
+        textView.layer.borderWidth = 1
+        textView.text = placeHolder
+        textView.backgroundColor = .clear
+        
+        textView.snp.makeConstraints {
+            $0.height.equalTo(80)
+        }
+        
+        return textView
+    }
+    
+    // 다이어리 stackView 생성
+    class func createDiaryStackView(arrangedSubviews: [UIView], distribution: UIStackView.Distribution  = .fill, axis: NSLayoutConstraint.Axis = .vertical) -> UIStackView {
+        
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.axis = axis
+        stackView.spacing = 15
+        stackView.distribution = distribution
+
+        return stackView
+    }
+    
+    class func createCloseButton() -> UIButton {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "plus")
+        config.buttonSize = .large
+        
+        let button = UIButton(configuration: config)
+        button.tintColor = .black
+        button.transform = CGAffineTransform(rotationAngle: CGFloat.pi/4)
+
+        return button
+    }
+    
+    class func createSaveButton() -> UIButton {
+        var config = UIButton.Configuration.plain()
+        config.title = "저장"
+        config.buttonSize = .large
+        
+        let button = UIButton(configuration: config)
+        button.tintColor = HexCode.selected.color
+        button.backgroundColor = HexCode.backGround.color
+        button.layer.cornerRadius = 15
+        
+        return button
+    }
+    
+    class func createCircleImageView(size: CGFloat) -> UIImageView {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = size/2
+        imageView.clipsToBounds = true
+        imageView.image = .add.withTintColor(HexCode.unselected.color)
+        
+        imageView.snp.makeConstraints {
+            $0.width.height.equalTo(size)
+        }
+        return imageView
+    }
+    
 }
 
+// MARK: - PreView 읽기
+import SwiftUI
+
+#if DEBUG
+struct PreView5: PreviewProvider {
+    static var previews: some View {
+        // 사용할 뷰 컨트롤러를 넣어주세요
+        DiaryViewController()
+            .toPreview()
+    }
+}
+#endif

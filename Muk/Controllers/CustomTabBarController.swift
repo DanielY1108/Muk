@@ -278,6 +278,7 @@ extension CustomTabBarController {
         case 1:
             print("Current Location")
             let diaryVC = DiaryViewController()
+            diaryVC.modalPresentationStyle = .fullScreen
             self.present(diaryVC, animated: true)
         default:
             print("Pin")
