@@ -11,10 +11,11 @@ class DiaryView: UIView {
     
     // MARK: - Properties
     
-    private let closeButton = UIFactory.createCloseButton()
+    let closeButton = UIFactory.createCloseButton()
+    let saveButton = UIFactory.createSaveButton()
+    
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
     private let dateTextField = UnderLindTextField()
-    private let saveButton = UIFactory.createSaveButton()
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     private let placeTextField = UnderLindTextField()
@@ -27,10 +28,9 @@ class DiaryView: UIView {
     
     private let photoLabel = UIFactory.createDiaryLabel(title: "사진")
     
-    private lazy var dummyImageView = UIFactory.createCircleImageView(size: imageSize)
-    lazy var photoImageViews: [UIImageView] = [dummyImageView]
-    private lazy var photoImageStackView = UIFactory.createDiaryStackView(arrangedSubviews: photoImageViews,
-                                                                          distribution: .fillEqually,
+    lazy var plusImageView = UIFactory.createCircleImageView(size: imageSize)
+    lazy var photoStackView = UIFactory.createDiaryStackView(arrangedSubviews: [plusImageView],
+                                                             distribution: .fillProportionally,
                                                                           axis: .horizontal)
     
     // MARK: - Size Properties
@@ -75,15 +75,15 @@ class DiaryView: UIView {
             $0.leading.trailing.equalToSuperview()
         }
         
-        self.addSubview(photoImageStackView)
-        photoImageStackView.snp.makeConstraints {
+        self.addSubview(photoStackView)
+        photoStackView.snp.makeConstraints {
             $0.top.equalTo(photoLabel.snp.bottom).offset(space-10)
             $0.centerX.equalToSuperview()
         }
         
         self.addSubview(dateTextField)
         dateTextField.snp.makeConstraints {
-            $0.top.equalTo(photoImageStackView.snp.bottom).offset(space)
+            $0.top.equalTo(photoStackView.snp.bottom).offset(space)
             $0.centerX.equalToSuperview()
         }
         
@@ -92,7 +92,6 @@ class DiaryView: UIView {
             $0.top.equalTo(dateTextField.snp.bottom).offset(space)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
         }
-        
         
         self.addSubview(detailStackView)
         detailStackView.snp.makeConstraints {
@@ -123,26 +122,25 @@ class DiaryView: UIView {
 
 extension DiaryView {
     
-    func addImage(_ image: UIImage) {
-            let imageView = UIFactory.createCircleImageView(size: imageSize)
-            imageView.image = image
-            imageView.contentMode = .scaleAspectFill
-            photoImageViews.append(imageView)
-            photoImageStackView.insertArrangedSubview(imageView, at: 0)
-
-    }
+//    func addImage(_ image: UIImage) {
+//        let imageView = UIFactory.createCircleImageView(size: imageSize)
+//        imageView.image = image
+//        imageView.contentMode = .scaleAspectFill
+//
+//        photoStackView.insertArrangedSubview(imageView, at: 0)
+//    }
     
-    func removeImage(at index: Int) {
-        photoImageStackView.removeArrangedSubview(photoImageViews[index])
-        photoImageViews.remove(at: index)
-    }
+//    func removeSubview(index: Int) {
+//        
+//    }
     
-    func removeAllImage() {
-        for imageView in photoImageViews {
-            photoImageStackView.removeArrangedSubview(imageView)
-        }
-        photoImageViews.removeAll()
-    }
+//    func stackViewRemoveAllSubviews() {
+//        photoStackView.subviews.forEach {
+//            if $0 != plusImageView {
+//                $0.removeFromSuperview()
+//            }
+//        }
+//    }
 }
 
 
