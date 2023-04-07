@@ -28,14 +28,17 @@ class DiaryView: UIView {
     
     private let photoLabel = UIFactory.createDiaryLabel(title: "사진")
     
+    let photoScrollView = UIScrollView()
+    
     lazy var plusImageView = UIFactory.createCircleImageView(size: imageSize)
     lazy var photoStackView = UIFactory.createDiaryStackView(arrangedSubviews: [plusImageView],
-                                                             distribution: .fillProportionally,
+                                                             distribution: .fillEqually,
                                                                           axis: .horizontal)
     
     // MARK: - Size Properties
     
-    private let space: CGFloat = 30
+    private let titleGap: CGFloat = 30
+    private let space: CGFloat = 10
     private let sideInset: CGFloat = 40
     private let imageSize: CGFloat = 90
     
@@ -59,8 +62,8 @@ class DiaryView: UIView {
         
         self.addSubview(closeButton)
         closeButton.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide).offset(10)
-            $0.leading.equalToSuperview().inset(10)
+            $0.top.equalTo(self.safeAreaLayoutGuide).offset(space)
+            $0.leading.equalToSuperview().inset(space)
         }
         
         self.addSubview(titleLabel)
@@ -71,31 +74,38 @@ class DiaryView: UIView {
         
         self.addSubview(photoLabel)
         photoLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(space)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(titleGap)
             $0.leading.trailing.equalToSuperview()
         }
         
-        self.addSubview(photoStackView)
+        self.addSubview(photoScrollView)
+        photoScrollView.snp.makeConstraints {
+            $0.top.equalTo(photoLabel.snp.bottom).offset(titleGap-10)
+            $0.trailing.leading.equalToSuperview().inset(sideInset)
+            $0.height.equalTo(imageSize+space)
+        }
+        
+        photoScrollView.addSubview(photoStackView)
         photoStackView.snp.makeConstraints {
-            $0.top.equalTo(photoLabel.snp.bottom).offset(space-10)
+            $0.trailing.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
         
         self.addSubview(dateTextField)
         dateTextField.snp.makeConstraints {
-            $0.top.equalTo(photoStackView.snp.bottom).offset(space)
+            $0.top.equalTo(photoStackView.snp.bottom).offset(titleGap)
             $0.centerX.equalToSuperview()
         }
         
         self.addSubview(placeNameStackView)
         placeNameStackView.snp.makeConstraints {
-            $0.top.equalTo(dateTextField.snp.bottom).offset(space)
+            $0.top.equalTo(dateTextField.snp.bottom).offset(titleGap)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
         }
         
         self.addSubview(detailStackView)
         detailStackView.snp.makeConstraints {
-            $0.top.equalTo(placeNameStackView.snp.bottom).offset(space)
+            $0.top.equalTo(placeNameStackView.snp.bottom).offset(titleGap)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
         }
         
@@ -122,25 +132,6 @@ class DiaryView: UIView {
 
 extension DiaryView {
     
-//    func addImage(_ image: UIImage) {
-//        let imageView = UIFactory.createCircleImageView(size: imageSize)
-//        imageView.image = image
-//        imageView.contentMode = .scaleAspectFill
-//
-//        photoStackView.insertArrangedSubview(imageView, at: 0)
-//    }
-    
-//    func removeSubview(index: Int) {
-//        
-//    }
-    
-//    func stackViewRemoveAllSubviews() {
-//        photoStackView.subviews.forEach {
-//            if $0 != plusImageView {
-//                $0.removeFromSuperview()
-//            }
-//        }
-//    }
 }
 
 

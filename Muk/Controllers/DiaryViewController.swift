@@ -72,7 +72,7 @@ extension DiaryViewController {
         // 라이브러리에서 보여줄 Assets을 필터를 한다. (기본값: 이미지, 비디오, 라이브포토)
         config.filter = PHPickerFilter.any(of: [.images])
         // 다중 선택 갯수 설정 (0 = 무제한)
-        config.selectionLimit = 3
+        config.selectionLimit = 5
         // 선택 동작을 나타냄 (default: 기본 틱 모양, ordered: 선택한 순서대로 숫자로 표현, people: 뭔지 모르겠게요)
         config.selection = .ordered
         // 잘은 모르겠지만, current로 설정하면 트랜스 코딩을 방지한다고 하네요!?
