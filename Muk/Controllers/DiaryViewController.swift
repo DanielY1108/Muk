@@ -15,7 +15,9 @@ class DiaryViewController: UIViewController {
     
     private let diaryView = DiaryView()
     
+    // Identifier와 PHPickerResult로 만든 Dictionary (이미지 데이터를 저장하기 위해 만들어 줌)
     private var selections = [String: PHPickerResult]()
+    // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
     private var selectedAssetIdentifiers = [String]()
     
     
@@ -88,13 +90,13 @@ extension DiaryViewController {
         self.present(imagePicker, animated: true)
     }
     
-    // 이미지를 받아 이미지뷰 추가 작업
-    private func addImageView(_ image: UIImage) {
+    // 이미지를 받아 이미지뷰 추가 작업, 버튼의 이미지를 항상 마지막에 위치하고 싶어 index를 받아와서 설정
+    private func addImageView(_ image: UIImage, index: Int) {
         let imageView = UIFactory.createCircleImageView(size: 90)
         imageView.image = image
         imageView.contentMode = .scaleAspectFill
         
-        diaryView.photoStackView.insertArrangedSubview(imageView, at: 0)
+        diaryView.photoStackView.insertArrangedSubview(imageView, at: index)
     }
     
     // 스택뷰 전체를 지우는 작업
@@ -140,9 +142,9 @@ extension DiaryViewController {
             self.stackViewRemoveAllSubviews()
             
             // 선택한 이미지의 순서대로 정렬하여 스택뷰에 올리기
-            for identifier in self.selectedAssetIdentifiers {
+            for (index, identifier) in self.selectedAssetIdentifiers.enumerated() {
                 guard let image = imagesDict[identifier] else { return }
-                self.addImageView(image)
+                self.addImageView(image, index: index)
             }
         }
     }
