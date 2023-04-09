@@ -161,6 +161,7 @@ class UIFactory {
         imageView.snp.makeConstraints {
             $0.width.height.equalTo(size)
         }
+        
         return imageView
     }
     

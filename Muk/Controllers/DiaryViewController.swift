@@ -99,6 +99,9 @@ extension DiaryViewController {
     
     // 스택뷰 전체를 지우는 작업
     private func stackViewRemoveAllSubviews() {
+        // 스크롤뷰의 콘텐츠 크기 조절
+        photoContentViewInsetUpdate()
+
         diaryView.photoStackView.subviews.forEach {
             if $0 != diaryView.plusImageView {
                 $0.removeFromSuperview()
@@ -107,9 +110,7 @@ extension DiaryViewController {
     }
     
     private func displayImage() {
-        // 처음 스택뷰의 서브뷰들을 모두 제거함
-        self.stackViewRemoveAllSubviews()
-
+        
         let dispatchGroup = DispatchGroup()
         // identifier와 이미지로 dictionary를 만듬 (selectedAssetIdentifiers의 순서에 따라 이미지를 받을 예정입니다.)
         var imagesDict = [String: UIImage]()
@@ -133,8 +134,11 @@ extension DiaryViewController {
         }
         
         dispatchGroup.notify(queue: DispatchQueue.main) { [weak self] in
-            
             guard let self = self else { return }
+            
+            // 먼저 스택뷰의 서브뷰들을 모두 제거함
+            self.stackViewRemoveAllSubviews()
+            
             // 선택한 이미지의 순서대로 정렬하여 스택뷰에 올리기
             for identifier in self.selectedAssetIdentifiers {
                 guard let image = imagesDict[identifier] else { return }
@@ -187,6 +191,36 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
     }
 }
 
+extension DiaryViewController: UIScrollViewDelegate {
+    // 스택뷰에 이미지를 추가함에 따라 스크롤뷰의 콘텐츠뷰의 크기를 증가시키는 메서드
+    private func photoContentViewInsetUpdate() {
+        diaryView.photoScrollView.delegate = self
+        
+        // 이미지가 추가될 때 마다 커지는 크기
+        let imageSizeWithSpace = ((diaryView.imageSize) / 2) + diaryView.space
+        var inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        // 현재 사진 갯수에 따라 크기를 키움
+        for num in 0 ..< selections.count {
+            inset.left = imageSizeWithSpace * CGFloat(num - 1)
+        }
+    
+        // 이미지가 3개 이상일 때 contentInset 변경, 아니라면 초기화
+        if selections.count >= 3 {
+            diaryView.photoScrollView.contentInset = inset
+        } else {
+            diaryView.photoScrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+    }
+    
+    // 콘텐츠뷰의 크기가 변할 때 마다 스크롤뷰의 위치를 이동 시켜줌, 스크롤뷰에서 보이는 화면을 마지막 버튼으로 이동
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        let x = scrollView.adjustedContentInset.left
+        scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+    }
+
+}
+
 
 
 // MARK: - PreView 읽기
@@ -201,3 +235,6 @@ struct PreView3: PreviewProvider {
     }
 }
 #endif
+
+
+

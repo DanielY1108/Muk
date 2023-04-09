@@ -38,9 +38,9 @@ class DiaryView: UIView {
     // MARK: - Size Properties
     
     private let titleGap: CGFloat = 30
-    private let space: CGFloat = 10
+    let space: CGFloat = 10
     private let sideInset: CGFloat = 40
-    private let imageSize: CGFloat = 90
+    let imageSize: CGFloat = 90
     
     // MARK: - Life Cyclesd
     
@@ -80,15 +80,15 @@ class DiaryView: UIView {
         
         self.addSubview(photoScrollView)
         photoScrollView.snp.makeConstraints {
-            $0.top.equalTo(photoLabel.snp.bottom).offset(titleGap-10)
+            $0.top.equalTo(photoLabel.snp.bottom).offset(titleGap-space)
             $0.trailing.leading.equalToSuperview().inset(sideInset)
             $0.height.equalTo(imageSize+space)
         }
         
         photoScrollView.addSubview(photoStackView)
         photoStackView.snp.makeConstraints {
-            $0.trailing.equalToSuperview()
             $0.centerX.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.addSubview(dateTextField)
@@ -147,3 +147,4 @@ struct PreView4: PreviewProvider {
     }
 }
 #endif
+
