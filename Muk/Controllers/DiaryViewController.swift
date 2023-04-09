@@ -67,6 +67,12 @@ extension DiaryViewController {
     @objc func imageViewHandler() {
         presentPicker()
     }
+
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension DiaryViewController : PHPickerViewControllerDelegate {
     
     private func presentPicker() {
         // 이미지의 Identifier를 사용하기 위해서는 초기화를 shared로 해줘야 합니다.
@@ -86,7 +92,7 @@ extension DiaryViewController {
         let imagePicker = PHPickerViewController(configuration: config)
         imagePicker.delegate = self
         
-        halfModalPresent(controller: imagePicker)
+        UIFactory.halfModalPresent(controller: imagePicker)
         self.present(imagePicker, animated: true)
     }
     
@@ -149,21 +155,6 @@ extension DiaryViewController {
         }
     }
     
-    private func halfModalPresent(controller: UIViewController) {
-        // iOS 15부터 사용 가능
-        guard let sheet = controller.sheetPresentationController else { return }
-        // 모달이 절반크기로 시작하고 확장이 가능
-        sheet.detents = [.medium(), .large()]
-        // true일 때 모달이 이전 컨트롤러와 크기가 같아질 때 스크롤 가능, false 하프 사이즈 부터 스크롤 사능
-        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        // 상단의 '-' 모양의 그랩바
-        sheet.prefersGrabberVisible = true
-    }
-}
-
-// MARK: - PHPickerViewControllerDelegate
-
-extension DiaryViewController : PHPickerViewControllerDelegate {
     // picker가 종료되면 동작 합니다.
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
@@ -192,6 +183,8 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         }
     }
 }
+
+// MARK: - DiaryView의 스크롤뷰 델리게이트
 
 extension DiaryViewController: UIScrollViewDelegate {
     // 스택뷰에 이미지를 추가함에 따라 스크롤뷰의 콘텐츠뷰의 크기를 증가시키는 메서드

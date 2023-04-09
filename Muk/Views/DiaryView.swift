@@ -33,7 +33,7 @@ class DiaryView: UIView {
     lazy var plusImageView = UIFactory.createCircleImageView(size: imageSize)
     lazy var photoStackView = UIFactory.createDiaryStackView(arrangedSubviews: [plusImageView],
                                                              distribution: .fillEqually,
-                                                                          axis: .horizontal)
+                                                             axis: .horizontal)
     
     // MARK: - Size Properties
     
