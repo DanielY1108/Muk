@@ -40,19 +40,18 @@ class UnderLindTextField: UITextField {
     func setPlaceHolder(_ text: String, color: UIColor = .placeholderText) {
         placeholderColor = color
         
-        self.attributedPlaceholder = NSAttributedString(
-            string: text,
-            attributes: [NSAttributedString.Key.foregroundColor : placeholderColor]
-        )
+        let textAttribute = [NSAttributedString.Key.foregroundColor: placeholderColor]
+        
+        self.attributedPlaceholder = NSAttributedString(string: text,
+                                                        attributes: textAttribute)
         
         underLineView.backgroundColor = color
     }
     
     // 텍스트 필드 양 사이드 공백주기
     func addSidePadding() {
-        let paddingView = UIView(frame: CGRect(origin: .zero,
-                                               size: CGSize(width: 5,
-                                                            height: self.frame.height)))
+        let size = CGSize(width: 5, height: self.frame.height)
+        let paddingView = UIView(frame: CGRect(origin: .zero, size: size))
         
         self.rightView = paddingView
         self.rightViewMode = ViewMode.always
