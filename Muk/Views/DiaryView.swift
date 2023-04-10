@@ -15,7 +15,7 @@ class DiaryView: UIView {
     let saveButton = UIFactory.createSaveButton()
     
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
-    private let dateTextField = UnderLindTextField()
+    let dateTextField = UnderLindTextField()
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     private let placeTextField = UnderLindTextField()

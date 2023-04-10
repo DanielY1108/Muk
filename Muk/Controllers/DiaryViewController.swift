@@ -32,6 +32,11 @@ class DiaryViewController: UIViewController {
         
         imageTapGasture()
         setupButtons()
+        setupDatePicker()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
 }
@@ -68,6 +73,57 @@ extension DiaryViewController {
         presentPicker()
     }
 
+}
+
+// MARK: - datePicker 설정 및 Toolbar 설정
+
+extension DiaryViewController {
+    
+    // datePicker
+    private func setupDatePicker() {
+        
+        let datePicker = UIDatePicker()
+        // 표시될 날짜 형식 설정
+        datePicker.datePickerMode = .date
+        // 스타일 설정
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.locale = Locale(identifier: "ko-KR")
+        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
+        
+        diaryView.dateTextField.inputView = datePicker
+        diaryView.dateTextField.text = dateFormat(date: Date())
+        
+        setupToolBar()
+    }
+    
+    @objc func dateChange(_ sender: UIDatePicker) {
+        diaryView.dateTextField.text = dateFormat(date: sender.date)
+    }
+    
+    // 날짜 형식 변환
+    private func dateFormat(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy / MM / dd"
+        
+        return formatter.string(from: date)
+    }
+    
+    // 툴바 설정
+    private func setupToolBar() {
+        let toolBar = UIToolbar()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandler))
+        
+        toolBar.sizeToFit()
+        toolBar.items = [flexibleSpace, doneButton]
+        
+        diaryView.dateTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc func doneButtonHandler(_ sender: UIBarButtonItem) {
+        self.view.endEditing(true)
+    }
 }
 
 // MARK: - PHPickerViewControllerDelegate
