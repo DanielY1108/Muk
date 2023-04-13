@@ -110,11 +110,12 @@ final class CustomTabBarController: UITabBarController {
         
         let addViewController = UIViewController()
         
-        let userViewController = UserViewController()
-        userViewController.tabBarItem.image = SettingTabBarItem.userVC.image
-        userViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
+        let profileViewController = ProfileViewController()
+        let profileNavigationController = UINavigationController(rootViewController: profileViewController)
+        profileViewController.tabBarItem.image = SettingTabBarItem.userVC.image
+        profileViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
         
-        self.viewControllers = [mapViewController, addViewController, userViewController]
+        self.viewControllers = [mapViewController, addViewController, profileNavigationController]
     }
     
 }

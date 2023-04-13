@@ -9,8 +9,8 @@ import UIKit
 
 /// Hex Code로 나타낸 색상
 enum HexCode: String {
-    case backGround = "e2eafc"
-    case tabBarBackground = "edf2fb"
+    case background = "edf2fb"
+    case tabBarBackground = "e2eafc"
     case unselected = "c1d3fe"
     case selected = "788bff"
     

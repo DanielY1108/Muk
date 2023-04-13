@@ -146,7 +146,6 @@ class UIFactory {
         
         let button = UIButton(configuration: config)
         button.tintColor = HexCode.selected.color
-        button.backgroundColor = HexCode.backGround.color
         button.layer.cornerRadius = 15
         
         return button
@@ -174,6 +173,15 @@ class UIFactory {
         sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         // 상단의 '-' 모양의 그랩바
         sheet.prefersGrabberVisible = true
+    }
+    
+    class func createNavigationTitleLabel(_ title: String) -> UILabel {
+        let label = UILabel()
+        label.text = title
+        label.textColor = HexCode.selected.color
+        label.font = .preferredFont(forTextStyle: .title2)
+    
+        return label
     }
     
 }

@@ -123,7 +123,7 @@ class DiaryView: UIView {
     }
     
     private func setupUI() {
-        self.backgroundColor = HexCode.tabBarBackground.color
+        self.backgroundColor = HexCode.background.color
         titleLabel.font = .preferredFont(forTextStyle: .title3)
     }
 }
