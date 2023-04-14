@@ -11,23 +11,31 @@ enum SettingTabBarItem {
     case mapVC
     case userVC
     
-    var image: UIImage {
-        switch self {
-        case .mapVC:
-            guard let image = UIImage(named: "globe") else { return UIImage() }
-            return image.resized(to: CGSize(width: 27, height: 27))
-        case .userVC:
-            return UIImage(named: "user")!
-        }
+    enum ImageOption {
+        case noraml
+        case filled
     }
     
-    var filledImage: UIImage {
+    func setImage(_ option: ImageOption) -> UIImage {
+        
         switch self {
         case .mapVC:
-            guard let image = UIImage(named: "globe.fill") else { return UIImage() }
-            return image.resized(to: CGSize(width: 27, height: 27))
+            if option == .noraml {
+                guard let image = UIImage(named: "globe") else { return UIImage() }
+                return image.resized(to: CGSize(width: 30, height: 30))
+            } else {
+                guard let image = UIImage(named: "globe.fill") else { return UIImage() }
+                return image.resized(to: CGSize(width: 30, height: 30))
+            }
         case .userVC:
-            return UIImage(named: "user.fill")!
+            if option == .noraml {
+                guard let image = UIImage(named: "user") else { return UIImage() }
+                return image.resized(to: CGSize(width: 28, height: 28))
+            } else {
+                guard let image = UIImage(named: "user.fill") else { return UIImage() }
+                return image.resized(to: CGSize(width: 28, height: 28))
+            }
         }
+        
     }
 }

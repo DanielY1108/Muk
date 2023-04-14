@@ -45,12 +45,12 @@ extension MapViewController {
     
     // 현재 위치 버튼 생성
     private func setupCurrnetLocationButton() {
-        let currentLocationButton = UIFactory.createCurrentLocationButton(size: 40)
+        let currentLocationButton = UIFactory.createCurrentLocationButton(size: 44)
         
         self.view.addSubview(currentLocationButton)
         
         currentLocationButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(17)
+            $0.leading.equalToSuperview().inset(15)
             $0.bottom.equalToSuperview().inset(120)
         }
         

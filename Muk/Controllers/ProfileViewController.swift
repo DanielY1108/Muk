@@ -18,6 +18,7 @@ final class ProfileViewController: UIViewController {
     lazy var backgroundCollectionView: UICollectionView = {
         let layout = createBackgroundCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        view.backgroundColor = HexCode.background.color
         view.register(BackgroundCell.self, forCellWithReuseIdentifier: BackgroundCell.identifier)
         return view
     }()
@@ -36,7 +37,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configUI() {
-        view.backgroundColor = HexCode.background.color
         
     }
 }
@@ -48,12 +48,8 @@ extension ProfileViewController {
     // 내부 콜렉션뷰 셋팅
     private func setupCollectionView() {
         self.view.addSubview(backgroundCollectionView)
-        backgroundCollectionView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
-        }
         
         configBackgroundCollectionViewDataSource()
-        
     }
 
     // 내부 콜렉션뷰 dataSource 설정
@@ -77,7 +73,7 @@ extension ProfileViewController {
     private func createBackgroundCollectionViewCompositionalLayout() -> UICollectionViewLayout {
         
         let sideInset: CGFloat = 20
-        let itemInset: CGFloat = 5
+        let itemInset: CGFloat = 10
 
         let layout = UICollectionViewCompositionalLayout { sectionIndext, layoutEnvironment in
             
@@ -86,7 +82,7 @@ extension ProfileViewController {
                 heightDimension: .fractionalHeight(1)
             )
             let itme = NSCollectionLayoutItem(layoutSize: itmeSize)
-            itme.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: sideInset, bottom: itemInset, trailing: sideInset)
+            itme.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sideInset, bottom: itemInset, trailing: sideInset)
             
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
@@ -95,7 +91,7 @@ extension ProfileViewController {
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [itme])
             
             let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0)
+            section.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: 0, bottom: itemInset, trailing: 0)
             return section
         }
         

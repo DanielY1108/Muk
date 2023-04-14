@@ -20,7 +20,7 @@ final class CustomTabBarController: UITabBarController {
     // 버튼 생성
     private let middleButton: UIButton = {
         // 현재 심볼 이미지를 변형(size, font 등)
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18,
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
                                                        weight: .heavy,
                                                        scale: .large)
         
@@ -55,6 +55,7 @@ final class CustomTabBarController: UITabBarController {
     }
     
     // MARK: - Setup
+    
     // 탭바를 설정
     private func setupTabBar() {
         setupTabBarItems()
@@ -93,9 +94,18 @@ final class CustomTabBarController: UITabBarController {
         // tab bar layer 삽입: addSublayer대신 insertSublayer(0번째 Sublayer에 대치) 사용
         self.tabBar.layer.insertSublayer(layer, at: 0)
         
-        // tab bar items 세팅
-        self.tabBar.itemWidth = width / 5
-        self.tabBar.itemPositioning = .centered
+        // tab bar items 세팅 (UITabBarAppearance)
+        let appearance = UITabBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.stackedItemWidth = width / 5
+        appearance.stackedItemPositioning = .centered
+        
+        self.tabBar.standardAppearance = appearance
+        self.tabBar.scrollEdgeAppearance = appearance
+        
+        // 만약 appearance를 사용하면 예전 방식 설정들은 사용 못함!!!
+//        self.tabBar.itemWidth = width / 5
+//        self.tabBar.itemPositioning = .centered
         
         // 틴트 컬러 설정
         self.tabBar.tintColor = HexCode.selected.color
@@ -105,15 +115,15 @@ final class CustomTabBarController: UITabBarController {
     // 탭바에 뷰 컨트롤러 연결
     private func setupTabBarItems() {
         let mapViewController = MapViewController()
-        mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.image
-        mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.filledImage
+        mapViewController.tabBarItem.image = SettingTabBarItem.mapVC.setImage(.noraml)
+        mapViewController.tabBarItem.selectedImage = SettingTabBarItem.mapVC.setImage(.filled)
         
         let addViewController = UIViewController()
         
         let profileViewController = ProfileViewController()
         let profileNavigationController = UINavigationController(rootViewController: profileViewController)
-        profileViewController.tabBarItem.image = SettingTabBarItem.userVC.image
-        profileViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.filledImage
+        profileViewController.tabBarItem.image = SettingTabBarItem.userVC.setImage(.noraml)
+        profileViewController.tabBarItem.selectedImage = SettingTabBarItem.userVC.setImage(.filled)
         
         self.viewControllers = [mapViewController, addViewController, profileNavigationController]
     }
@@ -131,6 +141,7 @@ extension CustomTabBarController: UITabBarControllerDelegate {
         case self.viewControllers?.first:
             middleButton.isEnabled = true
         case self.viewControllers?.last:
+            // FIXME: - 버튼을 Unable 시키면 틴트컬러가 날라가 버림!
             middleButton.isEnabled = false
             middleButtonAnimationStart()
         default: break
@@ -154,7 +165,7 @@ extension CustomTabBarController {
         
         self.tabBar.addSubview(middleButton)
         
-        let size: CGFloat = 40
+        let size: CGFloat = 45
         let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - size / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
         
         // layout 설정
@@ -242,7 +253,7 @@ extension CustomTabBarController {
         
         for i in 0 ..< count {
             
-            let button = UIFactory.createPopButton(size: 38, isTapped: self.buttonTapped)
+            let button = UIFactory.createPopButton(size: 40, isTapped: self.buttonTapped)
             
             self.view.addSubview(button)
             self.popButtons.buttons.append(button)
@@ -272,6 +283,8 @@ extension CustomTabBarController {
     }
     
     @objc func popButtonHandler(sender: UIButton) {
+        
+        middleButtonAnimationEnd()
         
         switch sender.tag {
         case 0:
