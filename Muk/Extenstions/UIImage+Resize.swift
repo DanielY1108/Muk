@@ -18,24 +18,37 @@ extension UIImage {
         return image
     }
     
+    /// 이미지 틴트색 다시 그리기
+    /// - Parameter tintColor: 틴트 컬러 설정
+    /// - Returns: 재설정한 이미지
+    func retinted(_ tintColor: UIColor) -> UIImage {
+        return UIGraphicsImageRenderer(size: self.size).image { _ in
+            // 적용할 tint 색상 설정
+            tintColor.setFill()
+            withRenderingMode(.alwaysTemplate).draw(in: CGRect(origin: .zero, size: self.size))
+        }
+    }
+    
     /// 불러온 이미지 사이즈 변경 (Compact 버전)
     /// - Parameter size: 이미지 사이즈 설정
     /// - Parameter tintColor: 틴트 컬러 설정
     /// - Returns: 재설정한 이미지
-    func resized(to size: CGSize, tintColor: UIColor) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
+    func resized(to size: CGFloat, tintColor: UIColor) -> UIImage {
+        let imageSize = CGSize(width: size, height: size)
+        return UIGraphicsImageRenderer(size: imageSize).image { _ in
             // 적용할 tint 색상 설정
             tintColor.setFill()
-            withRenderingMode(.alwaysTemplate).draw(in: CGRect(origin: .zero, size: size))
+            withRenderingMode(.alwaysTemplate).draw(in: CGRect(origin: .zero, size: imageSize))
         }
     }
     
     /// 불러온 이미지 사이즈 변경 (Compact 버전)
     /// - Parameter size: 이미지 사이즈 설정
     /// - Returns: 재설정한 이미지
-    func resized(to size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(origin: .zero, size: size))
+    func resized(to size: CGFloat) -> UIImage {
+        let imageSize = CGSize(width: size, height: size)
+        return UIGraphicsImageRenderer(size: imageSize).image { _ in
+            draw(in: CGRect(origin: .zero, size: imageSize))
         }
     }
     

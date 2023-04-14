@@ -96,12 +96,11 @@ final class CustomTabBarController: UITabBarController {
         
         // tab bar items 세팅 (UITabBarAppearance)
         let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.stackedItemWidth = width / 5
-        appearance.stackedItemPositioning = .centered
-        
+        appearance.configureWithTransparentBackground()  // Bar의 그림자 제거
+        appearance.stackedItemWidth = width / 5          // 아이템들의 크기
+        appearance.stackedItemPositioning = .centered    // 아이템의 위치
+
         self.tabBar.standardAppearance = appearance
-        self.tabBar.scrollEdgeAppearance = appearance
         
         // 만약 appearance를 사용하면 예전 방식 설정들은 사용 못함!!!
 //        self.tabBar.itemWidth = width / 5
@@ -139,10 +138,11 @@ extension CustomTabBarController: UITabBarControllerDelegate {
         
         switch viewController {
         case self.viewControllers?.first:
-            middleButton.isEnabled = true
+            middleButton.isUserInteractionEnabled = true
         case self.viewControllers?.last:
-            // FIXME: - 버튼을 Unable 시키면 틴트컬러가 날라가 버림!
-            middleButton.isEnabled = false
+            // 버튼을 disable하면 틴트색 조절을 하기 위해 UIGraphicsImageRenderer 작업이 필요하지만,
+            // 이렇게 터치만 안되게 설정만들어 주면 틴트 설정을 건드릴 필요 없이 코드가 짧아진다.
+            middleButton.isUserInteractionEnabled = false
             middleButtonAnimationStart()
         default: break
         }

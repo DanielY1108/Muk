@@ -22,18 +22,18 @@ enum SettingTabBarItem {
         case .mapVC:
             if option == .noraml {
                 guard let image = UIImage(named: "globe") else { return UIImage() }
-                return image.resized(to: CGSize(width: 30, height: 30))
+                return image.resized(to: 30)
             } else {
                 guard let image = UIImage(named: "globe.fill") else { return UIImage() }
-                return image.resized(to: CGSize(width: 30, height: 30))
+                return image.resized(to: 30)
             }
         case .userVC:
             if option == .noraml {
                 guard let image = UIImage(named: "user") else { return UIImage() }
-                return image.resized(to: CGSize(width: 28, height: 28))
+                return image.resized(to: 28)
             } else {
                 guard let image = UIImage(named: "user.fill") else { return UIImage() }
-                return image.resized(to: CGSize(width: 28, height: 28))
+                return image.resized(to: 28)
             }
         }
         
