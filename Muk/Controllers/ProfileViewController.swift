@@ -19,6 +19,7 @@ final class ProfileViewController: UIViewController {
         let layout = createBackgroundCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         view.backgroundColor = HexCode.background.color
+        view.isUserInteractionEnabled = true
         view.register(BackgroundCell.self, forCellWithReuseIdentifier: BackgroundCell.identifier)
         return view
     }()
@@ -58,7 +59,7 @@ extension ProfileViewController {
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackgroundCell.identifier, for: indexPath) as? BackgroundCell else { return nil }
             
-            cell.backgroundColor = .red
+            cell.backgroundColor = .lightGray
             return cell
         }
         

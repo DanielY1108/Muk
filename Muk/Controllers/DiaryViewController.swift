@@ -30,7 +30,7 @@ class DiaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imageTapGasture()
+        imageTapGesture()
         setupButtons()
         setupDatePicker()
     }
@@ -60,7 +60,7 @@ extension DiaryViewController {
     }
     
     // DiaryView의 photoImageView를 클릭하면 동작하게 만듬
-    private func imageTapGasture() {
+    private func imageTapGesture() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(imageViewHandler))
         
         if let lastImageView = diaryView.photoStackView.subviews.last {
