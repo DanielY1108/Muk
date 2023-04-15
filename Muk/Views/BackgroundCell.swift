@@ -25,7 +25,7 @@ class BackgroundCell: UICollectionViewCell {
     
     // MARK: - Properties for UI
     
-    let optionButton: UIButton = {
+    lazy var optionButton: UIButton = {
         let button = UIButton(configuration: .plain())
         
         button.configurationUpdateHandler = { btn in
@@ -36,11 +36,11 @@ class BackgroundCell: UICollectionViewCell {
             btn.tintColor = .darkGray
             btn.configuration = config
         }
-        
+        button.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
         return button
     }()
     
-    let dateLabel: UILabel = {
+    lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
         label.text = "2023년 04월 15일"
@@ -154,6 +154,10 @@ class BackgroundCell: UICollectionViewCell {
             $0.height.lessThanOrEqualToSuperview().offset(-20)
         }
     }
+    
+    @objc func buttonHandler(_ sender: UIButton) {
+        print("Option button Tapped")
+    }
 }
 
 
@@ -182,6 +186,8 @@ extension BackgroundCell: UIScrollViewDelegate {
             photoImageView.contentMode = .scaleAspectFit
             photoImageView.image = UIImage(named: photo["image"]!)
             
+            photoImageTapGesture(photoImageView)
+            
             photoScrollView.addSubview(photoImageView)
             photoImageView.frame.size.height = 150
             photoImageView.frame.size.width = self.bounds.size.width - 60
@@ -196,7 +202,15 @@ extension BackgroundCell: UIScrollViewDelegate {
     }
     
     // TODO: - 이미지뷰와 클릭 상호작용으로 화면을 띄어주고 싶다.
-
+    func photoImageTapGesture(_ imageView: UIImageView) {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageViewHandler))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tap)
+    }
+    
+    @objc func imageViewHandler(_ sender: UITapGestureRecognizer) {
+        print("ImageView Tapped")
+    }
 }
 
 
