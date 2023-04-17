@@ -23,6 +23,19 @@ class BackgroundCell: UICollectionViewCell {
         }
     }
     
+    // 옵션 버튼 액션 설정
+    private var optionButtonItmes: [UIAction] {
+        let edit = UIAction(title: "수정하기") { _ in
+            print("Edit Action")
+        }
+        let delete = UIAction(title: "삭제하기",
+                              attributes: .destructive) { _ in
+            print("Delete Action")
+        }
+        
+        return [edit, delete]
+    }
+    
     // MARK: - Properties for UI
     
     lazy var optionButton: UIButton = {
@@ -103,6 +116,7 @@ class BackgroundCell: UICollectionViewCell {
         
         configUI()
         configScrollView()
+        setupMenu()
     }
     
     required init?(coder: NSCoder) {
@@ -157,6 +171,13 @@ class BackgroundCell: UICollectionViewCell {
     
     @objc func buttonHandler(_ sender: UIButton) {
         print("Option button Tapped")
+    }
+    
+    private func setupMenu() {
+        let menu = UIMenu(children: self.optionButtonItmes)
+        
+        self.optionButton.menu = menu
+        self.optionButton.showsMenuAsPrimaryAction = true
     }
 }
 
