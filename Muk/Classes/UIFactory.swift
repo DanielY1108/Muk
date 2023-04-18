@@ -14,6 +14,54 @@ class UIFactory {
     
     private init() {}
     
+   
+    class func halfModalPresent(controller: UIViewController) {
+        // iOS 15부터 사용 가능
+        guard let sheet = controller.sheetPresentationController else { return }
+        // 모달이 절반크기로 시작하고 확장이 가능
+        sheet.detents = [.medium(), .large()]
+        // true일 때 모달이 이전 컨트롤러와 크기가 같아질 때 스크롤 가능, false 하프 사이즈 부터 스크롤 사능
+        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        // 상단의 '-' 모양의 그랩바
+        sheet.prefersGrabberVisible = true
+    }
+    
+
+    
+}
+
+// MARK: - CustomTabBarController UI
+
+extension UIFactory {
+    // 중간 + 버튼 생성
+    class func createMiddleButton() -> UIButton {
+        // 현재 심볼 이미지를 변형(size, font 등)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
+                                                       weight: .heavy,
+                                                       scale: .large)
+        
+        let button = UIButton(configuration: .plain())
+        
+        // configurationUpdateHandler: 버튼의 상태가 변경될 때 호출 되는 클로저
+        // 강조 처리 끄기(클릭 시 회색) ios 15 부터는 adjustsImageWhenHighlighted 사용 불가
+        // 대신 configurationUpdateHandler를 통해서 Highlight 설정을 해줘야 함.
+        // isHighlighted는 UIButton의 상태(State)를 변경하는 것이므로 직접 버튼에 설정은 불가능하다 (핸들러를 통해서 작업 해줘야 함)
+        button.configurationUpdateHandler = { btn in
+            var config = btn.configuration
+            // 이미지 설정
+            config?.image = UIImage(systemName: "plus", withConfiguration: imageConfig)
+            // 하이라이트
+            btn.isHighlighted = false
+            
+            btn.configuration = config
+        }
+
+        // 버튼 색상
+        button.tintColor = HexCode.unselected.color
+        button.backgroundColor = HexCode.selected.color
+        return button
+    }
+    
     /// Pop 버튼 생성
     /// - Parameters:
     ///   - size: 크기 (지름)
@@ -89,6 +137,31 @@ class UIFactory {
         
         return button
     }
+}
+
+// MARK: - MapViewController UI
+
+extension UIFactory {
+}
+
+// MARK: - ProfileViewController UI
+
+extension UIFactory {
+    // ProfileViewController 제목 설정
+    class func createNavigationTitleLabel(_ title: String) -> UILabel {
+        let label = UILabel()
+        label.text = title
+        label.textColor = HexCode.selected.color
+        label.font = .preferredFont(forTextStyle: .title2)
+    
+        return label
+    }
+}
+
+
+// MARK: - DiaryViewController UI
+
+extension UIFactory {
     
     // 다이어리 label 생성
     class func createDiaryLabel(title text: String, style: UIFont.TextStyle = .headline) -> UILabel {
@@ -127,6 +200,7 @@ class UIFactory {
         return stackView
     }
     
+    // 다이어리 X 버튼 생성
     class func createCloseButton() -> UIButton {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "plus")
@@ -139,6 +213,7 @@ class UIFactory {
         return button
     }
     
+    // 다이어리 저장 버튼 생성
     class func createSaveButton() -> UIButton {
         var config = UIButton.Configuration.plain()
         config.title = "저장"
@@ -151,6 +226,7 @@ class UIFactory {
         return button
     }
     
+    // 다이어리 이미지뷰 생성
     class func createCircleImageView(size: CGFloat) -> UIImageView {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = size/2
@@ -163,28 +239,8 @@ class UIFactory {
         
         return imageView
     }
-    
-    class func halfModalPresent(controller: UIViewController) {
-        // iOS 15부터 사용 가능
-        guard let sheet = controller.sheetPresentationController else { return }
-        // 모달이 절반크기로 시작하고 확장이 가능
-        sheet.detents = [.medium(), .large()]
-        // true일 때 모달이 이전 컨트롤러와 크기가 같아질 때 스크롤 가능, false 하프 사이즈 부터 스크롤 사능
-        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        // 상단의 '-' 모양의 그랩바
-        sheet.prefersGrabberVisible = true
-    }
-    
-    class func createNavigationTitleLabel(_ title: String) -> UILabel {
-        let label = UILabel()
-        label.text = title
-        label.textColor = HexCode.selected.color
-        label.font = .preferredFont(forTextStyle: .title2)
-    
-        return label
-    }
-    
 }
+
 
 // MARK: - PreView 읽기
 import SwiftUI

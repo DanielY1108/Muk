@@ -30,9 +30,7 @@ class DiaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imageTapGesture()
-        setupButtons()
-        setupDatePicker()
+        configUI()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -45,21 +43,14 @@ class DiaryViewController: UIViewController {
 
 extension DiaryViewController {
     
-    // DiaryView 버튼 셋팅
-    private func setupButtons() {
-        diaryView.saveButton.addTarget(self, action: #selector(saveButtonHandler), for: .touchUpInside)
-        diaryView.closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
-    }
-    
-    @objc func saveButtonHandler(_ sender: UIButton) {
+    private func configUI() {
+        diaryView.delegate = self
         
+        imageTapGesture()
+        setupDatePicker()
     }
     
-    @objc func closeButtonHandler(_ sender: UIButton) {
-        dismiss(animated: true)
-    }
-    
-    // DiaryView의 photoImageView를 클릭하면 동작하게 만듬
+    // DiaryView의 photoImageView의 마지막 "+" 이지미를 클릭하면 동작하게 만듬
     private func imageTapGesture() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(imageViewHandler))
         
@@ -270,6 +261,20 @@ extension DiaryViewController: UIScrollViewDelegate {
         scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
     }
 
+}
+
+// MARK: - DiaryView Button Handler 델리게이트
+
+extension DiaryViewController: DiaryViewProtocol {
+    
+    func saveButtonTapped(_ view: DiaryView) {
+        print("Save button Tapped")
+    }
+    
+    func closeButtonTapped(_ view: DiaryView) {
+        dismiss(animated: true)
+        print("Close button Tapped")
+    }
 }
 
 

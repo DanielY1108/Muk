@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol DiaryViewProtocol {
+    func saveButtonTapped(_ view: DiaryView)
+    func closeButtonTapped(_ view: DiaryView)
+}
+
 class DiaryView: UIView {
+    
+    var delegate: DiaryViewProtocol?
     
     // MARK: - Properties
     
@@ -47,9 +54,9 @@ class DiaryView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupStackViewLayout()
-        setupTextField()
         setupUI()
+        setupTextField()
+        setupButtons()
     }
     
     required init?(coder: NSCoder) {
@@ -58,7 +65,7 @@ class DiaryView: UIView {
     
     // MARK: - Setup
     
-    private func setupStackViewLayout() {
+    private func setupUI() {
         
         self.addSubview(closeButton)
         closeButton.snp.makeConstraints {
@@ -114,6 +121,15 @@ class DiaryView: UIView {
             $0.bottom.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(sideInset*2)
         }
+        
+        configUI()
+        setupTextField()
+        setupButtons()
+    }
+    
+    private func configUI() {
+        self.backgroundColor = HexCode.background.color
+        titleLabel.font = .preferredFont(forTextStyle: .title3)
     }
     
     private func setupTextField() {
@@ -122,16 +138,25 @@ class DiaryView: UIView {
         locationTextField.setPlaceHolder("주소를 확인해주세요.")
     }
     
-    private func setupUI() {
-        self.backgroundColor = HexCode.background.color
-        titleLabel.font = .preferredFont(forTextStyle: .title3)
+    // DiaryView 버튼 셋팅
+    private func setupButtons() {
+        saveButton.addTarget(self, action: #selector(saveButtonHandler), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
     }
+    
 }
 
-// MARK: - Method
+// MARK: - Buttom Handler
 
 extension DiaryView {
     
+    @objc func saveButtonHandler(_ sender: UIButton) {
+        delegate?.saveButtonTapped(self)
+    }
+    
+    @objc func closeButtonHandler(_ sender: UIButton) {
+        delegate?.closeButtonTapped(self)
+    }
 }
 
 

@@ -7,11 +7,21 @@
 
 import UIKit
 
+protocol BackgroundCellProtocol: AnyObject {
+    func editButtonTapped(_ cell: BackgroundCell)
+    func deleteButtonTapped(_ cell: BackgroundCell)
+    // TODO: - 나중에 데이터 받으면 다시 생각해보자(인덱스 값이랑 이미지가 필요)
+    func imageTapped(_ cell: BackgroundCell, sender: [Dictionary<String, String>]?)
+    
+}
+
 class BackgroundCell: UICollectionViewCell {
     
     static let identifier = "BackgroundCell"
     
     // MARK: - Properties
+    
+    var delegate: BackgroundCellProtocol?
     
     let photo1 = ["image" : "globe"]
     let photo2 = ["image" : "user"]
@@ -25,12 +35,13 @@ class BackgroundCell: UICollectionViewCell {
     
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
-        let edit = UIAction(title: "수정하기") { _ in
-            print("Edit Action")
+        
+        let edit = UIAction(title: "수정하기") { [unowned self] _ in
+            self.delegate?.editButtonTapped(self)
         }
         let delete = UIAction(title: "삭제하기",
-                              attributes: .destructive) { _ in
-            print("Delete Action")
+                              attributes: .destructive) { [unowned self] _ in
+            self.delegate?.deleteButtonTapped(self)
         }
         
         return [edit, delete]
@@ -68,33 +79,31 @@ class BackgroundCell: UICollectionViewCell {
     }()
     
     lazy var photoPageControl: UIPageControl = {
-       let page = UIPageControl()
+        let page = UIPageControl()
         page.currentPageIndicatorTintColor = .darkGray
         page.isUserInteractionEnabled = false
         return page
     }()
-        
+    
+    let locaionImageView: UIImageView = {
+        let view = UIImageView()
+        let resizeImage = UIImage(named: "location")?.resized(to: 16, tintColor: .darkGray)
+        view.image = resizeImage
+        return view
+    }()
+    
+    let loactionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .footnote)
+        label.textColor = .darkGray
+        label.text = "베이다드"
+        return label
+    }()
+    
     lazy var locationStackView: UIStackView = {
-        
-        let locaionImageView: UIImageView = {
-            let view = UIImageView()
-            let resizeImage = UIImage(named: "location")?.resized(to: 16, tintColor: .darkGray)
-            view.image = resizeImage
-            return view
-        }()
-        
-        let loactionLabel: UILabel = {
-            let label = UILabel()
-            label.font = .preferredFont(forTextStyle: .footnote)
-            label.textColor = .darkGray
-            label.text = "베이다드"
-            return label
-        }()
-        
-       let view = UIStackView(arrangedSubviews: [locaionImageView, loactionLabel])
+        let view = UIStackView(arrangedSubviews: [locaionImageView, loactionLabel])
         view.axis = .horizontal
         view.spacing = 5
-        
         return view
     }()
     
@@ -107,7 +116,7 @@ class BackgroundCell: UICollectionViewCell {
                      """
         return label
     }()
-        
+    
     
     // MARK: - Life Cycles
     
@@ -154,7 +163,7 @@ class BackgroundCell: UICollectionViewCell {
             $0.centerX.equalToSuperview()
             $0.height.equalTo(20)
         }
-
+        
         self.addSubview(locationStackView)
         locationStackView.snp.makeConstraints {
             $0.top.equalTo(photoPageControl.snp.bottom).offset(5)
@@ -169,15 +178,16 @@ class BackgroundCell: UICollectionViewCell {
         }
     }
     
-    @objc func buttonHandler(_ sender: UIButton) {
-        print("Option button Tapped")
-    }
-    
     private func setupMenu() {
         let menu = UIMenu(children: self.optionButtonItmes)
         
         self.optionButton.menu = menu
         self.optionButton.showsMenuAsPrimaryAction = true
+    }
+    
+    // 옵션 버튼 (정의 필요 없음)
+    @objc func buttonHandler(_ sender: UIButton) {
+        print("Option button Tapped")
     }
 }
 
@@ -230,7 +240,7 @@ extension BackgroundCell: UIScrollViewDelegate {
     }
     
     @objc func imageViewHandler(_ sender: UITapGestureRecognizer) {
-        print("ImageView Tapped")
+        delegate?.imageTapped(self, sender: self.photoArray)
     }
 }
 

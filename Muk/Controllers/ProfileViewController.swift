@@ -59,6 +59,7 @@ extension ProfileViewController {
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackgroundCell.identifier, for: indexPath) as? BackgroundCell else { return nil }
             
+            cell.delegate = self
             cell.backgroundColor = .lightGray
             return cell
         }
@@ -121,8 +122,24 @@ extension ProfileViewController {
         navigationItem.titleView = titleLabel
     }
     
+}
+
+
+// MARK: - BackgroundCell Button Handler 델리게이트
+
+extension ProfileViewController: BackgroundCellProtocol {
+  
+    func editButtonTapped(_ cell: BackgroundCell) {
+        print("Edit Action")
+    }
     
+    func deleteButtonTapped(_ cell: BackgroundCell) {
+        print("Delete Action")
+    }
     
+    func imageTapped(_ cell: BackgroundCell, sender: [Dictionary<String, String>]?) {
+        print("ImageView Tapped")
+    }
 }
 
 

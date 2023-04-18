@@ -66,8 +66,8 @@ extension MapViewController {
         }
         
         let region = MKCoordinateRegion(center: coordinaite,
-                                        latitudinalMeters: 1000,
-                                        longitudinalMeters: 1000)
+                                        latitudinalMeters: 500,
+                                        longitudinalMeters: 500)
         
         self.mapView.setRegion(region, animated: true)
     }
@@ -99,8 +99,8 @@ extension MapViewController: MKMapViewDelegate {
     
     // 한국 중심으로 지도를 시작
     private func centerMapOnKorea() {
-        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.6)
-        let span = MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
+        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.8)
+        let span = MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4)
         mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: true)
     }
     

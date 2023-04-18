@@ -18,33 +18,7 @@ final class CustomTabBarController: UITabBarController {
     private var buttonTapped = false  // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
     
     // 버튼 생성
-    private let middleButton: UIButton = {
-        // 현재 심볼 이미지를 변형(size, font 등)
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
-                                                       weight: .heavy,
-                                                       scale: .large)
-        
-        let button = UIButton(configuration: .plain())
-        
-        // configurationUpdateHandler: 버튼의 상태가 변경될 때 호출 되는 클로저
-        // 강조 처리 끄기(클릭 시 회색) ios 15 부터는 adjustsImageWhenHighlighted 사용 불가
-        // 대신 configurationUpdateHandler를 통해서 Highlight 설정을 해줘야 함.
-        // isHighlighted는 UIButton의 상태(State)를 변경하는 것이므로 직접 버튼에 설정은 불가능하다 (핸들러를 통해서 작업 해줘야 함)
-        button.configurationUpdateHandler = { btn in
-            var config = btn.configuration
-            // 이미지 설정
-            config?.image = UIImage(systemName: "plus", withConfiguration: imageConfig)
-            // 하이라이트
-            btn.isHighlighted = false
-            
-            btn.configuration = config
-        }
-
-        // 버튼 색상
-        button.tintColor = HexCode.unselected.color
-        button.backgroundColor = HexCode.selected.color
-        return button
-    }()
+    private let middleButton = UIFactory.createMiddleButton()
     
     // MARK: - LifeCycles
     
@@ -189,6 +163,7 @@ extension CustomTabBarController {
         middleButton.addTarget(self, action: #selector(middleButtonHandler), for: .touchUpInside)
     }
     
+    // 중간 버튼 핸들러
     @objc func middleButtonHandler(sender: UIButton) {
         
         if buttonTapped == false {
@@ -282,6 +257,7 @@ extension CustomTabBarController {
         }
     }
     
+    // pop 버튼 핸들러
     @objc func popButtonHandler(sender: UIButton) {
         
         middleButtonAnimationEnd()
