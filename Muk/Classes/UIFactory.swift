@@ -14,7 +14,7 @@ class UIFactory {
     
     private init() {}
     
-   
+    
     class func halfModalPresent(controller: UIViewController) {
         // iOS 15부터 사용 가능
         guard let sheet = controller.sheetPresentationController else { return }
@@ -26,7 +26,7 @@ class UIFactory {
         sheet.prefersGrabberVisible = true
     }
     
-
+    
     
 }
 
@@ -37,8 +37,8 @@ extension UIFactory {
     class func createMiddleButton() -> UIButton {
         // 현재 심볼 이미지를 변형(size, font 등)
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
-                                                       weight: .heavy,
-                                                       scale: .large)
+                                                      weight: .heavy,
+                                                      scale: .large)
         
         let button = UIButton(configuration: .plain())
         
@@ -55,7 +55,7 @@ extension UIFactory {
             
             btn.configuration = config
         }
-
+        
         // 버튼 색상
         button.tintColor = HexCode.unselected.color
         button.backgroundColor = HexCode.selected.color
@@ -153,7 +153,7 @@ extension UIFactory {
         label.text = title
         label.textColor = HexCode.selected.color
         label.font = .preferredFont(forTextStyle: .title2)
-    
+        
         return label
     }
 }
@@ -169,7 +169,7 @@ extension UIFactory {
         label.font = .preferredFont(forTextStyle: style)
         label.text = text
         label.textAlignment = .center
-    
+        
         return label
     }
     
@@ -196,7 +196,7 @@ extension UIFactory {
         stackView.axis = axis
         stackView.spacing = 15
         stackView.distribution = distribution
-
+        
         return stackView
     }
     
@@ -209,7 +209,7 @@ extension UIFactory {
         let button = UIButton(configuration: config)
         button.tintColor = .black
         button.transform = CGAffineTransform(rotationAngle: CGFloat.pi/4)
-
+        
         return button
     }
     

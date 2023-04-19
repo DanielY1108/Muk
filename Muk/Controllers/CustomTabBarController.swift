@@ -20,6 +20,8 @@ final class CustomTabBarController: UITabBarController {
     // 버튼 생성
     private let middleButton = UIFactory.createMiddleButton()
     
+    private let customTabBar = CustomTabBar()
+    
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
@@ -28,62 +30,20 @@ final class CustomTabBarController: UITabBarController {
         setupTabBar()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupMiddleButton()
+    }
+    
     // MARK: - Setup
     
     // 탭바를 설정
     private func setupTabBar() {
-        setupTabBarItems()
-        setupTabBarUI()
-        setupMiddleButton()
-
+        setValue(customTabBar, forKey: "tabBar")
         self.delegate = self
+        setupTabBarItems()
     }
     
-    // 탭바 UI 설정
-    private func setupTabBarUI() {
-        // CAShapeLayer 객체 생성
-        let layer = CAShapeLayer()
-        
-        // tab bar layer 세팅
-        let x: CGFloat = 70                                       // x 축으로 이동한 거리 (여백)
-        let width: CGFloat = self.tabBar.bounds.width - (x * 2)   // 크기: 탭바의 너비(390) - (여백 * 2)
-        let height: CGFloat = 50                                  // 높이를 설정
-        let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - height / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
-        // 알약 모양으로 UIBezierPath 생성
-        let path = UIBezierPath(roundedRect: CGRect(x: x,
-                                                    y: y,
-                                                    width: width,
-                                                    height: height),
-                                cornerRadius: height / 2).cgPath
-        layer.path = path
-        
-        layer.fillColor = HexCode.tabBarBackground.color.cgColor
-        
-        // tab bar layer 그림자 설정
-        layer.shadowColor = HexCode.selected.color.cgColor
-        layer.shadowOffset = CGSize(width: 0.0, height: -1.0)  // 밑면 그림자 크기
-        layer.shadowRadius = 5.0                              // 흐려지는 반경
-        layer.shadowOpacity = 0.9                             // 불투명도 (0 ~ 1)
-        
-        // tab bar layer 삽입: addSublayer대신 insertSublayer(0번째 Sublayer에 대치) 사용
-        self.tabBar.layer.insertSublayer(layer, at: 0)
-        
-        // tab bar items 세팅 (UITabBarAppearance)
-        let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()  // Bar의 그림자 제거
-        appearance.stackedItemWidth = width / 5          // 아이템들의 크기
-        appearance.stackedItemPositioning = .centered    // 아이템의 위치
-
-        self.tabBar.standardAppearance = appearance
-        
-        // 만약 appearance를 사용하면 예전 방식 설정들은 사용 못함!!!
-//        self.tabBar.itemWidth = width / 5
-//        self.tabBar.itemPositioning = .centered
-        
-        // 틴트 컬러 설정
-        self.tabBar.tintColor = HexCode.selected.color
-        self.tabBar.unselectedItemTintColor = HexCode.unselected.color
-    }
     
     // 탭바에 뷰 컨트롤러 연결
     private func setupTabBarItems() {
@@ -105,7 +65,7 @@ final class CustomTabBarController: UITabBarController {
 
 // MARK: - 탭바 컨트롤러 델리게이트
 extension CustomTabBarController: UITabBarControllerDelegate {
-    // 탭바를 클릭 했을 때 중간버튼 동작 안하게 만들고 만약 UserVC를 선택 시 "X"로 변경되는 애니메이션 처리
+    // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         middleButtonAnimationEnd()
@@ -114,7 +74,7 @@ extension CustomTabBarController: UITabBarControllerDelegate {
         case self.viewControllers?.first:
             middleButton.isUserInteractionEnabled = true
         case self.viewControllers?.last:
-            // 버튼을 disable하면 틴트색 조절을 하기 위해 UIGraphicsImageRenderer 작업이 필요하지만,
+            // 버튼을 disable하면 틴트색이 회색으로 변한다. 틴트 조절을 하기 위해 UIGraphicsImageRenderer 작업이 필요하지만,
             // 이렇게 터치만 안되게 설정만들어 주면 틴트 설정을 건드릴 필요 없이 코드가 짧아진다.
             middleButton.isUserInteractionEnabled = false
             middleButtonAnimationStart()
@@ -139,13 +99,12 @@ extension CustomTabBarController {
         
         self.tabBar.addSubview(middleButton)
         
-        let size: CGFloat = 45
-        let y: CGFloat = (self.tabBar.bounds.midY - 5.5) - size / 2  // Y축 = (아이콘의 중간 위치 값) - 높이의 절반
+        let size: CGFloat = 50
+        let y: CGFloat = 30 - 11 - (size/2)   // (layer 높이/2 - layer에서 추가된 높이 - 버튼 사이즈/2)
         
         // layout 설정
         middleButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            // 왜 top으로 설정하면 중간 정렬이 될까요?
             $0.top.equalToSuperview().offset(y)
             $0.width.height.equalTo(size)
         }
@@ -171,7 +130,7 @@ extension CustomTabBarController {
             middleButtonAnimationStart()
             
             let popButtonCount = self.popButtons.options.count
-            self.setupPopButton(count: popButtonCount, radius: 72)
+            self.setupPopButton(count: popButtonCount, radius: 80)
             
         } else {
             // 버튼 취소 시 할 작업 - pop 버튼 제거, 끝 애니메이션
