@@ -34,7 +34,7 @@ class UIFactory {
 
 extension UIFactory {
     // 중간 + 버튼 생성
-    class func createMiddleButton() -> UIButton {
+    class func createMiddleButton(size: CGFloat) -> UIButton {
         // 현재 심볼 이미지를 변형(size, font 등)
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
                                                       weight: .heavy,
@@ -55,6 +55,17 @@ extension UIFactory {
             
             btn.configuration = config
         }
+        
+        // layout 설정
+        button.snp.makeConstraints {
+            $0.width.height.equalTo(size)
+        }
+        
+        // 버튼 모양 설정
+        button.layer.cornerRadius = size / 2
+        
+        // 버튼 그림자 설정
+        button.layer.createShadow(size: size)
         
         // 버튼 색상
         button.tintColor = HexCode.unselected.color
@@ -85,11 +96,7 @@ extension UIFactory {
         button.transform = CGAffineTransform(scaleX: 0, y: 0)
         
         // 그림자
-        button.layer.shadowColor = HexCode.selected.color.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 1)
-        button.layer.shadowOpacity = 0.9
-        button.layer.shadowRadius = 5
-        
+        button.layer.createShadow(size: size)
         
         // 조건문: 버튼을 클릭 시 (애니메이션 동작)
         if isTapped {
@@ -106,7 +113,11 @@ extension UIFactory {
         }
         return button
     }
-    
+}
+
+// MARK: - MapViewController UI
+
+extension UIFactory {
     
     /// 현재 위치 버튼 생성
     /// - Parameter size: 크기 (지름)
@@ -130,18 +141,10 @@ extension UIFactory {
         
         button.layer.cornerRadius = size / 2
         
-        button.layer.shadowColor = HexCode.selected.color.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 1)
-        button.layer.shadowOpacity = 0.9
-        button.layer.shadowRadius = 5
+        button.layer.createShadow(size: size)
         
         return button
     }
-}
-
-// MARK: - MapViewController UI
-
-extension UIFactory {
 }
 
 // MARK: - ProfileViewController UI

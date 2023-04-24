@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol BackgroundCellProtocol: AnyObject {
+protocol BackgroundCellDelegate: AnyObject {
     func editButtonTapped(_ cell: BackgroundCell)
     func deleteButtonTapped(_ cell: BackgroundCell)
     // TODO: - 나중에 데이터 받으면 다시 생각해보자(인덱스 값이랑 이미지가 필요)
@@ -21,7 +21,7 @@ class BackgroundCell: UICollectionViewCell {
     
     // MARK: - Properties
     
-    var delegate: BackgroundCellProtocol?
+    var delegate: BackgroundCellDelegate?
     
     let photo1 = ["image" : "globe"]
     let photo2 = ["image" : "user"]

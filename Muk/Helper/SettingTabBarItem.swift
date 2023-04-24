@@ -7,8 +7,9 @@
 
 import UIKit
 
-enum SettingTabBarItem {
+enum TabBarItems: CaseIterable {
     case mapVC
+    case addActions
     case userVC
     
     enum ImageOption {
@@ -16,7 +17,7 @@ enum SettingTabBarItem {
         case filled
     }
     
-    func setImage(_ option: ImageOption) -> UIImage {
+    func setImage(_ option: ImageOption) -> UIImage? {
         
         switch self {
         case .mapVC:
@@ -27,6 +28,8 @@ enum SettingTabBarItem {
                 guard let image = UIImage(named: "globe.fill") else { return UIImage() }
                 return image.resized(to: 30)
             }
+        case .addActions:
+            return nil
         case .userVC:
             if option == .noraml {
                 guard let image = UIImage(named: "user") else { return UIImage() }
@@ -36,6 +39,5 @@ enum SettingTabBarItem {
                 return image.resized(to: 28)
             }
         }
-        
     }
 }

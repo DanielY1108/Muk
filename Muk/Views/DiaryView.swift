@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol DiaryViewProtocol {
+protocol DiaryViewDelegate {
     func saveButtonTapped(_ view: DiaryView)
     func closeButtonTapped(_ view: DiaryView)
 }
 
 class DiaryView: UIView {
     
-    var delegate: DiaryViewProtocol?
+    var delegate: DiaryViewDelegate?
     
     // MARK: - Properties
     

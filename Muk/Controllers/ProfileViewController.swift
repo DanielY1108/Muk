@@ -127,7 +127,7 @@ extension ProfileViewController {
 
 // MARK: - BackgroundCell Button Handler 델리게이트
 
-extension ProfileViewController: BackgroundCellProtocol {
+extension ProfileViewController: BackgroundCellDelegate {
   
     func editButtonTapped(_ cell: BackgroundCell) {
         print("Edit Action")

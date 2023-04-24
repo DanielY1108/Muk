@@ -265,7 +265,7 @@ extension DiaryViewController: UIScrollViewDelegate {
 
 // MARK: - DiaryView Button Handler 델리게이트
 
-extension DiaryViewController: DiaryViewProtocol {
+extension DiaryViewController: DiaryViewDelegate {
     
     func saveButtonTapped(_ view: DiaryView) {
         print("Save button Tapped")
