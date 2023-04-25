@@ -12,6 +12,9 @@ enum Section {
 }
 
 final class ProfileViewController: UIViewController {
+    
+    var models = [DiaryModel]()
+    var viewModel = ProfileViewModel()
 
     // MARK: - Properties
     
@@ -24,7 +27,7 @@ final class ProfileViewController: UIViewController {
         return view
     }()
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
+    var dataSource: UICollectionViewDiffableDataSource<Section, DiaryModel>!
 
     
     // MARK: - Life Cylces
@@ -34,10 +37,17 @@ final class ProfileViewController: UIViewController {
         
         configUI()
         setupNavigationAppearance()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupCollectionView()
+
     }
     
     private func configUI() {
+        guard let tabBarController = tabBarController as? CustomTabBarController else { return }
+        tabBarController.customDelegate = self
         
     }
 }
@@ -57,17 +67,28 @@ extension ProfileViewController {
     private func configBackgroundCollectionViewDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else { return nil }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
+                fatalError("Failed Cell Load")
+            }
             
             cell.delegate = self
             cell.backgroundColor = .lightGray
+            
+            self.viewModel.models.bind { models in
+                let images = models?[indexPath.row].images
+//              cell.photoArray = images
+                cell.placeLabel.text = models?[indexPath.row].placeName
+                cell.detailLabel.text = models?[indexPath.row].detail
+            }
+            
             return cell
         }
         
-        var snapShot = NSDiffableDataSourceSnapshot<Section, Int>()
+        var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
         snapShot.appendSections([.main])
-        snapShot.appendItems(Array(1...5))
-        
+        snapShot.appendItems(models)
+        collectionView.reloadData()
+
         dataSource.apply(snapShot)
     }
     
@@ -139,6 +160,22 @@ extension ProfileViewController: ProfileCellDelegate {
     
     func imageTapped(_ cell: ProfileCell, sender: [Dictionary<String, String>]?) {
         print("ImageView Tapped")
+    }
+}
+
+// 커스텁 탭바에서 DiaryViewController로 접근하기 위해 델리게이트 사용
+extension ProfileViewController: CustomTabBarControllerDelegate {
+    func didSelectPopButton(viewController: CustomTabBarController, presentController: UIViewController) {
+        guard let diaryViewController = presentController as? DiaryViewController else { return }
+        diaryViewController.delegate = self
+    }
+}
+
+// DiaryViewController에서 데이터를 받아와 Obsevable의 value를 업데이트 시켜줌
+extension ProfileViewController: DiaryViewControllerDelegate {
+    func loadData(viewController: DiaryViewController, model: DiaryModel) {
+        models.append(model)
+        viewModel.models.value = models
     }
 }
 

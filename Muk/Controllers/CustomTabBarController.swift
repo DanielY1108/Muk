@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
+protocol CustomTabBarControllerDelegate: AnyObject {
+    func didSelectPopButton(viewController: CustomTabBarController, presentController: UIViewController)
+}
+
 final class CustomTabBarController: UITabBarController {
+    
+    weak var customDelegate: CustomTabBarControllerDelegate?
     
     // MARK: - Properties
     
@@ -22,7 +28,7 @@ final class CustomTabBarController: UITabBarController {
     private var middleButtonTapped = false
     
     // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
-    private var popButtons = PopButtons()
+    var popButtons = PopButtons()
     
     
     
@@ -230,6 +236,7 @@ extension CustomTabBarController {
         case 1:
             print("Current Location")
             let diaryVC = DiaryViewController()
+            customDelegate?.didSelectPopButton(viewController: self, presentController: diaryVC)
             diaryVC.modalPresentationStyle = .fullScreen
             self.present(diaryVC, animated: true)
         default:

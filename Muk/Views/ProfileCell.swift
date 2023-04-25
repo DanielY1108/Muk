@@ -73,28 +73,28 @@ class ProfileCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var photoScrollView: UIScrollView = {
+    private lazy var photoScrollView: UIScrollView = {
         let view = UIScrollView()
         view.delegate = self
         view.backgroundColor = .darkGray
         return view
     }()
     
-    lazy var photoPageControl: UIPageControl = {
+    private lazy var photoPageControl: UIPageControl = {
         let page = UIPageControl()
         page.currentPageIndicatorTintColor = .darkGray
         page.isUserInteractionEnabled = false
         return page
     }()
     
-    let locaionImageView: UIImageView = {
+    private let placeImageView: UIImageView = {
         let view = UIImageView()
         let resizeImage = UIImage(named: "location")?.resized(to: 16, tintColor: .darkGray)
         view.image = resizeImage
         return view
     }()
     
-    let loactionLabel: UILabel = {
+    let placeLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textColor = .darkGray
@@ -102,8 +102,8 @@ class ProfileCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var locationStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [locaionImageView, loactionLabel])
+    private lazy var placeStackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [placeImageView, placeLabel])
         view.axis = .horizontal
         view.spacing = 5
         return view
@@ -166,15 +166,15 @@ class ProfileCell: UICollectionViewCell {
             $0.height.equalTo(20)
         }
         
-        self.addSubview(locationStackView)
-        locationStackView.snp.makeConstraints {
+        self.addSubview(placeStackView)
+        placeStackView.snp.makeConstraints {
             $0.top.equalTo(photoPageControl.snp.bottom).offset(5)
             $0.leading.equalTo(photoScrollView)
         }
         
         self.addSubview(detailLabel)
         detailLabel.snp.makeConstraints {
-            $0.top.equalTo(locationStackView.snp.bottom).offset(10)
+            $0.top.equalTo(placeStackView.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview().inset(30)
             $0.height.lessThanOrEqualToSuperview().offset(-20)
         }

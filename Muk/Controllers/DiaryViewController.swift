@@ -9,8 +9,13 @@ import UIKit
 import SnapKit
 import PhotosUI
 
+protocol DiaryViewControllerDelegate: AnyObject {
+    func loadData(viewController: DiaryViewController, model: DiaryModel)
+}
+
 class DiaryViewController: UIViewController {
     
+    weak var delegate: DiaryViewControllerDelegate?
     // MARK: - Properties
     
     private let diaryView = DiaryView()
