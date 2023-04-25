@@ -19,7 +19,10 @@ class DiaryViewController: UIViewController {
     private var selections = [String: PHPickerResult]()
     // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
     private var selectedAssetIdentifiers = [String]()
+    // 모든 이미지
+    private var images = [UIImage]()
     
+    private var viewModel: DiaryViewModel!
     
     // MARK: - Life Cycle
     
@@ -33,21 +36,38 @@ class DiaryViewController: UIViewController {
         configUI()
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+    deinit {
+        print("다이어리 컨트롤러 해제")
     }
-    
 }
 
 // MARK: - Setup
 
 extension DiaryViewController {
     
+    private func saveData() {
+        guard let date = diaryView.dateTextField.text,
+              let placeName = diaryView.placeTextField.text,
+              let locationName = diaryView.locationTextField.text,
+              let detail = diaryView.detailTextView.text else { return }
+        
+        let model = DiaryModel(images: images,
+                               date: date,
+                               placeName: placeName,
+                               locationName: locationName,
+                               detail: detail)
+        
+        viewModel = DiaryViewModel(model: model)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
     private func configUI() {
         diaryView.delegate = self
         
         imageTapGesture()
-        setupDatePicker()
     }
     
     // DiaryView의 photoImageView의 마지막 "+" 이지미를 클릭하면 동작하게 만듬
@@ -63,58 +83,7 @@ extension DiaryViewController {
     @objc func imageViewHandler() {
         presentPicker()
     }
-
-}
-
-// MARK: - datePicker 설정 및 Toolbar 설정
-
-extension DiaryViewController {
     
-    // datePicker
-    private func setupDatePicker() {
-        
-        let datePicker = UIDatePicker()
-        // 표시될 날짜 형식 설정
-        datePicker.datePickerMode = .date
-        // 스타일 설정
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.locale = Locale(identifier: "ko-KR")
-        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
-        
-        diaryView.dateTextField.inputView = datePicker
-        diaryView.dateTextField.text = dateFormat(date: Date())
-        
-        setupToolBar()
-    }
-    
-    @objc func dateChange(_ sender: UIDatePicker) {
-        diaryView.dateTextField.text = dateFormat(date: sender.date)
-    }
-    
-    // 날짜 형식 변환
-    private func dateFormat(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy / MM / dd"
-        
-        return formatter.string(from: date)
-    }
-    
-    // 툴바 설정
-    private func setupToolBar() {
-        let toolBar = UIToolbar()
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandler))
-        
-        toolBar.sizeToFit()
-        toolBar.items = [flexibleSpace, doneButton]
-        
-        diaryView.dateTextField.inputAccessoryView = toolBar
-    }
-    
-    @objc func doneButtonHandler(_ sender: UIBarButtonItem) {
-        self.view.endEditing(true)
-    }
 }
 
 // MARK: - PHPickerViewControllerDelegate
@@ -136,7 +105,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         config.preselectedAssetIdentifiers = selectedAssetIdentifiers
         
         // 만들어준 Configuration를 사용해 PHPicker 컨트롤러 객체 생성
-        let imagePicker = PHPickerViewController(configuration: config)
+        var imagePicker = PHPickerViewController(configuration: config)
         imagePicker.delegate = self
         
         UIFactory.halfModalPresent(controller: imagePicker)
@@ -156,7 +125,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
     private func stackViewRemoveAllSubviews() {
         // 스크롤뷰의 콘텐츠 크기 조절
         photoContentViewInsetUpdate()
-
+        
         diaryView.photoStackView.subviews.forEach {
             if $0 != diaryView.plusImageView {
                 $0.removeFromSuperview()
@@ -198,6 +167,9 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
             for (index, identifier) in self.selectedAssetIdentifiers.enumerated() {
                 guard let image = imagesDict[identifier] else { return }
                 self.addImageView(image, index: index)
+                
+                // 밖에서 사용하기 위해서 만들어 줌
+                self.images.insert(image, at: index)
             }
         }
     }
@@ -246,7 +218,7 @@ extension DiaryViewController: UIScrollViewDelegate {
         for num in 0 ..< selections.count {
             inset.left = imageSizeWithSpace * CGFloat(num - 1)
         }
-    
+        
         // 이미지가 3개 이상일 때 contentInset 변경, 아니라면 초기화
         if selections.count >= 3 {
             diaryView.photoScrollView.contentInset = inset
@@ -260,7 +232,7 @@ extension DiaryViewController: UIScrollViewDelegate {
         let x = scrollView.adjustedContentInset.left
         scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
     }
-
+    
 }
 
 // MARK: - DiaryView Button Handler 델리게이트
@@ -269,6 +241,9 @@ extension DiaryViewController: DiaryViewDelegate {
     
     func saveButtonTapped(_ view: DiaryView) {
         print("Save button Tapped")
+        saveData()
+        
+        self.dismiss(animated: true)
     }
     
     func closeButtonTapped(_ view: DiaryView) {

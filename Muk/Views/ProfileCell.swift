@@ -7,22 +7,22 @@
 
 import UIKit
 
-protocol BackgroundCellDelegate: AnyObject {
-    func editButtonTapped(_ cell: BackgroundCell)
-    func deleteButtonTapped(_ cell: BackgroundCell)
+protocol ProfileCellDelegate: AnyObject {
+    func editButtonTapped(_ cell: ProfileCell)
+    func deleteButtonTapped(_ cell: ProfileCell)
     // TODO: - 나중에 데이터 받으면 다시 생각해보자(인덱스 값이랑 이미지가 필요)
-    func imageTapped(_ cell: BackgroundCell, sender: [Dictionary<String, String>]?)
+    func imageTapped(_ cell: ProfileCell, sender: [Dictionary<String, String>]?)
     
 }
 
-class BackgroundCell: UICollectionViewCell {
+class ProfileCell: UICollectionViewCell {
     
     static let identifier = "BackgroundCell"
     
+    weak var delegate: ProfileCellDelegate?
+    
     // MARK: - Properties
-    
-    var delegate: BackgroundCellDelegate?
-    
+        
     let photo1 = ["image" : "globe"]
     let photo2 = ["image" : "user"]
     let photo3 = ["image" : "location"]
@@ -36,11 +36,13 @@ class BackgroundCell: UICollectionViewCell {
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
         
-        let edit = UIAction(title: "수정하기") { [unowned self] _ in
+        let edit = UIAction(title: "수정하기") { [weak self] _ in
+            guard let self = self else { return }
             self.delegate?.editButtonTapped(self)
         }
         let delete = UIAction(title: "삭제하기",
-                              attributes: .destructive) { [unowned self] _ in
+                              attributes: .destructive) { [weak self] _ in
+            guard let self = self else { return }
             self.delegate?.deleteButtonTapped(self)
         }
         
@@ -194,7 +196,7 @@ class BackgroundCell: UICollectionViewCell {
 
 // MARK: - 스크롤뷰 델리게이트 & pagecontrol
 
-extension BackgroundCell: UIScrollViewDelegate {
+extension ProfileCell: UIScrollViewDelegate {
     
     
     private func configScrollView() {

@@ -15,12 +15,12 @@ final class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
-    lazy var backgroundCollectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = createBackgroundCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         view.backgroundColor = HexCode.background.color
         view.isUserInteractionEnabled = true
-        view.register(BackgroundCell.self, forCellWithReuseIdentifier: BackgroundCell.identifier)
+        view.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
         return view
     }()
     
@@ -48,16 +48,16 @@ extension ProfileViewController {
     
     // 내부 콜렉션뷰 셋팅
     private func setupCollectionView() {
-        self.view.addSubview(backgroundCollectionView)
+        self.view.addSubview(collectionView)
         
         configBackgroundCollectionViewDataSource()
     }
 
     // 내부 콜렉션뷰 dataSource 설정
     private func configBackgroundCollectionViewDataSource() {
-        self.dataSource = UICollectionViewDiffableDataSource(collectionView: backgroundCollectionView) { collectionView, indexPath, itemIdentifier in
+        self.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackgroundCell.identifier, for: indexPath) as? BackgroundCell else { return nil }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else { return nil }
             
             cell.delegate = self
             cell.backgroundColor = .lightGray
@@ -127,17 +127,17 @@ extension ProfileViewController {
 
 // MARK: - BackgroundCell Button Handler 델리게이트
 
-extension ProfileViewController: BackgroundCellDelegate {
+extension ProfileViewController: ProfileCellDelegate {
   
-    func editButtonTapped(_ cell: BackgroundCell) {
+    func editButtonTapped(_ cell: ProfileCell) {
         print("Edit Action")
     }
     
-    func deleteButtonTapped(_ cell: BackgroundCell) {
+    func deleteButtonTapped(_ cell: ProfileCell) {
         print("Delete Action")
     }
     
-    func imageTapped(_ cell: BackgroundCell, sender: [Dictionary<String, String>]?) {
+    func imageTapped(_ cell: ProfileCell, sender: [Dictionary<String, String>]?) {
         print("ImageView Tapped")
     }
 }

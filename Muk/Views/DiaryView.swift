@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol DiaryViewDelegate {
+protocol DiaryViewDelegate: AnyObject {
     func saveButtonTapped(_ view: DiaryView)
     func closeButtonTapped(_ view: DiaryView)
 }
 
 class DiaryView: UIView {
     
-    var delegate: DiaryViewDelegate?
+   weak var delegate: DiaryViewDelegate?
     
     // MARK: - Properties
     
@@ -25,12 +25,12 @@ class DiaryView: UIView {
     let dateTextField = UnderLindTextField()
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
-    private let placeTextField = UnderLindTextField()
-    private let locationTextField = UnderLindTextField()
+    let placeTextField = UnderLindTextField()
+    let locationTextField = UnderLindTextField()
     private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, locationTextField])
     
     private let detailLabel = UIFactory.createDiaryLabel(title: "내용")
-    private let detailTextView = UIFactory.createDiaryTextView(placeHolder: "내용을 입력하세요.")
+    let detailTextView = UIFactory.createDiaryTextView(placeHolder: "내용을 입력하세요.")
     private lazy var detailStackView = UIFactory.createDiaryStackView(arrangedSubviews: [detailLabel, detailTextView])
     
     private let photoLabel = UIFactory.createDiaryLabel(title: "사진")
@@ -57,6 +57,7 @@ class DiaryView: UIView {
         setupUI()
         setupTextField()
         setupButtons()
+        setupDatePicker()
     }
     
     required init?(coder: NSCoder) {
@@ -144,6 +145,58 @@ class DiaryView: UIView {
         closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
     }
     
+    
+}
+
+// MARK: - datePicker 설정 및 Toolbar 설정
+
+extension DiaryView {
+    // datePicker
+    private func setupDatePicker() {
+        
+        let datePicker = UIDatePicker()
+        // 표시될 날짜 형식 설정
+        datePicker.datePickerMode = .date
+        // 스타일 설정
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.locale = Locale(identifier: "ko-KR")
+        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
+        
+        dateTextField.inputView = datePicker
+        dateTextField.text = dateFormat(date: Date())
+        
+        setupToolBar()
+    }
+    
+    @objc func dateChange(_ sender: UIDatePicker) {
+        dateTextField.text = dateFormat(date: sender.date)
+    }
+    
+    // 날짜 형식 변환
+    private func dateFormat(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy / MM / dd"
+        
+        return formatter.string(from: date)
+    }
+    
+    // DatePicker 툴바 설정
+    private func setupToolBar() {
+        let toolBar = UIToolbar()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandler))
+        
+        toolBar.sizeToFit()
+        toolBar.items = [flexibleSpace, doneButton]
+        
+        dateTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc func doneButtonHandler(_ sender: UIBarButtonItem) {
+        print("DatePicker 선택 완료")
+        self.endEditing(true)
+    }
 }
 
 // MARK: - Buttom Handler
