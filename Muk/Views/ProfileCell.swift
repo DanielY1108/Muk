@@ -11,8 +11,7 @@ protocol ProfileCellDelegate: AnyObject {
     func editButtonTapped(_ cell: ProfileCell)
     func deleteButtonTapped(_ cell: ProfileCell)
     // TODO: - 나중에 데이터 받으면 다시 생각해보자(인덱스 값이랑 이미지가 필요)
-    func imageTapped(_ cell: ProfileCell, sender: [Dictionary<String, String>]?)
-    
+    func imageTapped(_ cell: ProfileCell, sender: [UIImage]?)
 }
 
 class ProfileCell: UICollectionViewCell {
@@ -22,17 +21,16 @@ class ProfileCell: UICollectionViewCell {
     weak var delegate: ProfileCellDelegate?
     
     // MARK: - Properties
-        
-    let photo1 = ["image" : "globe"]
-    let photo2 = ["image" : "user"]
-    let photo3 = ["image" : "location"]
     
-    var photoArray: [Dictionary<String, String>]! {
+    var photoArray: [UIImage]? {
         didSet {
+            guard let photoArray = photoArray else { return }
             photoPageControl.numberOfPages =  photoArray.count
+            loadPhotos(photoArray)
         }
     }
-    
+    let photoImageView = UIImageView()
+
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
         
@@ -69,7 +67,6 @@ class ProfileCell: UICollectionViewCell {
     lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
-        label.text = "2023년 04월 15일"
         return label
     }()
     
@@ -98,7 +95,6 @@ class ProfileCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textColor = .darkGray
-        label.text = "베이다드"
         return label
     }()
     
@@ -112,10 +108,6 @@ class ProfileCell: UICollectionViewCell {
     let detailLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = """
-                     기본 텍스트는 2줄
-                     입니다. 더이상 입력 불가.더이상 입력 불가.더이상 입력 불가
-                     """
         return label
     }()
     
@@ -201,30 +193,25 @@ extension ProfileCell: UIScrollViewDelegate {
     
     private func configScrollView() {
         
-        // 사진 더미 데이터
-        photoArray = [photo1, photo2, photo3]
-        
         photoScrollView.isPagingEnabled = true
         photoScrollView.showsHorizontalScrollIndicator = false
-        photoScrollView.contentSize = CGSize(width: (self.bounds.width - 60) * 3, height: 150)
-        
-        loadPhotos()
     }
     
-    private func loadPhotos() {
+    private func loadPhotos(_ photos: [UIImage]) {
         
-        for (index, photo) in photoArray.enumerated() {
+        for (index, photo) in photos.enumerated() {
             let photoImageView = UIImageView()
-            photoImageView.backgroundColor = .blue
-            photoImageView.contentMode = .scaleAspectFit
-            photoImageView.image = UIImage(named: photo["image"]!)
+            photoImageView.contentMode = .scaleAspectFill
+            photoImageView.image = photo
+        
+            photoImageView.frame.size.height = 150
+            photoImageView.frame.size.width = self.bounds.size.width - 60
+            photoImageView.frame.origin.x = CGFloat(index) * (self.bounds.size.width - 60)
             
             photoImageTapGesture(photoImageView)
             
             photoScrollView.addSubview(photoImageView)
-            photoImageView.frame.size.height = 150
-            photoImageView.frame.size.width = self.bounds.size.width - 60
-            photoImageView.frame.origin.x = CGFloat(index) * (self.bounds.size.width - 60)
+            photoScrollView.contentSize = CGSize(width: (Int(self.bounds.width) - 60) * (index + 1), height: 150)
         }
     }
     

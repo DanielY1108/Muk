@@ -13,10 +13,11 @@ enum Section {
 
 final class ProfileViewController: UIViewController {
     
-    var models = [DiaryModel]()
-    var viewModel = ProfileViewModel()
-
     // MARK: - Properties
+    
+    var models = [DiaryModel]()
+
+    var viewModel = ProfileViewModel()
     
     lazy var collectionView: UICollectionView = {
         let layout = createBackgroundCollectionViewCompositionalLayout()
@@ -72,11 +73,12 @@ extension ProfileViewController {
             }
             
             cell.delegate = self
-            cell.backgroundColor = .lightGray
+            cell.backgroundColor = .systemBackground
             
             self.viewModel.models.bind { models in
-                let images = models?[indexPath.row].images
-//              cell.photoArray = images
+                guard let images = models?[indexPath.row].images else { return }
+                cell.photoArray = images
+                cell.dateLabel.text = models?[indexPath.row].date
                 cell.placeLabel.text = models?[indexPath.row].placeName
                 cell.detailLabel.text = models?[indexPath.row].detail
             }
@@ -86,9 +88,7 @@ extension ProfileViewController {
         
         var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
         snapShot.appendSections([.main])
-        snapShot.appendItems(models)
-        collectionView.reloadData()
-
+        snapShot.appendItems(viewModel.models.value ?? [])
         dataSource.apply(snapShot)
     }
     
@@ -158,7 +158,7 @@ extension ProfileViewController: ProfileCellDelegate {
         print("Delete Action")
     }
     
-    func imageTapped(_ cell: ProfileCell, sender: [Dictionary<String, String>]?) {
+    func imageTapped(_ cell: ProfileCell, sender: [UIImage]?) {
         print("ImageView Tapped")
     }
 }
