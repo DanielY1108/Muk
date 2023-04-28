@@ -21,7 +21,7 @@ final class ProfileViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
         let layout = createBackgroundCollectionViewCompositionalLayout()
-        let view = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        let view = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         view.backgroundColor = HexCode.background.color
         view.isUserInteractionEnabled = true
         view.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -73,7 +73,6 @@ extension ProfileViewController {
             }
             
             cell.delegate = self
-            cell.backgroundColor = .systemBackground
             
             self.viewModel.models.bind { models in
                 guard let images = models?[indexPath.row].images else { return }
@@ -97,24 +96,22 @@ extension ProfileViewController {
         
         let sideInset: CGFloat = 20
         let itemInset: CGFloat = 10
+        
+        let size = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(300)
+        )
 
         let layout = UICollectionViewCompositionalLayout { sectionIndext, layoutEnvironment in
             
-            let itmeSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .fractionalHeight(1)
-            )
-            let itme = NSCollectionLayoutItem(layoutSize: itmeSize)
-            itme.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sideInset, bottom: itemInset, trailing: sideInset)
-            
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .fractionalHeight(0.4)
-            )
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [itme])
+            let itme = NSCollectionLayoutItem(layoutSize: size)
+            // contentInsets 대신 edgeSpacing 사용해야 디버그창에서 레이아웃 에러를 해결가능
+            itme.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(itemInset), trailing: nil, bottom: nil)
+   
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [itme])
             
             let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: 0, bottom: itemInset, trailing: 0)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sideInset, bottom: sideInset, trailing: sideInset)
             return section
         }
         
@@ -133,7 +130,7 @@ extension ProfileViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.backgroundColor = HexCode.background.color
-        appearance.titlePositionAdjustment = UIOffset(horizontal: -CGFloat.greatestFiniteMagnitude,
+        appearance.titlePositionAdjustment = UIOffset(horizontal: -self.view.frame.midX,
                                                       vertical: 0)
         
         navigationController?.navigationBar.standardAppearance = appearance
@@ -160,6 +157,35 @@ extension ProfileViewController: ProfileCellDelegate {
     
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?) {
         print("ImageView Tapped")
+    }
+    
+    // 콜렉션뷰 레이아웃 잡을 때, 크기를 동적으로 처리해놔서, 버튼을 통해 detailLabel의 줄수로 셀의 크기를 변경
+    func showHideButtonTapped(_ cell: ProfileCell, button: UIButton) {
+        print("show,Hide Button Tapped")
+
+        // 아마도 타이틀을 AttributedString로 만들어줘서 currentTitle값이 nil인 듯 싶다.
+        switch button.titleLabel?.text {
+        case "Show":
+            cell.detailLabel.numberOfLines = 0
+            
+            var titleAttribute = AttributedString.init("Hide")
+            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
+            
+            button.configuration?.attributedTitle = titleAttribute
+            self.collectionView.reloadData()
+
+        case "Hide":
+            cell.detailLabel.numberOfLines = 2
+            
+            var titleAttribute = AttributedString.init("Show")
+            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
+
+            button.configuration?.attributedTitle = titleAttribute
+            self.collectionView.reloadData()
+
+        default: break
+        }
+        
     }
 }
 

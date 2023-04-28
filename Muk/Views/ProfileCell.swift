@@ -10,6 +10,7 @@ import UIKit
 protocol ProfileCellDelegate: AnyObject {
     func editButtonTapped(_ cell: ProfileCell)
     func deleteButtonTapped(_ cell: ProfileCell)
+    func showHideButtonTapped(_ cell: ProfileCell, button: UIButton)
     // TODO: - 나중에 데이터 받으면 다시 생각해보자(인덱스 값이랑 이미지가 필요)
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?)
 }
@@ -80,6 +81,7 @@ class ProfileCell: UICollectionViewCell {
     private lazy var photoPageControl: UIPageControl = {
         let page = UIPageControl()
         page.currentPageIndicatorTintColor = .darkGray
+        page.tintColor = .lightGray
         page.isUserInteractionEnabled = false
         return page
     }()
@@ -111,6 +113,20 @@ class ProfileCell: UICollectionViewCell {
         return label
     }()
     
+    private lazy var showHideButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        
+        var titleAttribute = AttributedString.init("Show")
+        titleAttribute.font = .preferredFont(forTextStyle: .footnote)
+        
+        config.attributedTitle = titleAttribute
+        config.baseForegroundColor = HexCode.selected.color
+        
+        let button = UIButton(configuration: config)
+        button.addTarget(self, action: #selector(showHideButtonHandler), for: .touchUpInside)
+       return button
+    }()
+    
     
     // MARK: - Life Cycles
     
@@ -130,7 +146,9 @@ class ProfileCell: UICollectionViewCell {
     // MARK: - Configuration
     
     private func configUI() {
+        self.backgroundColor = HexCode.tabBarBackground.color
         layer.cornerRadius = 20
+        layer.borderWidth = 1
         clipsToBounds = true
         
         self.addSubview(optionButton)
@@ -162,15 +180,25 @@ class ProfileCell: UICollectionViewCell {
         placeStackView.snp.makeConstraints {
             $0.top.equalTo(photoPageControl.snp.bottom).offset(5)
             $0.leading.equalTo(photoScrollView)
+            $0.height.equalTo(20)
         }
         
         self.addSubview(detailLabel)
         detailLabel.snp.makeConstraints {
             $0.top.equalTo(placeStackView.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview().inset(30)
-            $0.height.lessThanOrEqualToSuperview().offset(-20)
+            $0.bottom.equalToSuperview().offset(-20)
+        }
+        
+        self.addSubview(showHideButton)
+        showHideButton.snp.makeConstraints {
+            $0.trailing.bottom.equalToSuperview().offset(-20)
+            $0.width.equalTo(60)
+            $0.height.equalTo(20)
         }
     }
+    
+    // MARK: - Actions
     
     private func setupMenu() {
         let menu = UIMenu(children: self.optionButtonItmes)
@@ -182,6 +210,10 @@ class ProfileCell: UICollectionViewCell {
     // 옵션 버튼 (정의 필요 없음)
     @objc func buttonHandler(_ sender: UIButton) {
         print("Option button Tapped")
+    }
+    
+    @objc func showHideButtonHandler(_ sender: UIButton) {
+        delegate?.showHideButtonTapped(self, button: sender)
     }
 }
 
