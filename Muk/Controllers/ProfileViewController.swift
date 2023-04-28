@@ -14,13 +14,11 @@ enum Section {
 final class ProfileViewController: UIViewController {
     
     // MARK: - Properties
-    
-    var models = [DiaryModel]()
-
+        
     var viewModel = ProfileViewModel()
     
     lazy var collectionView: UICollectionView = {
-        let layout = createBackgroundCollectionViewCompositionalLayout()
+        let layout = createCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         view.backgroundColor = HexCode.background.color
         view.isUserInteractionEnabled = true
@@ -28,8 +26,8 @@ final class ProfileViewController: UIViewController {
         return view
     }()
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, DiaryModel>!
 
+    
     
     // MARK: - Life Cylces
     
@@ -43,7 +41,7 @@ final class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupCollectionView()
-
+        
     }
     
     private func configUI() {
@@ -61,12 +59,13 @@ extension ProfileViewController {
     private func setupCollectionView() {
         self.view.addSubview(collectionView)
         
-        configBackgroundCollectionViewDataSource()
+        configCollectionViewDataSource()
+        viewModel.configCollectionViewSnapShot()
     }
-
+    
     // 내부 콜렉션뷰 dataSource 설정
-    private func configBackgroundCollectionViewDataSource() {
-        self.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+    private func configCollectionViewDataSource() {
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
@@ -84,15 +83,10 @@ extension ProfileViewController {
             
             return cell
         }
-        
-        var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
-        snapShot.appendSections([.main])
-        snapShot.appendItems(viewModel.models.value ?? [])
-        dataSource.apply(snapShot)
     }
     
     // 내부 콜렉션뷰 레이아웃 설정
-    private func createBackgroundCollectionViewCompositionalLayout() -> UICollectionViewLayout {
+    private func createCollectionViewCompositionalLayout() -> UICollectionViewLayout {
         
         let sideInset: CGFloat = 20
         let itemInset: CGFloat = 10
@@ -101,13 +95,13 @@ extension ProfileViewController {
             widthDimension: .fractionalWidth(1),
             heightDimension: .estimated(300)
         )
-
+        
         let layout = UICollectionViewCompositionalLayout { sectionIndext, layoutEnvironment in
             
             let itme = NSCollectionLayoutItem(layoutSize: size)
             // contentInsets 대신 edgeSpacing 사용해야 디버그창에서 레이아웃 에러를 해결가능
             itme.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(itemInset), trailing: nil, bottom: nil)
-   
+            
             let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [itme])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -117,7 +111,7 @@ extension ProfileViewController {
         
         return layout
     }
-
+    
 }
 
 
@@ -135,7 +129,7 @@ extension ProfileViewController {
         
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-                
+        
         let titleLabel = UIFactory.createNavigationTitleLabel("Profile")
         navigationItem.titleView = titleLabel
     }
@@ -146,7 +140,7 @@ extension ProfileViewController {
 // MARK: - BackgroundCell Button Handler 델리게이트
 
 extension ProfileViewController: ProfileCellDelegate {
-  
+    
     func editButtonTapped(_ cell: ProfileCell) {
         print("Edit Action")
     }
@@ -162,7 +156,7 @@ extension ProfileViewController: ProfileCellDelegate {
     // 콜렉션뷰 레이아웃 잡을 때, 크기를 동적으로 처리해놔서, 버튼을 통해 detailLabel의 줄수로 셀의 크기를 변경
     func showHideButtonTapped(_ cell: ProfileCell, button: UIButton) {
         print("show,Hide Button Tapped")
-
+        
         // 아마도 타이틀을 AttributedString로 만들어줘서 currentTitle값이 nil인 듯 싶다.
         switch button.titleLabel?.text {
         case "Show":
@@ -172,17 +166,20 @@ extension ProfileViewController: ProfileCellDelegate {
             titleAttribute.font = .preferredFont(forTextStyle: .footnote)
             
             button.configuration?.attributedTitle = titleAttribute
-            self.collectionView.reloadData()
-
+            
+            // 원래 reconfigureItems으로 해줘야 되는데, 이렇게 불러와도 업데이트가 되서 그냥 사용함.
+            viewModel.configCollectionViewSnapShot()
+            
         case "Hide":
             cell.detailLabel.numberOfLines = 2
             
             var titleAttribute = AttributedString.init("Show")
             titleAttribute.font = .preferredFont(forTextStyle: .footnote)
-
+            
             button.configuration?.attributedTitle = titleAttribute
-            self.collectionView.reloadData()
-
+            
+            viewModel.configCollectionViewSnapShot()
+            
         default: break
         }
         
@@ -200,8 +197,7 @@ extension ProfileViewController: CustomTabBarControllerDelegate {
 // DiaryViewController에서 데이터를 받아와 Obsevable의 value를 업데이트 시켜줌
 extension ProfileViewController: DiaryViewControllerDelegate {
     func loadData(viewController: DiaryViewController, model: DiaryModel) {
-        models.append(model)
-        viewModel.models.value = models
+        viewModel.appendData(model)
     }
 }
 
