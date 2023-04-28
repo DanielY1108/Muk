@@ -8,7 +8,7 @@
 import UIKit
 import PhotosUI
 
-class DiaryViewModel {
+final class DiaryViewModel {
     
     // MARK: - Properties
     

@@ -15,7 +15,7 @@ protocol ProfileCellDelegate: AnyObject {
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?)
 }
 
-class ProfileCell: UICollectionViewCell {
+final class ProfileCell: UICollectionViewCell {
     
     static let identifier = "BackgroundCell"
     

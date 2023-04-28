@@ -26,9 +26,6 @@ final class ProfileViewController: UIViewController {
         return view
     }()
     
-
-    
-    
     // MARK: - Life Cylces
     
     override func viewDidLoad() {

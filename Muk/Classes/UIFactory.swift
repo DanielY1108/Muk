@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class UIFactory {
+final class UIFactory {
     
     static let sheard = UIFactory()
     

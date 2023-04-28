@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Observable<T> {
+final class Observable<T> {
     
     // 2. value가 변하면 didSet에 의해 변경된 value 값을 갖고 listener 동작을 실행합니다.
     var value: T? {

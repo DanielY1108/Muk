@@ -12,7 +12,7 @@ protocol DiaryViewDelegate: AnyObject {
     func closeButtonTapped(_ view: DiaryView)
 }
 
-class DiaryView: UIView {
+final class DiaryView: UIView {
     
    weak var delegate: DiaryViewDelegate?
     

@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class CustomAnnotationView: MKAnnotationView {
+final class CustomAnnotationView: MKAnnotationView {
     
     lazy var backgroundView: UIView = {
         let view = UIView()

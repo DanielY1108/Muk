@@ -7,7 +7,7 @@
 
 import UIKit
 
-class UnderLindTextField: UITextField {
+final class UnderLindTextField: UITextField {
     
     private var placeholderColor: UIColor = UIColor.systemBackground
     

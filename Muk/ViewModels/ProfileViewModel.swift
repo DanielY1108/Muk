@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileViewModel {
+final class ProfileViewModel {
     
     // MARK: - Properties
     

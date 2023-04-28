@@ -13,7 +13,7 @@ protocol DiaryViewControllerDelegate: AnyObject {
     func loadData(viewController: DiaryViewController, model: DiaryModel)
 }
 
-class DiaryViewController: UIViewController {
+final class DiaryViewController: UIViewController {
     
     weak var delegate: DiaryViewControllerDelegate?
     // MARK: - Properties
