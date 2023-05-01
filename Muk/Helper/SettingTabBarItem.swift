@@ -7,10 +7,10 @@
 
 import UIKit
 
-enum TabBarItems: CaseIterable {
+enum TabBarItems: Int, CaseIterable {
     case mapVC
     case addActions
-    case userVC
+    case profileVC
     
     enum ImageOption {
         case noraml
@@ -30,7 +30,7 @@ enum TabBarItems: CaseIterable {
             }
         case .addActions:
             return nil
-        case .userVC:
+        case .profileVC:
             if option == .noraml {
                 guard let image = UIImage(named: "user") else { return UIImage() }
                 return image.resized(to: 28)

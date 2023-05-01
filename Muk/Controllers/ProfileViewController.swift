@@ -33,19 +33,37 @@ final class ProfileViewController: UIViewController {
         
         configUI()
         setupNavigationAppearance()
+        let m = DiaryModel(images: [UIImage(systemName: "plus")!, UIImage(systemName: "plus")!, UIImage(systemName: "plus")!,UIImage(systemName: "plus")!,UIImage(systemName: "plus")!], date: "2023 / 08 / 29", placeName: "베이다드베이다드베이다드베이다드", locationName: "asdf", detail: "일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일")
+        viewModel.models.value?.append(m)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupCollectionView()
-        
+        collectionView.reloadData()
     }
+
+    // MARK: - Method
     
     private func configUI() {
         guard let tabBarController = tabBarController as? CustomTabBarController else { return }
         tabBarController.customDelegate = self
-        
     }
+    
+    private func binding(cell: ProfileCell, indexPath: IndexPath) {
+        // 바인딩
+        self.viewModel.models.bind { models in
+            
+            guard let model = models?[indexPath.row],
+                  let images = model.images else { return }
+            
+            cell.photoArray = images
+            cell.dateLabel.text = model.date
+            cell.placeLabel.text = model.placeName
+            cell.detailLabel.text = model.detail
+        }
+    }
+    
 }
 
 // MARK: - 콜렉션 뷰
@@ -67,17 +85,10 @@ extension ProfileViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
             }
-            
             cell.delegate = self
-            
-            self.viewModel.models.bind { models in
-                guard let images = models?[indexPath.row].images else { return }
-                cell.photoArray = images
-                cell.dateLabel.text = models?[indexPath.row].date
-                cell.placeLabel.text = models?[indexPath.row].placeName
-                cell.detailLabel.text = models?[indexPath.row].detail
-            }
-            
+            self.binding(cell: cell, indexPath: indexPath)
+            self.viewModel.hideButtonByNumberOfLines(cell)
+
             return cell
         }
     }

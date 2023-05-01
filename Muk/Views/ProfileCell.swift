@@ -88,7 +88,8 @@ final class ProfileCell: UICollectionViewCell {
     
     private let placeImageView: UIImageView = {
         let view = UIImageView()
-        let resizeImage = UIImage(named: "location")?.resized(to: 16, tintColor: .darkGray)
+        // 크기와 색을변경 하기 위해 resized를 사용해 줌
+        let resizeImage = UIImage(named: "location")?.resized(to: 15, tintColor: .darkGray)
         view.image = resizeImage
         return view
     }()
@@ -113,7 +114,7 @@ final class ProfileCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var showHideButton: UIButton = {
+    lazy var showHideButton: UIButton = {
         var config = UIButton.Configuration.plain()
         
         var titleAttribute = AttributedString.init("Show")
@@ -126,6 +127,13 @@ final class ProfileCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(showHideButtonHandler), for: .touchUpInside)
        return button
     }()
+    
+    // MARK: - Setup Constants
+    
+    private let photoSize: CGFloat = 150
+    private let sideInset: CGFloat = 30
+    private let space: CGFloat = 10
+    
     
     
     // MARK: - Life Cycles
@@ -151,50 +159,54 @@ final class ProfileCell: UICollectionViewCell {
         layer.borderWidth = 1
         clipsToBounds = true
         
+        setupLayout()
+    }
+    
+    private func setupLayout() {
         self.addSubview(optionButton)
         optionButton.snp.makeConstraints {
-            $0.top.trailing.equalToSuperview().inset(15)
+            $0.top.trailing.equalToSuperview().inset(sideInset/2)
         }
         
         self.addSubview(dateLabel)
         dateLabel.snp.makeConstraints {
             $0.centerY.equalTo(optionButton)
-            $0.leading.equalToSuperview().offset(30)
+            $0.leading.equalToSuperview().inset(sideInset)
         }
         
         self.addSubview(photoScrollView)
         photoScrollView.snp.makeConstraints {
-            $0.top.equalTo(optionButton.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview().inset(30)
-            $0.height.equalTo(150)
+            $0.top.equalTo(optionButton.snp.bottom).offset(space)
+            $0.leading.trailing.equalToSuperview().inset(sideInset)
+            $0.height.equalTo(photoSize)
         }
         
         self.addSubview(photoPageControl)
         photoPageControl.snp.makeConstraints {
-            $0.top.equalTo(photoScrollView.snp.bottom).offset(5)
+            $0.top.equalTo(photoScrollView.snp.bottom).offset(space/2)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(20)
+            $0.height.equalTo(space)
         }
         
         self.addSubview(placeStackView)
         placeStackView.snp.makeConstraints {
-            $0.top.equalTo(photoPageControl.snp.bottom).offset(5)
+            $0.top.equalTo(photoPageControl.snp.bottom).offset(space)
             $0.leading.equalTo(photoScrollView)
-            $0.height.equalTo(20)
         }
         
         self.addSubview(detailLabel)
         detailLabel.snp.makeConstraints {
-            $0.top.equalTo(placeStackView.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview().inset(30)
-            $0.bottom.equalToSuperview().offset(-20)
+            $0.top.equalTo(placeStackView.snp.bottom).offset(space)
+            $0.leading.equalToSuperview().inset(sideInset)
+            $0.trailing.equalToSuperview().inset(sideInset)
+            $0.bottom.equalToSuperview().inset(space*2)
         }
         
         self.addSubview(showHideButton)
         showHideButton.snp.makeConstraints {
-            $0.trailing.bottom.equalToSuperview().offset(-20)
-            $0.width.equalTo(60)
-            $0.height.equalTo(20)
+            $0.leading.equalTo(detailLabel.snp.trailing)
+            $0.trailing.equalToSuperview().inset(space/2)
+            $0.bottom.equalToSuperview().inset(space*3/2)
         }
     }
     

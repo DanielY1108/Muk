@@ -16,6 +16,7 @@
 		6523D86029BF5AFD005EFBFF /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D85F29BF5AFD005EFBFF /* ProfileViewController.swift */; };
 		6523D86229BF625A005EFBFF /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D86129BF625A005EFBFF /* CustomTabBarController.swift */; };
 		6523D86529BF629A005EFBFF /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6523D86429BF629A005EFBFF /* SnapKit */; };
+		65263CC129FC3C600072ACA5 /* UILabel+LineCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65263CC029FC3C600072ACA5 /* UILabel+LineCount.swift */; };
 		652EC4FA29E83889000C795E /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EC4F929E83889000C795E /* ProfileCell.swift */; };
 		6533F9AD29D1680400C66394 /* CustomAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */; };
 		6533F9AF29D1684D00C66394 /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9AE29D1684D00C66394 /* CustomAnnotation.swift */; };
@@ -51,6 +52,7 @@
 		6523D85929BF566D005EFBFF /* SecureAPIKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SecureAPIKeys.plist; sourceTree = "<group>"; };
 		6523D85F29BF5AFD005EFBFF /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		6523D86129BF625A005EFBFF /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		65263CC029FC3C600072ACA5 /* UILabel+LineCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+LineCount.swift"; sourceTree = "<group>"; };
 		652EC4F929E83889000C795E /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotationView.swift; sourceTree = "<group>"; };
 		6533F9AE29D1684D00C66394 /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				6533F9B229D3352900C66394 /* String+addingPercentEncoding.swift */,
 				6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */,
 				65A8689A29F1311A00251120 /* CALayer+Shadow.swift */,
+				65263CC029FC3C600072ACA5 /* UILabel+LineCount.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				6523D85429BF53EE005EFBFF /* MapViewController.swift in Sources */,
 				6523D86229BF625A005EFBFF /* CustomTabBarController.swift in Sources */,
 				6533F9AD29D1680400C66394 /* CustomAnnotationView.swift in Sources */,
+				65263CC129FC3C600072ACA5 /* UILabel+LineCount.swift in Sources */,
 				6533F9B529D403EA00C66394 /* Platform.swift in Sources */,
 				6533F9B729D46E3F00C66394 /* Location.swift in Sources */,
 				6523D83C29BF526D005EFBFF /* SceneDelegate.swift in Sources */,

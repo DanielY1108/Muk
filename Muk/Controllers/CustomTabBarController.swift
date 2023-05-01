@@ -59,6 +59,12 @@ final class CustomTabBarController: UITabBarController {
         self.viewControllers = TabBarItems.allCases.map {
             return viewControllerForTabBarItem($0)
         }
+        
+        // DiaryVC에서 델리게이트로 데이터를 전달하려면 profileVC를 한번은 실행시켜줘야 델리게이트가 동작
+        self.selectedViewController = self.viewControllers?[TabBarItems.profileVC.rawValue]
+        DispatchQueue.main.async {
+            self.selectedViewController = self.viewControllers?[TabBarItems.mapVC.rawValue]
+        }
     }
     
     private func viewControllerForTabBarItem(_ itme: TabBarItems) -> UIViewController {
@@ -70,11 +76,11 @@ final class CustomTabBarController: UITabBarController {
             return mapViewController
         case .addActions:
             return UIViewController()
-        case .userVC:
+        case .profileVC:
             let profileViewController = ProfileViewController()
             let profileNavigationController = UINavigationController(rootViewController: profileViewController)
-            profileViewController.tabBarItem.image = TabBarItems.userVC.setImage(.noraml)
-            profileViewController.tabBarItem.selectedImage = TabBarItems.userVC.setImage(.filled)
+            profileViewController.tabBarItem.image = TabBarItems.profileVC.setImage(.noraml)
+            profileViewController.tabBarItem.selectedImage = TabBarItems.profileVC.setImage(.filled)
             return profileNavigationController
         }
     }
