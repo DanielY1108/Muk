@@ -75,7 +75,7 @@ extension CustomTabBar {
     
     private func addShape() {
         // 배경 레이어 (알약 모양)
-        var pillShapePath = createCapsulePath()
+        let pillShapePath = createCapsulePath()
         
         subLayer.fillColor = HexCode.tabBarBackground.color.cgColor
         subLayer.path = pillShapePath.cgPath

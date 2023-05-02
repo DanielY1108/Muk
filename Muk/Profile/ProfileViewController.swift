@@ -16,7 +16,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Properties
         
     var viewModel = ProfileViewModel()
-    
+        
     lazy var collectionView: UICollectionView = {
         let layout = createCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.frame, collectionViewLayout: layout)
@@ -33,12 +33,8 @@ final class ProfileViewController: UIViewController {
         
         configUI()
         setupNavigationAppearance()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         setupCollectionView()
-        collectionView.reloadData()
+        binding()
     }
 
     // MARK: - Method
@@ -48,20 +44,13 @@ final class ProfileViewController: UIViewController {
         tabBarController.customDelegate = self
     }
     
-    private func binding(cell: ProfileCell, indexPath: IndexPath) {
+    private func binding() {
         // 바인딩
-        self.viewModel.models.bind { models in
-            
-            guard let model = models?[indexPath.row],
-                  let images = model.images else { return }
-            
-            cell.photoArray = images
-            cell.dateLabel.text = model.date
-            cell.placeLabel.text = model.placeName
-            cell.detailLabel.text = model.detail
+        self.viewModel.models.bind { [weak self] models in
+            guard let self = self else { return }
+            self.viewModel.updateCollectionViewSnapShot()
         }
     }
-    
 }
 
 // MARK: - 콜렉션 뷰
@@ -73,19 +62,25 @@ extension ProfileViewController {
         self.view.addSubview(collectionView)
         
         configCollectionViewDataSource()
-        viewModel.configCollectionViewSnapShot()
     }
     
     // 내부 콜렉션뷰 dataSource 설정
     private func configCollectionViewDataSource() {
-        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, itemIdentifier in
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
             }
             cell.delegate = self
-            self?.binding(cell: cell, indexPath: indexPath)
-            self?.viewModel.hideButtonByNumberOfLines(cell)
+            
+            guard let models = self.viewModel.loadModels() else {
+                fatalError("Failed Load Models")
+            }
+            
+            let model = models[indexPath.row]
+                  
+            cell.congigCell(model)
+            cell.hideButtonByNumberOfLines()
 
             return cell
         }
@@ -153,6 +148,7 @@ extension ProfileViewController: ProfileCellDelegate {
     
     func deleteButtonTapped(_ cell: ProfileCell) {
         print("Delete Action")
+        viewModel.deleteModel(at: collectionView, cell: cell)
     }
     
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?) {
@@ -174,7 +170,7 @@ extension ProfileViewController: ProfileCellDelegate {
             button.configuration?.attributedTitle = titleAttribute
             
             // 원래 reconfigureItems으로 해줘야 되는데, 이렇게 불러와도 업데이트가 되서 그냥 사용함.
-            viewModel.configCollectionViewSnapShot()
+            viewModel.updateCollectionViewSnapShot()
             
         case "Hide":
             cell.detailLabel.numberOfLines = 2
@@ -184,7 +180,7 @@ extension ProfileViewController: ProfileCellDelegate {
             
             button.configuration?.attributedTitle = titleAttribute
             
-            viewModel.configCollectionViewSnapShot()
+            viewModel.updateCollectionViewSnapShot()
             
         default: break
         }

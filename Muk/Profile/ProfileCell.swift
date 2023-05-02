@@ -26,11 +26,16 @@ final class ProfileCell: UICollectionViewCell {
     var photoArray: [UIImage]? {
         didSet {
             guard let photoArray = photoArray else { return }
-            photoPageControl.numberOfPages =  photoArray.count
+            photoPageControl.numberOfPages = photoArray.count
+            
             loadPhotos(photoArray)
         }
     }
-    var photoImageView = [UIImageView]()
+    var photoImageViews = [UIImageView]() {
+        didSet {
+            scrollViewAddImageView()
+        }
+    }
 
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
@@ -134,8 +139,6 @@ final class ProfileCell: UICollectionViewCell {
     private let sideInset: CGFloat = 30
     private let space: CGFloat = 10
     
-    
-    
     // MARK: - Life Cycles
     
     override init(frame: CGRect) {
@@ -150,8 +153,33 @@ final class ProfileCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        photoImageViews.forEach { $0.image = nil }
+    }
     
     // MARK: - Configuration
+    
+    func congigCell(_ model: DiaryModel) {
+        photoArray = model.images
+        dateLabel.text = model.date
+        placeLabel.text = model.placeName
+        detailLabel.text = model.detail
+    }
+    
+    func hideButtonByNumberOfLines() {
+        if detailLabel.lineCount < 3 {
+            showHideButton.isHidden = true
+            detailLabel.snp.updateConstraints {
+                $0.trailing.equalToSuperview().inset(30)
+            }
+        } else {
+            showHideButton.isHidden = false
+            detailLabel.snp.updateConstraints {
+                $0.trailing.equalToSuperview().inset(70)
+            }
+        }
+    }
     
     private func configUI() {
         self.backgroundColor = HexCode.tabBarBackground.color
@@ -234,11 +262,19 @@ final class ProfileCell: UICollectionViewCell {
 
 extension ProfileCell: UIScrollViewDelegate {
     
-    
     private func configScrollView() {
         
         photoScrollView.isPagingEnabled = true
         photoScrollView.showsHorizontalScrollIndicator = false
+    }
+    
+    private func scrollViewAddImageView() {
+        for (index, imageView) in photoImageViews.enumerated() {
+            photoImageTapGesture(imageView)
+            
+            photoScrollView.addSubview(imageView)
+            photoScrollView.contentSize = CGSize(width: (Int(self.bounds.width) - 60) * (index + 1), height: 150)
+        }
     }
     
     private func loadPhotos(_ photos: [UIImage]) {
@@ -252,12 +288,7 @@ extension ProfileCell: UIScrollViewDelegate {
             photoImageView.frame.size.width = self.bounds.size.width - 60
             photoImageView.frame.origin.x = CGFloat(index) * (self.bounds.size.width - 60)
             
-            self.photoImageView.append(photoImageView)
-            
-            photoImageTapGesture(photoImageView)
-            
-            photoScrollView.addSubview(photoImageView)
-            photoScrollView.contentSize = CGSize(width: (Int(self.bounds.width) - 60) * (index + 1), height: 150)
+            self.photoImageViews.append(photoImageView)
         }
     }
     

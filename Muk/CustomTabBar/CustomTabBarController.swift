@@ -89,9 +89,9 @@ final class CustomTabBarController: UITabBarController {
 // MARK: - 탭바 컨트롤러 델리게이트
 
 extension CustomTabBarController: UITabBarControllerDelegate {
-    // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
-    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
 
+    // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         middleButtonAnimationEnd(anitaion: false)
 
         switch viewController {
@@ -104,8 +104,6 @@ extension CustomTabBarController: UITabBarControllerDelegate {
             middleButtonAnimationStart(anitaion: true)
         default: break
         }
-
-        return true
     }
 }
 

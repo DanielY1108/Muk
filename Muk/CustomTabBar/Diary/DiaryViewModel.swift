@@ -54,7 +54,7 @@ final class DiaryViewModel {
                 itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
                     guard let url = url else { return }
                     
-                    let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 300, height: 300))
+                    let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 1000, height: 1000))
                     
                     imagesDict[identifier] = image
                     dispatchGroup.leave()

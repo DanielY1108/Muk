@@ -127,9 +127,9 @@
 				65105DF029C1996F003A9F18 /* Extenstions */,
 				6523D84F29BF52CF005EFBFF /* Networking */,
 				6523D85029BF52D7005EFBFF /* Models */,
-				65A868A029F648B400251120 /* ViewModels */,
-				6533F9AB29D167E900C66394 /* Views */,
-				6523D85129BF52E9005EFBFF /* Controllers */,
+				65A868A029F648B400251120 /* CustomTabBar */,
+				659B27A32A012AEB00E1CA3A /* Map */,
+				6533F9AB29D167E900C66394 /* Profile */,
 			);
 			path = Muk;
 			sourceTree = "<group>";
@@ -165,15 +165,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		6523D85129BF52E9005EFBFF /* Controllers */ = {
+		6523D85129BF52E9005EFBFF /* Diary */ = {
 			isa = PBXGroup;
 			children = (
-				6523D86129BF625A005EFBFF /* CustomTabBarController.swift */,
-				6523D85329BF53EE005EFBFF /* MapViewController.swift */,
-				6523D85F29BF5AFD005EFBFF /* ProfileViewController.swift */,
+				6533F9DE29D5C9E700C66394 /* DiaryView.swift */,
 				6533F9BA29D4994800C66394 /* DiaryViewController.swift */,
+				65A868A329F6526D00251120 /* DiaryViewModel.swift */,
 			);
-			path = Controllers;
+			path = Diary;
 			sourceTree = "<group>";
 		};
 		6523D85529BF5407005EFBFF /* App */ = {
@@ -196,15 +195,14 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
-		6533F9AB29D167E900C66394 /* Views */ = {
+		6533F9AB29D167E900C66394 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */,
-				6533F9DE29D5C9E700C66394 /* DiaryView.swift */,
 				652EC4F929E83889000C795E /* ProfileCell.swift */,
-				658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */,
+				6523D85F29BF5AFD005EFBFF /* ProfileViewController.swift */,
+				65A8689E29F6424700251120 /* ProfileViewModel.swift */,
 			);
-			path = Views;
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		655E377029C19A7B00FBACAE /* Helper */ = {
@@ -215,13 +213,23 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		65A868A029F648B400251120 /* ViewModels */ = {
+		659B27A32A012AEB00E1CA3A /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				65A8689E29F6424700251120 /* ProfileViewModel.swift */,
-				65A868A329F6526D00251120 /* DiaryViewModel.swift */,
+				6533F9AC29D1680400C66394 /* CustomAnnotationView.swift */,
+				6523D85329BF53EE005EFBFF /* MapViewController.swift */,
 			);
-			path = ViewModels;
+			path = Map;
+			sourceTree = "<group>";
+		};
+		65A868A029F648B400251120 /* CustomTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */,
+				6523D86129BF625A005EFBFF /* CustomTabBarController.swift */,
+				6523D85129BF52E9005EFBFF /* Diary */,
+			);
+			path = CustomTabBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
