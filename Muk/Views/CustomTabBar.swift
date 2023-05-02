@@ -23,18 +23,7 @@ final class CustomTabBar: UITabBar {
     private(set) lazy var x: CGFloat = eachSideSpace                                       // X축으로 이동한 거리 (여백)
     private(set) lazy var y: CGFloat = -(addHeight/2 + fixedY)                             // 이미지 기준, 높이의 절반 위치
 
-    private lazy var subLayer: CAShapeLayer = {
-        let layer = CAShapeLayer()
-        layer.fillColor = HexCode.tabBarBackground.color.cgColor
-        
-        // tab bar layer 그림자 설정
-        layer.createShadow(path: pillShapePath)
-        return layer
-    }()
-    
-    // 배경 레이어
-    private lazy var pillShapePath = createCapsulePath()
-
+    private let subLayer = CAShapeLayer()
     
     // MARK: - life Cycle
     
@@ -85,18 +74,25 @@ extension CustomTabBar {
     }
     
     private func addShape() {
+        // 배경 레이어 (알약 모양)
+        var pillShapePath = createCapsulePath()
+        
+        subLayer.fillColor = HexCode.tabBarBackground.color.cgColor
         subLayer.path = pillShapePath.cgPath
+        
+        // tab bar layer 그림자 설정
+        subLayer.createShadow(path: pillShapePath)
+        
         // tab bar layer 삽입: addSublayer대신 insertSublayer(0번째 Sublayer에 대치) 사용
         self.layer.insertSublayer(subLayer, at: 0)
     }
     
     // 알약 모양으로 UIBezierPath 생성
     private func createCapsulePath() -> UIBezierPath {
-      
+        
         // 알약 모양으로 UIBezierPath 생성
         let path = UIBezierPath(roundedRect: CGRect(x: x, y: y, width: currentWidth, height: currentHeight),
                                 cornerRadius: currentHeight / 2)
-        
         return path
     }
 }

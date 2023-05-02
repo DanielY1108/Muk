@@ -10,7 +10,6 @@ import UIKit
 extension UIImage {
     
     /// 이미지의 틴트 색 변경을 위한 설정
-    ///
     /// - Parameter named: 사용할 이미지 이름
     /// - Returns: alwaysTemplate 허용한  UIImage
     static func imageWithRenderingModeAlwaysTemplate(named: String) -> UIImage? {
@@ -52,21 +51,19 @@ extension UIImage {
         }
     }
     
-    /// 불러온 이미지 사이즈 변경
-    ///
-    /// From : https://leechamin.tistory.com/558
-    private func resized(to size: CGSize) -> UIImage? {
-        // 비트맵 생성
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-        // 비트맵 그래픽 배경에 이미지 다시 그리기
-        self.draw(in: CGRect(origin: CGPoint.zero, size: size))
-        // 현재 비트맵 그래픽 배경에서 이미지 가져오기
-        guard let resizedImage = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
-        }
-        // 비트맵 환경 제거
-        UIGraphicsEndImageContext()
-        // 크기가 조정된 이미지 반환
-        return resizedImage
+    static func downsampleImage(imageAt imageURL: URL, to pointSize: CGSize, scale: CGFloat = 1) -> UIImage {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithURL(imageURL as CFURL, imageSourceOptions) else { return UIImage() }
+        
+        let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+        ] as CFDictionary
+        
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else { return UIImage() }
+        return UIImage(cgImage: downsampledImage)
     }
 }

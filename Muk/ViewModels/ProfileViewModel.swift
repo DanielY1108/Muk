@@ -23,7 +23,6 @@ final class ProfileViewModel {
     }
     
     func hideButtonByNumberOfLines(_ cell: ProfileCell) {
-        print(cell.detailLabel.lineCount)
         if cell.detailLabel.lineCount < 3 {
             cell.showHideButton.isHidden = true
             cell.detailLabel.snp.updateConstraints {

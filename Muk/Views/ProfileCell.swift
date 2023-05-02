@@ -30,7 +30,7 @@ final class ProfileCell: UICollectionViewCell {
             loadPhotos(photoArray)
         }
     }
-    let photoImageView = UIImageView()
+    var photoImageView = [UIImageView]()
 
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
@@ -251,6 +251,8 @@ extension ProfileCell: UIScrollViewDelegate {
             photoImageView.frame.size.height = 150
             photoImageView.frame.size.width = self.bounds.size.width - 60
             photoImageView.frame.origin.x = CGFloat(index) * (self.bounds.size.width - 60)
+            
+            self.photoImageView.append(photoImageView)
             
             photoImageTapGesture(photoImageView)
             

@@ -21,7 +21,7 @@ final class DiaryViewController: UIViewController {
     private let diaryView = DiaryView()
     
     private var viewModel = DiaryViewModel()
-    
+        
     // MARK: - Life Cycle
     
     override func loadView() {
@@ -55,7 +55,6 @@ extension DiaryViewController {
                                locationName: locationName,
                                detail: detail)
         
-        viewModel = DiaryViewModel(model: model)
         delegate?.loadData(viewController: self, model: model)
     }
     

@@ -50,10 +50,11 @@ final class DiaryViewModel {
             let itemProvider = result.itemProvider
             // 만약 itemProvider에서 UIImage로 로드가 가능하다면?
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
-                // 로드 핸들러를 통해 UIImage를 처리해 줍시다. (비동기적으로 동작)
-                itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                // 이미지의 url을 받아 다운샘플링하는 동작을 정의함 (비동기적으로 동작)
+                itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                    guard let url = url else { return }
                     
-                    guard let image = image as? UIImage else { return }
+                    let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 300, height: 300))
                     
                     imagesDict[identifier] = image
                     dispatchGroup.leave()
@@ -66,6 +67,9 @@ final class DiaryViewModel {
             
             // 먼저 스택뷰의 서브뷰들을 모두 제거함
             self.stackViewRemoveAllSubviews(in: view)
+            // 기존에 저장된 이미지를 제거함 (이 로직이 이미지를 다 지우고 다시 읽어오는 것이므로 만약 이미지 수정 시
+            // ProfileVC의 이미지가 선택한 이미지 + 수정한 이미지로 계속 추가되서 나타남)
+            self.images = []
             
             // 선택한 이미지의 순서대로 정렬하여 스택뷰에 올리기
             for (index, identifier) in self.selectedAssetIdentifiers.enumerated() {

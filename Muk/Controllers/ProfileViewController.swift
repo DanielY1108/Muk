@@ -33,8 +33,6 @@ final class ProfileViewController: UIViewController {
         
         configUI()
         setupNavigationAppearance()
-        let m = DiaryModel(images: [UIImage(systemName: "plus")!, UIImage(systemName: "plus")!, UIImage(systemName: "plus")!,UIImage(systemName: "plus")!,UIImage(systemName: "plus")!], date: "2023 / 08 / 29", placeName: "베이다드베이다드베이다드베이다드", locationName: "asdf", detail: "일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일일")
-        viewModel.models.value?.append(m)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,14 +78,14 @@ extension ProfileViewController {
     
     // 내부 콜렉션뷰 dataSource 설정
     private func configCollectionViewDataSource() {
-        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, itemIdentifier in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
             }
             cell.delegate = self
-            self.binding(cell: cell, indexPath: indexPath)
-            self.viewModel.hideButtonByNumberOfLines(cell)
+            self?.binding(cell: cell, indexPath: indexPath)
+            self?.viewModel.hideButtonByNumberOfLines(cell)
 
             return cell
         }
