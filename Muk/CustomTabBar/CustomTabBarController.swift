@@ -95,14 +95,13 @@ extension CustomTabBarController: UITabBarControllerDelegate {
         middleButtonAnimationEnd(anitaion: false)
 
         switch viewController {
-        case self.viewControllers?.first:
+        case is MapViewController:
             middleButton.isUserInteractionEnabled = true
-        case self.viewControllers?.last:
+        default:
             // 버튼을 disable하면 틴트색이 회색으로 변한다. 틴트 조절을 하기 위해 UIGraphicsImageRenderer 작업이 필요하지만,
             // 이렇게 터치만 안되게 설정만들어 주면 틴트 설정을 건드릴 필요 없이 코드가 짧아진다.
             middleButton.isUserInteractionEnabled = false
             middleButtonAnimationStart(anitaion: true)
-        default: break
         }
     }
 }
@@ -140,8 +139,7 @@ extension CustomTabBarController {
             // 버튼 클릭 시 할 작업 - pop 버튼 생성, 시작 애니메이션
             middleButtonAnimationStart(anitaion: true)
 
-            let popButtonCount = self.popButtons.options.count
-            self.setupPopButton(count: popButtonCount, radius: 80)
+            self.setupPopButton(radius: 80)
             
         } else {
             // 버튼 취소 시 할 작업 - pop 버튼 제거, 끝 애니메이션
@@ -164,7 +162,6 @@ extension CustomTabBarController {
             self.middleButton.layer.borderWidth = 4
             self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
             
-//            self.buttonTapped = true
             self.middleButtonTapped = anitaion
         }
     }
@@ -194,25 +191,31 @@ extension CustomTabBarController {
 // MARK: - pop 버튼 세팅
 extension CustomTabBarController {
     // pop 버튼 셋팅
-    private func setupPopButton(count: Int, radius: CGFloat) {
+    private func setupPopButton(radius: CGFloat) {
         // 45° 마다 배치
         let degrees: CGFloat = 45
         
-        for i in 0 ..< count {
+        // 만약에 버튼의 갯수 및 이미지등을 변경하고 싶으면 구조체 PopButtons에서 변경
+        let popButtonCount = self.popButtons.options.count
+
+        for _ in 0 ..< popButtonCount {
             
             let button = UIFactory.createPopButton(size: 40, isTapped: self.middleButtonTapped)
             
-            self.view.addSubview(button)
             self.popButtons.buttons.append(button)
+        }
+        
+        for (index, button) in popButtons.buttons.enumerated() {
             
+            self.view.addSubview(button)
             // 버튼 태그
-            button.tag = i
+            button.tag = index
             
             // 1° = (π / 180) rad
             // x = cos(a) * r = cos(각도) * 반지름
             // y = sin(a) * r = sin(각도) * 반지름
-            let x = cos(degrees * CGFloat(i+1) * .pi/180) * radius
-            let y = sin(degrees * CGFloat(i+1) * .pi/180) * radius
+            let x = cos(degrees * CGFloat(index+1) * .pi/180) * radius
+            let y = sin(degrees * CGFloat(index+1) * .pi/180) * radius
             
             button.snp.makeConstraints {
                 $0.centerX.equalTo(tabBar).offset(-x)
@@ -220,7 +223,7 @@ extension CustomTabBarController {
                 $0.top.equalTo(tabBar).offset(-y)
             }
             
-            button.setImage(popButtons.options[i].image, for: .normal)
+            button.setImage(popButtons.options[index].image, for: .normal)
             
             // pop 버튼이 가장 앞쪽으로 위치하게 만듬
             self.view.bringSubviewToFront(button)
@@ -252,7 +255,7 @@ extension CustomTabBarController {
     private func removePopButton() {
         
         let popButtons = self.popButtons.buttons
-       
+    
         for button in popButtons {
             
             UIView.animate(withDuration: 0.3) {
@@ -260,6 +263,7 @@ extension CustomTabBarController {
             } completion: { _ in
                 DispatchQueue.main.async {
                     button.removeFromSuperview()
+                    self.popButtons.buttons.removeAll()
                 }
             }
         }

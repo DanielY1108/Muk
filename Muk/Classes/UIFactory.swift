@@ -8,14 +8,9 @@
 import UIKit
 import SnapKit
 
-final class UIFactory {
+struct UIFactory {
     
-    static let sheard = UIFactory()
-    
-    private init() {}
-    
-    
-    class func halfModalPresent(controller: UIViewController) {
+    static func halfModalPresent(controller: UIViewController) {
         // iOS 15부터 사용 가능
         guard let sheet = controller.sheetPresentationController else { return }
         // 모달이 절반크기로 시작하고 확장이 가능
@@ -25,16 +20,13 @@ final class UIFactory {
         // 상단의 '-' 모양의 그랩바
         sheet.prefersGrabberVisible = true
     }
-    
-    
-    
 }
 
 // MARK: - CustomTabBarController UI
 
 extension UIFactory {
     // 중간 + 버튼 생성
-    class func createMiddleButton(size: CGFloat) -> UIButton {
+    static func createMiddleButton(size: CGFloat) -> UIButton {
         // 현재 심볼 이미지를 변형(size, font 등)
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
                                                       weight: .heavy,
@@ -78,7 +70,7 @@ extension UIFactory {
     ///   - size: 크기 (지름)
     ///   - isTapped: 버튼 클릭 여부 (Bool)
     /// - Returns: UIButton
-    class func createPopButton(size: CGFloat ,isTapped: Bool) -> UIButton {
+    static func createPopButton(size: CGFloat ,isTapped: Bool) -> UIButton {
         
         let button = UIButton(type: .custom)
         
@@ -122,7 +114,7 @@ extension UIFactory {
     /// 현재 위치 버튼 생성
     /// - Parameter size: 크기 (지름)
     /// - Returns: UIButton
-    class func createCurrentLocationButton(size: CGFloat) -> UIButton {
+    static func createCurrentLocationButton(size: CGFloat) -> UIButton {
         
         let button = UIButton(type: .custom)
         
@@ -151,7 +143,7 @@ extension UIFactory {
 
 extension UIFactory {
     // ProfileViewController 제목 설정
-    class func createNavigationTitleLabel(_ title: String) -> UILabel {
+    static func createNavigationTitleLabel(_ title: String) -> UILabel {
         let label = UILabel()
         label.text = title
         label.textColor = HexCode.selected.color
@@ -167,7 +159,7 @@ extension UIFactory {
 extension UIFactory {
     
     // 다이어리 label 생성
-    class func createDiaryLabel(title text: String, style: UIFont.TextStyle = .headline) -> UILabel {
+    static func createDiaryLabel(title text: String, style: UIFont.TextStyle = .headline) -> UILabel {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: style)
         label.text = text
@@ -177,7 +169,7 @@ extension UIFactory {
     }
     
     // 다이어리 textView 생성
-    class func createDiaryTextView(placeHolder: String) -> UITextView {
+    static func createDiaryTextView(placeHolder: String) -> UITextView {
         let textView = UITextView()
         textView.font = .preferredFont(forTextStyle: .subheadline)
         textView.layer.cornerRadius = 10
@@ -193,7 +185,7 @@ extension UIFactory {
     }
     
     // 다이어리 stackView 생성
-    class func createDiaryStackView(arrangedSubviews: [UIView], distribution: UIStackView.Distribution  = .fill, axis: NSLayoutConstraint.Axis = .vertical) -> UIStackView {
+    static func createDiaryStackView(arrangedSubviews: [UIView], distribution: UIStackView.Distribution  = .fill, axis: NSLayoutConstraint.Axis = .vertical) -> UIStackView {
         
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.axis = axis
@@ -204,7 +196,7 @@ extension UIFactory {
     }
     
     // 다이어리 X 버튼 생성
-    class func createCloseButton() -> UIButton {
+    static func createCloseButton() -> UIButton {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "plus")
         config.buttonSize = .large
@@ -217,7 +209,7 @@ extension UIFactory {
     }
     
     // 다이어리 저장 버튼 생성
-    class func createSaveButton() -> UIButton {
+    static func createSaveButton() -> UIButton {
         var config = UIButton.Configuration.plain()
         config.title = "저장"
         config.buttonSize = .large
@@ -230,7 +222,7 @@ extension UIFactory {
     }
     
     // 다이어리 이미지뷰 생성
-    class func createCircleImageView(size: CGFloat) -> UIImageView {
+    static func createCircleImageView(size: CGFloat) -> UIImageView {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = size/2
         imageView.clipsToBounds = true
