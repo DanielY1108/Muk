@@ -12,8 +12,6 @@ protocol KeyboardEvent where Self: UIViewController {
     func setupKeyboardEvent()
 }
 
-// FIXME: - 오직 디테일 텍스트뷰에서만 키보드를 동작시 올라가게 만들고 싶다.
-
 extension KeyboardEvent where Self: UIViewController {
     func setupKeyboardEvent() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
@@ -34,18 +32,28 @@ extension KeyboardEvent where Self: UIViewController {
     }
     
     private func keyboardWillAppear(_ notification: Notification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardRectangle = keyboardFrame.cgRectValue
-        let keyboardHeight = keyboardRectangle.height
-                
-        if transformView.frame.origin.y == 0 {
-            transformView.frame.origin.y -= keyboardHeight
+        // 현재 응답을 받는 UITextView의 크기를 전달받아 계산
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let currentTextView = UIResponder.currentResponder as? UITextView else { return }
+        
+        let keyboardTopY = keyboardFrame.cgRectValue.origin.y
+        let convertedTextViewFrame = view.convert(currentTextView.frame,
+                                                  from: currentTextView.superview)
+        // 텍스트 카운트 label 높이 ~= 20
+        let textViewBottomY = convertedTextViewFrame.origin.y + convertedTextViewFrame.size.height + 20
+
+        // 텍스트뷰 바텀 위치가 키보드 탑 위치보다 클 때 (즉, 텍스트뷰가 키보드에 가려질 때)
+        if textViewBottomY > keyboardTopY {
+            let textViewTopY = convertedTextViewFrame.origin.y
+            // 노가다를 통해서 모든 기종에 적절한 크기를 설정함.
+            let newFrame = textViewTopY - keyboardTopY/1.6
+            view.frame.origin.y -= newFrame
         }
     }
     
     private func keyboardWillDisappear(_ notification: Notification) {
-        if transformView.frame.origin.y != 0 {
-            transformView.frame.origin.y = 0
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
         }
     }
 }
