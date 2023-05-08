@@ -31,11 +31,7 @@ final class ProfileCell: UICollectionViewCell {
             loadPhotos(photoArray)
         }
     }
-    var photoImageViews = [UIImageView]() {
-        didSet {
-            scrollViewAddImageView()
-        }
-    }
+    var photoImageViews = [UIImageView]()
 
     // 옵션 버튼 액션 설정
     private var optionButtonItmes: [UIAction] {
@@ -290,6 +286,8 @@ extension ProfileCell: UIScrollViewDelegate {
             
             self.photoImageViews.append(photoImageView)
         }
+        
+        scrollViewAddImageView()
     }
     
     // 스크롤뷰를 스크롤 시, 페이지 컨트롤 위치 이동

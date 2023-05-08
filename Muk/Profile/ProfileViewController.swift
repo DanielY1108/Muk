@@ -48,6 +48,7 @@ final class ProfileViewController: UIViewController {
         // 바인딩
         self.viewModel.models.bind { [weak self] models in
             guard let self = self else { return }
+            
             self.viewModel.updateCollectionViewSnapShot()
         }
     }
@@ -148,7 +149,7 @@ extension ProfileViewController: ProfileCellDelegate {
     
     func deleteButtonTapped(_ cell: ProfileCell) {
         print("Delete Action")
-        viewModel.deleteModel(at: collectionView, cell: cell)
+        viewModel.deleteCell(cell, at: collectionView)
     }
     
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?) {
@@ -169,8 +170,7 @@ extension ProfileViewController: ProfileCellDelegate {
             
             button.configuration?.attributedTitle = titleAttribute
             
-            // 원래 reconfigureItems으로 해줘야 되는데, 이렇게 불러와도 업데이트가 되서 그냥 사용함.
-            viewModel.updateCollectionViewSnapShot()
+            viewModel.reloadCollectionViewSnapShot()
             
         case "Hide":
             cell.detailLabel.numberOfLines = 2
@@ -180,7 +180,7 @@ extension ProfileViewController: ProfileCellDelegate {
             
             button.configuration?.attributedTitle = titleAttribute
             
-            viewModel.updateCollectionViewSnapShot()
+            viewModel.reloadCollectionViewSnapShot()
             
         default: break
         }

@@ -18,23 +18,42 @@ final class ProfileViewModel {
 
     // MARK: - Methods
     
-    // snapShot에 저장된 데이터를 리로드합니다. reconfigureItems로 업데이트를 시켜줘야 하지만 생성만으로도 업데이트가 되서 그냥 사용함.
+    // snapShot을 업데이트 시킵니다. delete 동작도 이 메서드로 대체할 예정 (binding 으로 값이 변하면 자동 업데이트)
     func updateCollectionViewSnapShot() {
         DispatchQueue.global(qos: .background).async {
-            self.snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
-            self.snapShot.appendSections([.main])
-            self.snapShot.appendItems(self.models.value ?? [])
+            var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
+            snapShot.appendSections([.main])
+            snapShot.appendItems(self.loadModels() ?? [])
             
             DispatchQueue.main.async {
-                self.dataSource.apply(self.snapShot, animatingDifferences: true)
+                self.dataSource.apply(snapShot, animatingDifferences: true)
             }
         }
     }
     
-    func deleteModel(at collectionView: UICollectionView, cell: ProfileCell) {
+    func reloadCollectionViewSnapShot() {
+        var snapShot = dataSource.snapshot()
+        let items = snapShot.itemIdentifiers
+        // 기존의 셀을 유지하면서 아이템을 업데이트 한다. (prepareForReuse를 호출하지 않으므로 성능 상승)
+        snapShot.reconfigureItems(items)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapShot, animatingDifferences: false)
+        }
+    }
+    
+//    func deleteCollectionViewSnapShot(at index: Int) {
+//        var snapShot = dataSource.snapshot()
+//        let item = snapShot.itemIdentifiers[index]
+//        snapShot.deleteItems([item])
+//        DispatchQueue.main.async {
+//            self.dataSource.apply(snapShot, animatingDifferences: true)
+//        }
+//    }
+    
+    func deleteCell(_ cell: ProfileCell, at collectionView: UICollectionView) {
         guard let indexPaht = collectionView.indexPath(for: cell) else { return }
         self.removeData(indexPaht.row)
-        self.updateCollectionViewSnapShot()
+//        self.deleteCollectionViewSnapShot(at: indexPaht.row)
     }
     
     func loadModels() -> [DiaryModel]? {
