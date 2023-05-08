@@ -63,7 +63,7 @@ final class UnderLindTextField: UITextField {
 
 extension UnderLindTextField {
     @objc func editingDidBegin() {
-        underLineView.backgroundColor = UIColor.darkGray
+        underLineView.backgroundColor = HexCode.selected.color
     }
     
     @objc func editingDidEnd() {

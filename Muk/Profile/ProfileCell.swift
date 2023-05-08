@@ -161,7 +161,7 @@ final class ProfileCell: UICollectionViewCell {
     
     // MARK: - Configuration
     
-    func congigCell(_ model: DiaryModel) {
+    func configCell(_ model: DiaryModel) {
         photoArray = model.images
         dateLabel.text = model.date
         placeLabel.text = model.placeName
@@ -172,7 +172,7 @@ final class ProfileCell: UICollectionViewCell {
         if detailLabel.lineCount < 3 {
             showHideButton.isHidden = true
             detailLabel.snp.updateConstraints {
-                $0.trailing.equalToSuperview().inset(30)
+                $0.trailing.equalToSuperview().inset(20)
             }
         } else {
             showHideButton.isHidden = false

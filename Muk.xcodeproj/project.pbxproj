@@ -27,6 +27,7 @@
 		6533F9BB29D4994800C66394 /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9BA29D4994800C66394 /* DiaryViewController.swift */; };
 		6533F9DF29D5C9E700C66394 /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6533F9DE29D5C9E700C66394 /* DiaryView.swift */; };
 		653B60C029D6F7880043F239 /* UnderLindTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B60BF29D6F7880043F239 /* UnderLindTextField.swift */; };
+		655B11122A08C247004BC84B /* KeyboardEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B11112A08C247004BC84B /* KeyboardEvent.swift */; };
 		655E376F29C199E500FBACAE /* UIColor+HexCodeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */; };
 		655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
@@ -63,6 +64,7 @@
 		6533F9BA29D4994800C66394 /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
 		6533F9DE29D5C9E700C66394 /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
 		653B60BF29D6F7880043F239 /* UnderLindTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderLindTextField.swift; sourceTree = "<group>"; };
+		655B11112A08C247004BC84B /* KeyboardEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardEvent.swift; sourceTree = "<group>"; };
 		655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexCodeColor.swift"; sourceTree = "<group>"; };
 		655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */,
 				65A8689A29F1311A00251120 /* CALayer+Shadow.swift */,
 				65263CC029FC3C600072ACA5 /* UILabel+LineCount.swift */,
+				655B11112A08C247004BC84B /* KeyboardEvent.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				65A868A229F649CD00251120 /* Observable.swift in Sources */,
 				6533F9B329D3352900C66394 /* String+addingPercentEncoding.swift in Sources */,
 				65FF0DD229C8B4A400ACF031 /* PopButtonOption.swift in Sources */,
+				655B11122A08C247004BC84B /* KeyboardEvent.swift in Sources */,
 				6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */,
 				65FAE68629C624C5006D1038 /* UIImage+Resize&Retint.swift in Sources */,
 				653B60C029D6F7880043F239 /* UnderLindTextField.swift in Sources */,

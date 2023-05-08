@@ -30,8 +30,14 @@ final class DiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         setupUI()
+        setupKeyboardEvent()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        removeKeyboardObserver()
     }
     
     deinit {
@@ -169,6 +175,12 @@ extension DiaryViewController: DiaryViewDelegate {
     }
 }
 
+
+// MARK: - 키보드 생성 시 뷰를 가리지 않도록 위치를 조정하는 프로토콜
+extension DiaryViewController: KeyboardEvent {
+    var transformView: UIView { return self.diaryView }
+
+}
 
 
 // MARK: - PreView 읽기

@@ -61,7 +61,7 @@ final class ProfileViewModel {
     }
     
     func appendData(_ model: DiaryModel) {
-        models.value?.append(model)
+        models.value?.insert(model, at: 0)
     }
     
     func removeData(_ index: Int) {

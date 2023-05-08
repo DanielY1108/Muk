@@ -52,6 +52,11 @@ final class ProfileViewController: UIViewController {
             self.viewModel.updateCollectionViewSnapShot()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.viewModel.reloadCollectionViewSnapShot()
+    }
 }
 
 // MARK: - 콜렉션 뷰
@@ -80,7 +85,7 @@ extension ProfileViewController {
             
             let model = models[indexPath.row]
                   
-            cell.congigCell(model)
+            cell.configCell(model)
             cell.hideButtonByNumberOfLines()
 
             return cell

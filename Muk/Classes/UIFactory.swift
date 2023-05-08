@@ -173,9 +173,11 @@ extension UIFactory {
         let textView = UITextView()
         textView.font = .preferredFont(forTextStyle: .subheadline)
         textView.layer.cornerRadius = 10
-        textView.layer.borderWidth = 1
         textView.text = placeHolder
-        textView.backgroundColor = .clear
+        textView.textColor = .placeholderText
+        textView.backgroundColor = HexCode.unselected.color
+        textView.layer.borderColor = HexCode.selected.color.cgColor
+        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
         textView.snp.makeConstraints {
             $0.height.equalTo(80)
@@ -193,6 +195,14 @@ extension UIFactory {
         stackView.distribution = distribution
         
         return stackView
+    }
+    
+    static func createTextViewCountLabel() -> UILabel {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.textColor = .placeholderText
+        
+        return label
     }
     
     // 다이어리 X 버튼 생성
