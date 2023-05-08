@@ -29,8 +29,13 @@ final class ProfileCell: UICollectionViewCell {
             photoPageControl.numberOfPages = photoArray.count
             
             loadPhotos(photoArray)
+            
+            if photoArray.count == 0 {
+                updatePhotoScrollView()
+            }
         }
     }
+    
     var photoImageViews = [UIImageView]()
 
     // 옵션 버튼 액션 설정
@@ -231,6 +236,12 @@ final class ProfileCell: UICollectionViewCell {
             $0.leading.equalTo(detailLabel.snp.trailing)
             $0.trailing.equalToSuperview().inset(space/2)
             $0.bottom.equalToSuperview().inset(space*3/2)
+        }
+    }
+    
+    private func updatePhotoScrollView() {
+        photoScrollView.snp.updateConstraints {
+            $0.height.equalTo(0)
         }
     }
     
