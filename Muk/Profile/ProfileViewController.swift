@@ -36,6 +36,11 @@ final class ProfileViewController: UIViewController {
         setupCollectionView()
         binding()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.viewModel.reloadCollectionViewSnapShot()
+    }
 
     // MARK: - Method
     
@@ -51,11 +56,6 @@ final class ProfileViewController: UIViewController {
             
             self.viewModel.updateCollectionViewSnapShot()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.viewModel.reloadCollectionViewSnapShot()
     }
 }
 
