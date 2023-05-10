@@ -11,12 +11,12 @@ import MapKit
 final class CustomAnnotation: NSObject, MKAnnotation {
     
     @objc dynamic var coordinate: CLLocationCoordinate2D
+    var image: UIImage?
     var title: String?
-    var subtitle: String?
-    var imageName: String?
     
-    init(title: String, coordinate: CLLocationCoordinate2D) {
-        self.title = title
-        self.coordinate = coordinate
+    init(coordinate: (Double, Double), date: String, image: UIImage) {
+        self.coordinate = CLLocationCoordinate2D(latitude: coordinate.0, longitude: coordinate.1)
+        self.image = image
+        self.title = date
     }
 }

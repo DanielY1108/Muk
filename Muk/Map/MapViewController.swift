@@ -12,6 +12,9 @@ import MapKit
 final class MapViewController: UIViewController {
     
     // MARK: - Properties
+    
+    var viewModel = MapViewModel()
+    
     private let mapView = MKMapView()
     
     private let locationManager = CLLocationManager()
@@ -32,10 +35,11 @@ final class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupUI()
         setupMapView()
         setupCurrnetLocationButton()
         setupLocation()
+        setupNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,13 +49,20 @@ final class MapViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+        NotificationNameIs.saveButton.stopNotification()
     }
     
 }
 
 // MARK: - MapViewController 설정들
+
 extension MapViewController {
+    
+    private func setupUI() {
+        // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
+        guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
+        customTabBarController.customDelegate = self
+    }
     
     // 현재 위치 버튼 생성
     private func setupCurrnetLocationButton() {
@@ -82,6 +93,39 @@ extension MapViewController {
         self.mapView.setRegion(region, animated: true)
     }
     
+    private func setupNotification() {
+        NotificationNameIs.saveButton.startNotification { [weak self] notification in
+            guard let self = self,
+                  let model = notification.object as? DiaryModel,
+                  let coordinate = model.coordinate,
+                  let dateText = model.dateText else { return }
+            
+            let image = model.images?.first ?? UIImage(systemName: "plus")!
+            
+            self.addAnnotation(coordinate: coordinate,
+                               date: dateText,
+                               image: image)
+        }
+    }
+}
+
+extension MapViewController: CustomTabBarDelegate {
+    func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
+        switch presentController {
+        case is DiaryViewController:
+            print("Current Location")
+            guard let diaryVC = presentController as? DiaryViewController,
+                  let coodinate = currentCoordinate else {
+                print("Failed to get the Current Location Coordinate")
+                return
+            }
+                  
+            diaryVC.viewModel.configCoordinateData(coodinate)
+
+        default: break
+            
+        }
+    }
 }
 
 // MARK: - MapKit 설정 & 델리게이트
@@ -104,7 +148,6 @@ extension MapViewController: MKMapViewDelegate {
         
         registerMapAnnotationViews()
         centerMapOnKorea()
-        addAnnotation()
     }
     
     // 한국 중심으로 지도를 시작
@@ -115,14 +158,13 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     // annotation 추가
-    private func addAnnotation() {
-        //        let annotation1 = CustomAnnotation(title: "My Home",
-        //                                          coordinate: CLLocationCoordinate2D(latitude: 37.2719952,
-        //                                                                             longitude: 127.4348221))
-        //        annotation1.imageName = "myProfile"
-        //
-        //        allAnnotaions = [annotation1]
-        //        displayedAnnotations = allAnnotaions
+    private func addAnnotation(coordinate: (Double, Double), date: String, image: UIImage) {
+        let annotation = CustomAnnotation(coordinate: coordinate,
+                                          date: date,
+                                          image: image)
+        
+        allAnnotaions = [annotation]
+        displayedAnnotations = allAnnotaions
     }
     
     // 재사용을 위해 식별자 생성
@@ -138,7 +180,13 @@ extension MapViewController: MKMapViewDelegate {
     // annotation view 커스터마이징
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // 현재 위치 표시(점)도 일종에 어노테이션이기 때문에, 이 처리를 안하게 되면, 유저 위치 어노테이션도 변경 된다.
-        guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
+        guard !annotation.isKind(of: MKUserLocation.self) else {
+            // 유저 핀을 가장 위쪽으로 올리는 작업 (이 작업 또는 추가되는 핀을 가장 아래로 내리면 해결 됨)
+            let userAnnotaionView = MKUserLocationView(annotation: annotation,
+                                                       reuseIdentifier: "UserAnnotation")
+            userAnnotaionView.zPriority = .max
+            return userAnnotaionView
+        }
         
         var annotationView: MKAnnotationView?
         
@@ -150,7 +198,7 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // 유저 어노테이션 클릭 시 동작 안하게 만듬
+        // 유저 어노테이션 클릭은 동작 안하게 만듬
         guard !(view.annotation is MKUserLocation) else {
             mapView.deselectAnnotation(view.annotation, animated: false)
             return

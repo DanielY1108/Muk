@@ -8,9 +8,15 @@
 import UIKit
 import SnapKit
 
+protocol CustomTabBarDelegate: AnyObject {
+    func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController)
+}
+
 final class CustomTabBarController: UITabBarController {
     
     // MARK: - Properties
+    
+    var customDelegate: CustomTabBarDelegate?
     
     private let customTabBar = CustomTabBar()
     
@@ -235,9 +241,10 @@ extension CustomTabBarController {
         case 0:
             print("Search")
         case 1:
-            print("Current Location")
+            // Current Location Button Tapped
             let diaryVC = DiaryViewController()
             diaryVC.modalPresentationStyle = .fullScreen
+            customDelegate?.didSelectedPopButton(self, presentController: diaryVC)
             self.present(diaryVC, animated: true)
         default:
             print("Pin")

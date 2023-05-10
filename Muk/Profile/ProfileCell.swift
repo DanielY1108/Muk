@@ -25,14 +25,14 @@ final class ProfileCell: UICollectionViewCell {
     
     var photoArray: [UIImage]? {
         didSet {
-            guard let photoArray = photoArray else { return }
+            guard let photoArray = photoArray else {
+                updatePhotoScrollView()
+                return
+            }
+            
             photoPageControl.numberOfPages = photoArray.count
             
             loadPhotos(photoArray)
-            
-            if photoArray.count == 0 {
-                updatePhotoScrollView()
-            }
         }
     }
     
@@ -163,9 +163,9 @@ final class ProfileCell: UICollectionViewCell {
     
     func configCell(_ model: DiaryModel) {
         photoArray = model.images
-        dateLabel.text = model.date
+        dateLabel.text = model.dateText
         placeLabel.text = model.placeName
-        detailLabel.text = model.detail
+        detailLabel.text = model.detailText
     }
     
     func hideButtonByNumberOfLines() {

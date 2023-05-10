@@ -16,13 +16,16 @@ struct Document: Codable {
     let roadAddressName: String
     let placeName: String
     let placeURL: String
-    let x, y: String
+    let latitude: String
+    let longitude: String
     
     enum CodingKeys: String, CodingKey {
         case addressName = "address_name"
         case roadAddressName = "road_address_name"
         case placeName = "place_name"
         case placeURL = "place_url"
-        case x, y
+        case latitude = "y"
+        case longitude = "x"
+        
     }
 }

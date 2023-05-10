@@ -16,14 +16,6 @@ final class CustomAnnotationView: MKAnnotationView {
         view.layer.borderWidth = 1
         return view
     }()
-
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .caption1)
-        label.textColor = .orange
-        label.textAlignment = .center
-        return label
-    }()
     
     lazy var customImageView: UIImageView = {
         let view = UIImageView()
@@ -31,9 +23,17 @@ final class CustomAnnotationView: MKAnnotationView {
         view.backgroundColor = .lightGray
         return view
     }()
+
+    lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.textColor = .orange
+        label.textAlignment = .center
+        return label
+    }()
     
     lazy var stacView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [titleLabel, customImageView])
+        let view = UIStackView(arrangedSubviews: [customImageView, dateLabel])
         view.spacing = 5
         view.axis = .vertical
         return view
@@ -51,13 +51,15 @@ final class CustomAnnotationView: MKAnnotationView {
     }
     
     func configUI() {
-        self.addSubview(backgroundView)
-        backgroundView.addSubview(stacView)
+        backgroundView.layer.cornerRadius = 30
+        backgroundView.clipsToBounds = true
         
+        self.addSubview(backgroundView)
         backgroundView.snp.makeConstraints {
-            $0.width.height.equalTo(70)
+            $0.width.height.equalTo(60)
         }
-
+        
+        backgroundView.addSubview(stacView)
         stacView.snp.makeConstraints {
             $0.edges.equalTo(backgroundView).inset(5)
         }
@@ -69,7 +71,7 @@ final class CustomAnnotationView: MKAnnotationView {
     override func prepareForReuse() {
         super.prepareForReuse()
         customImageView.image = nil
-        titleLabel.text = nil
+        dateLabel.text = nil
     }
     
     // annotation이 뷰에서 표시되기 전에 호출됩니다. (값을 정할 수 있다)
@@ -78,11 +80,9 @@ final class CustomAnnotationView: MKAnnotationView {
         
         guard let annotation = annotation as? CustomAnnotation else { return }
         
-        titleLabel.text = annotation.title
+        dateLabel.text = annotation.title
         
-        guard let imageName = annotation.imageName,
-              let image = UIImage(named: imageName) else { return }
-        
+        guard let image = annotation.image else { return }
         customImageView.image = image
         
         // 이미지의 크기 및 레이블의 사이즈가 변경될 수도 있으므로 레이아웃을 업데이트 한다.
@@ -92,9 +92,9 @@ final class CustomAnnotationView: MKAnnotationView {
     override func layoutSubviews() {
         super.layoutSubviews()
         // MKAnnotationView 크기를 backgroundView 크기 만큼 정해주면 이미지를 클릭해도 동작한다.
-        frame.size = CGSize(width: 70, height: 70)
-        //
-        centerOffset = CGPoint(x: 0, y: 35)
+        frame.size = CGSize(width: 60, height: 60)
+        // 0, 0 은 어노테이션의 정중앙에 연결됨
+        centerOffset = CGPoint(x: 0, y: 30)
 
     }
 }

@@ -15,7 +15,7 @@ enum NotificationNameIs: NotificationProtocol {
     var name: Notification.Name {
         switch self {
         case .saveButton:
-            return Notification.Name("saveButton")
+            return Notification.Name("Save Button")
         }
     }
 }

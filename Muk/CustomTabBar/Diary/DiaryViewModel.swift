@@ -13,20 +13,24 @@ final class DiaryViewModel {
     // MARK: - Properties
     
     var images: [UIImage]?
-    var date: String?
+    var dateText: String?
     var placeName: String?
     var locationName: String?
-    var detail: String?
-    
+    var detailText: String?
+    var coordinate: (Double, Double)?
     
     // MARK: - Method
     
-    // 데이터들을 저장!
+    func configCoordinateData(_ coordinate: CLLocationCoordinate2D) {
+        self.coordinate = (coordinate.latitude, coordinate.longitude)
+    }
+    
+    // UI 데이터들을 저장!
     func configData(in view: DiaryView) {
-        date = view.dateTextField.text
+        dateText = view.dateTextField.text
         placeName = view.placeTextField.text
         locationName = view.locationTextField.text
-        detail = view.detailTextView.text
+        detailText = view.detailTextView.text
     }
     
     // PHPickerViewController 에서 이미지를 받아 저장함
@@ -37,7 +41,4 @@ final class DiaryViewModel {
     func makeEmptyImages() {
         images = []
     }
-
-   
-    
 }
