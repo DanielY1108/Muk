@@ -13,9 +13,13 @@ final class DiaryViewController: UIViewController {
     
     // MARK: - Properties
     
+    var viewModel = DiaryViewModel()
+
     private let diaryView = DiaryView()
-    
-    private var viewModel = DiaryViewModel()
+    // Identifier와 PHPickerResult로 만든 Dictionary (이미지 데이터를 저장하기 위해 만들어 줌)
+    private var selections = [String: PHPickerResult]()
+    // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
+    private var selectedAssetIdentifiers = [String]()
     
     // MARK: - Life Cycle
     
@@ -72,7 +76,7 @@ extension DiaryViewController {
     
 }
 
-// MARK: - PHPickerViewControllerDelegate
+// MARK: - PHPickerViewControllerDelegate & setup
 
 extension DiaryViewController : PHPickerViewControllerDelegate {
     
@@ -88,7 +92,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         // 잘은 모르겠지만, current로 설정하면 트랜스 코딩을 방지한다고 하네요!?
         config.preferredAssetRepresentationMode = .current
         // 이 동작이 있어야 PHPicker를 실행 시, 선택했던 이미지를 기억해 표시할 수 있다. (델리게이트 코드 참고)
-        config.preselectedAssetIdentifiers = viewModel.selectedAssetIdentifiers
+        config.preselectedAssetIdentifiers = selectedAssetIdentifiers
         
         // 만들어준 Configuration를 사용해 PHPicker 컨트롤러 객체 생성
         let imagePicker = PHPickerViewController(configuration: config)
@@ -96,6 +100,91 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         
         UIFactory.halfModalPresent(controller: imagePicker)
         self.present(imagePicker, animated: true)
+    }
+    
+    // 이미지를 받아 스택뷰에 이미지뷰 추가 작업, 버튼의 이미지를 항상 마지막에 위치하고 싶어 index를 받아와서 설정
+    private func addImageView(on view: DiaryView, image: UIImage, index: Int) {
+        let imageView = UIFactory.createCircleImageView(size: 90)
+        imageView.image = image
+        
+        view.photoStackView.insertArrangedSubview(imageView, at: index)
+    }
+    
+    // 스택뷰 전체를 지우는 작업
+    func stackViewRemoveAllSubviews(on view: DiaryView) {
+        // 스크롤뷰의 콘텐츠 크기 조절
+        photoContentViewInsetUpdate(view)
+        
+        view.photoStackView.subviews.forEach {
+            if $0 != view.plusImageView {
+                $0.removeFromSuperview()
+            }
+        }
+    }
+    
+    // 스택뷰에 이미지를 추가함에 따라 스크롤뷰의 콘텐츠뷰의 크기를 증가시키는 메서드
+    func photoContentViewInsetUpdate(_ view: DiaryView) {
+        // 이미지가 추가될 때 마다 커지는 크기
+        let imageSizeWithSpace = ((view.imageSize) / 2) + view.space
+        var inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        // 현재 사진 갯수에 따라 크기를 키움
+        for num in 0 ..< selections.count {
+            inset.left = imageSizeWithSpace * CGFloat(num - 1)
+        }
+        
+        // 이미지가 3개 이상일 때 contentInset 변경, 아니라면 초기화
+        if selections.count >= 3 {
+            view.photoScrollView.contentInset = inset
+        } else {
+            view.photoScrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+    }
+    
+    // 이미지를 받아오는 작업 + 아래의 이미지뷰 추가 작업까지
+    func displayImage(on view: DiaryView) {
+        
+        let dispatchGroup = DispatchGroup()
+        // identifier와 이미지로 dictionary를 만듬 (selectedAssetIdentifiers의 순서에 따라 이미지를 받을 예정입니다.)
+        var imagesDict = [String: UIImage]()
+        
+        for (identifier, result) in selections {
+            
+            dispatchGroup.enter()
+            
+            let itemProvider = result.itemProvider
+            // 만약 itemProvider에서 UIImage로 로드가 가능하다면?
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                // 이미지의 url을 받아 다운샘플링하는 동작을 정의함 (비동기적으로 동작)
+                itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                    guard let url = url else { return }
+                    
+                    let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 1000, height: 1000))
+                    
+                    imagesDict[identifier] = image
+                    dispatchGroup.leave()
+                }
+            }
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let self = self else { return }
+            
+            // 먼저 스택뷰의 서브뷰들을 모두 제거함
+            self.stackViewRemoveAllSubviews(on: view)
+            // 기존에 저장된 이미지를 제거함 (이 로직이 이미지를 다 지우고 다시 읽어오는 것이므로 만약 이미지 수정 시
+            // ProfileVC의 이미지가 선택한 이미지 + 수정한 이미지로 계속 추가되서 나타남)
+            self.viewModel.makeEmptyImages()
+            
+            // 선택한 이미지의 순서대로 정렬하여 스택뷰에 올리기
+            for (index, identifier) in self.selectedAssetIdentifiers.enumerated() {
+                guard let image = imagesDict[identifier] else { return }
+                self.addImageView(on: view, image: image, index: index)
+                
+                // 밖에서 사용하기 위해서 만들어 줌
+                self.viewModel.insertImage(image: image, at: index)
+            }
+        }
     }
     
     // picker가 종료되면 동작 합니다.
@@ -110,19 +199,19 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         for result in results {
             let identifier = result.assetIdentifier!
             // ⭐️ 여기는 WWDC에서 3분 부분을 참고하세요. (Picker의 사진의 저장 방식)
-            newSelections[identifier] = viewModel.selections[identifier] ?? result
+            newSelections[identifier] = selections[identifier] ?? result
         }
         
         // selections에 새로 만들어진 newSelection을 넣어줍시다.
-        viewModel.selections = newSelections
+        selections = newSelections
         // Picker에서 선택한 이미지의 Identifier들을 저장 (assetIdentifier은 옵셔널 값이라서 compactMap 받음)
         // 위의 PHPickerConfiguration에서 사용하기 위해서 입니다.
-        viewModel.selectedAssetIdentifiers = results.compactMap { $0.assetIdentifier }
+        selectedAssetIdentifiers = results.compactMap { $0.assetIdentifier }
         
-        if viewModel.selections.isEmpty {
-            viewModel.stackViewRemoveAllSubviews(in: diaryView)
+        if selections.isEmpty {
+            stackViewRemoveAllSubviews(on: diaryView)
         } else {
-            viewModel.displayImage(on: diaryView)
+            displayImage(on: diaryView)
         }
     }
 }
@@ -144,8 +233,13 @@ extension DiaryViewController: DiaryViewDelegate {
     
     func saveButtonTapped(_ view: DiaryView) {
         print("Save button Tapped")
-        self.viewModel.saveData(on: view)
         
+        // 데이터를 뷰모델로 저장 및 모델 생성 + 노티피케이션으로 ProfileVC로 전달
+        viewModel.configData(in: view)
+        let model = DiaryModel(viewModel)
+        
+        NotificationNameIs.saveButton.postNotification(with: model)
+    
         self.dismiss(animated: true)
     }
     
@@ -157,6 +251,7 @@ extension DiaryViewController: DiaryViewDelegate {
 
 
 // MARK: - 키보드 생성 시 뷰를 가리지 않도록 위치를 조정하는 프로토콜
+
 extension DiaryViewController: KeyboardEvent {
     var transformView: UIView { return self.diaryView }
     

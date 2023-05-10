@@ -14,7 +14,7 @@ protocol DiaryViewDelegate: AnyObject {
 
 final class DiaryView: UIView {
     
-   weak var delegate: DiaryViewDelegate?
+    weak var delegate: DiaryViewDelegate?
     
     // MARK: - Properties
     
@@ -30,11 +30,11 @@ final class DiaryView: UIView {
     private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, locationTextField])
     
     private let detailLabel = UIFactory.createDiaryLabel(title: "내용")
-    let detailTextViewPlaceHolder = "내용을 입력해주세요."
+    private let detailTextViewPlaceHolder = "내용을 입력해주세요."
     lazy var detailTextView = UIFactory.createDiaryTextView(placeHolder: detailTextViewPlaceHolder)
     private lazy var detailStackView = UIFactory.createDiaryStackView(arrangedSubviews: [detailLabel, detailTextView])
     
-    let detailTextViewLetterCountLabel = UIFactory.createTextViewCountLabel()
+    private let detailTextViewLetterCountLabel = UIFactory.createTextViewCountLabel()
     
     private let photoLabel = UIFactory.createDiaryLabel(title: "사진")
     
@@ -215,21 +215,13 @@ extension DiaryView {
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
         
         dateTextField.inputView = datePicker
-        dateTextField.text = dateFormat(date: Date())
+        dateTextField.text = DateFormatter.custom(date: Date())
         
         setupToolBar()
     }
     
     @objc func dateChange(_ sender: UIDatePicker) {
-        dateTextField.text = dateFormat(date: sender.date)
-    }
-    
-    // 날짜 형식 변환
-    private func dateFormat(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy / MM / dd"
-        
-        return formatter.string(from: date)
+        dateTextField.text = DateFormatter.custom(date: sender.date)
     }
     
     // DatePicker 툴바 설정

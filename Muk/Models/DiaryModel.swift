@@ -22,4 +22,12 @@ struct DiaryModel: Hashable {
     static func == (lhs: DiaryModel, rhs: DiaryModel) -> Bool {
           return lhs.identifier == rhs.identifier
       }
+    
+    init?(_ viewModel: DiaryViewModel) {
+        self.images = viewModel.images
+        self.date = viewModel.date
+        self.placeName = viewModel.placeName
+        self.locationName = viewModel.locationName
+        self.detail = viewModel.detail
+    }
 }

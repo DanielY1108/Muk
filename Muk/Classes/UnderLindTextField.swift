@@ -49,7 +49,7 @@ final class UnderLindTextField: UITextField {
     }
     
     // 텍스트 필드 양 사이드 공백주기
-    func addSidePadding() {
+    private func addSidePadding() {
         let size = CGSize(width: 5, height: self.frame.height)
         let paddingView = UIView(frame: CGRect(origin: .zero, size: size))
         

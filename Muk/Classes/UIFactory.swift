@@ -236,6 +236,7 @@ extension UIFactory {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = size/2
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.image = .add.withTintColor(HexCode.unselected.color)
         
         imageView.snp.makeConstraints {
