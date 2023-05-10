@@ -36,6 +36,21 @@ final class DiaryViewModel {
     
     // MARK: - Method
     
+    func saveData(on view: DiaryView) {
+        guard let date = view.dateTextField.text,
+              let placeName = view.placeTextField.text,
+              let locationName = view.locationTextField.text,
+              let detail = view.detailTextView.text else { return }
+        
+        let model = DiaryModel(images: images,
+                               date: date,
+                               placeName: placeName,
+                               locationName: locationName,
+                               detail: detail)
+    
+        NotificationNameIs.saveButton.postNotification(with: model)
+    }
+    
     // 이미지를 받아오는 작업 + 아래의 이미지뷰 추가 작업까지
     func displayImage(on view: DiaryView) {
         

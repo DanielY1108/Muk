@@ -29,6 +29,7 @@
 		653B60C029D6F7880043F239 /* UnderLindTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B60BF29D6F7880043F239 /* UnderLindTextField.swift */; };
 		655B11122A08C247004BC84B /* KeyboardEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B11112A08C247004BC84B /* KeyboardEvent.swift */; };
 		655B11142A0920B4004BC84B /* UIResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B11132A0920B4004BC84B /* UIResponder.swift */; };
+		655B11422A0A444C004BC84B /* NotificationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B11412A0A444C004BC84B /* NotificationProtocol.swift */; };
 		655E376F29C199E500FBACAE /* UIColor+HexCodeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */; };
 		655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
@@ -67,6 +68,7 @@
 		653B60BF29D6F7880043F239 /* UnderLindTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderLindTextField.swift; sourceTree = "<group>"; };
 		655B11112A08C247004BC84B /* KeyboardEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardEvent.swift; sourceTree = "<group>"; };
 		655B11132A0920B4004BC84B /* UIResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIResponder.swift; sourceTree = "<group>"; };
+		655B11412A0A444C004BC84B /* NotificationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationProtocol.swift; sourceTree = "<group>"; };
 		655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexCodeColor.swift"; sourceTree = "<group>"; };
 		655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				655B11112A08C247004BC84B /* KeyboardEvent.swift */,
+				655B11412A0A444C004BC84B /* NotificationProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				6533F9B729D46E3F00C66394 /* Location.swift in Sources */,
 				655B11142A0920B4004BC84B /* UIResponder.swift in Sources */,
 				6523D83C29BF526D005EFBFF /* SceneDelegate.swift in Sources */,
+				655B11422A0A444C004BC84B /* NotificationProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,10 +498,13 @@
 				DEVELOPMENT_TEAM = ZG488AACV6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Muk/App/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자 위치에 접근합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치에 접근합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진을 추가하겠습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -522,10 +529,13 @@
 				DEVELOPMENT_TEAM = ZG488AACV6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Muk/App/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자 위치에 접근합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치에 접근합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진을 추가하겠습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

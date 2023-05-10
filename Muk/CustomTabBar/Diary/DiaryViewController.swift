@@ -9,19 +9,14 @@ import UIKit
 import SnapKit
 import PhotosUI
 
-protocol DiaryViewControllerDelegate: AnyObject {
-    func loadData(viewController: DiaryViewController, model: DiaryModel)
-}
-
 final class DiaryViewController: UIViewController {
     
-    weak var delegate: DiaryViewControllerDelegate?
     // MARK: - Properties
     
     private let diaryView = DiaryView()
     
     private var viewModel = DiaryViewModel()
-        
+    
     // MARK: - Life Cycle
     
     override func loadView() {
@@ -30,7 +25,7 @@ final class DiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         setupUI()
         setupKeyboardEvent()
     }
@@ -49,21 +44,6 @@ final class DiaryViewController: UIViewController {
 
 extension DiaryViewController {
     
-    private func saveData() {
-        guard let date = diaryView.dateTextField.text,
-              let placeName = diaryView.placeTextField.text,
-              let locationName = diaryView.locationTextField.text,
-              let detail = diaryView.detailTextView.text else { return }
-        
-        let model = DiaryModel(images: viewModel.images,
-                               date: date,
-                               placeName: placeName,
-                               locationName: locationName,
-                               detail: detail)
-        
-        delegate?.loadData(viewController: self, model: model)
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -71,7 +51,7 @@ extension DiaryViewController {
     private func setupUI() {
         diaryView.delegate = self
         diaryView.photoScrollView.delegate = self
-
+        
         imageTapGesture()
     }
     
@@ -164,7 +144,7 @@ extension DiaryViewController: DiaryViewDelegate {
     
     func saveButtonTapped(_ view: DiaryView) {
         print("Save button Tapped")
-        saveData()
+        self.viewModel.saveData(on: view)
         
         self.dismiss(animated: true)
     }
@@ -179,7 +159,7 @@ extension DiaryViewController: DiaryViewDelegate {
 // MARK: - 키보드 생성 시 뷰를 가리지 않도록 위치를 조정하는 프로토콜
 extension DiaryViewController: KeyboardEvent {
     var transformView: UIView { return self.diaryView }
-
+    
 }
 
 

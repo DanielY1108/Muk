@@ -8,13 +8,7 @@
 import UIKit
 import SnapKit
 
-protocol CustomTabBarControllerDelegate: AnyObject {
-    func didSelectPopButton(viewController: CustomTabBarController, presentController: UIViewController)
-}
-
 final class CustomTabBarController: UITabBarController {
-    
-    weak var customDelegate: CustomTabBarControllerDelegate?
     
     // MARK: - Properties
     
@@ -89,11 +83,11 @@ final class CustomTabBarController: UITabBarController {
 // MARK: - 탭바 컨트롤러 델리게이트
 
 extension CustomTabBarController: UITabBarControllerDelegate {
-
+    
     // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         middleButtonAnimationEnd(anitaion: false)
-
+        
         switch viewController {
         case is MapViewController:
             middleButton.isUserInteractionEnabled = true
@@ -111,7 +105,7 @@ extension CustomTabBarController {
     // add 버튼 세팅
     private func setupMiddleButton() {
         self.tabBar.addSubview(middleButton)
-
+        
         // 네이게이션 아이템 대신 버튼을 사용할 것이므로, 비활성화 시켜 클릭을 방지.
         DispatchQueue.main.async {
             if let items = self.tabBar.items {
@@ -138,7 +132,7 @@ extension CustomTabBarController {
         if !middleButtonTapped {
             // 버튼 클릭 시 할 작업 - pop 버튼 생성, 시작 애니메이션
             middleButtonAnimationStart(anitaion: true)
-
+            
             self.setupPopButton(radius: 80)
             
         } else {
@@ -197,7 +191,7 @@ extension CustomTabBarController {
         
         // 만약에 버튼의 갯수 및 이미지등을 변경하고 싶으면 구조체 PopButtons에서 변경
         let popButtonCount = self.popButtons.options.count
-
+        
         for _ in 0 ..< popButtonCount {
             
             let button = UIFactory.createPopButton(size: 40, isTapped: self.middleButtonTapped)
@@ -243,7 +237,6 @@ extension CustomTabBarController {
         case 1:
             print("Current Location")
             let diaryVC = DiaryViewController()
-            customDelegate?.didSelectPopButton(viewController: self, presentController: diaryVC)
             diaryVC.modalPresentationStyle = .fullScreen
             self.present(diaryVC, animated: true)
         default:
@@ -255,7 +248,7 @@ extension CustomTabBarController {
     private func removePopButton() {
         
         let popButtons = self.popButtons.buttons
-    
+        
         for button in popButtons {
             
             UIView.animate(withDuration: 0.3) {

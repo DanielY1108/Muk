@@ -67,6 +67,4 @@ final class ProfileViewModel {
     func removeData(_ index: Int) {
         models.value?.remove(at: index)
     }
-    
-  
 }

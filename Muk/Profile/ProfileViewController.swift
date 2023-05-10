@@ -14,9 +14,9 @@ enum Section {
 final class ProfileViewController: UIViewController {
     
     // MARK: - Properties
-        
+    
     var viewModel = ProfileViewModel()
-        
+    
     lazy var collectionView: UICollectionView = {
         let layout = createCollectionViewCompositionalLayout()
         let view = UICollectionView(frame: view.frame, collectionViewLayout: layout)
@@ -32,21 +32,25 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         configUI()
-        setupNavigationAppearance()
-        setupCollectionView()
-        binding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.viewModel.reloadCollectionViewSnapShot()
+        
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationNameIs.saveButton.stopNotification()
+    }
+    
     // MARK: - Method
     
     private func configUI() {
-        guard let tabBarController = tabBarController as? CustomTabBarController else { return }
-        tabBarController.customDelegate = self
+        setupNotification()
+        setupNavigationAppearance()
+        setupCollectionView()
+        binding()
     }
     
     private func binding() {
@@ -55,6 +59,15 @@ final class ProfileViewController: UIViewController {
             guard let self = self else { return }
             
             self.viewModel.updateCollectionViewSnapShot()
+        }
+    }
+    
+    func setupNotification() {
+        NotificationNameIs.saveButton.startNotification { [weak self] notification in
+            guard let self = self,
+                  let model = notification.object as? DiaryModel else { return }
+            
+            self.viewModel.appendData(model)
         }
     }
 }
@@ -72,7 +85,7 @@ extension ProfileViewController {
     
     // 내부 콜렉션뷰 dataSource 설정
     private func configCollectionViewDataSource() {
-        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, DiaryModel>(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
@@ -84,10 +97,10 @@ extension ProfileViewController {
             }
             
             let model = models[indexPath.row]
-                  
+            
             cell.configCell(model)
             cell.hideButtonByNumberOfLines()
-
+            
             return cell
         }
     }
@@ -189,22 +202,6 @@ extension ProfileViewController: ProfileCellDelegate {
             
         default: break
         }
-        
-    }
-}
-
-// 커스텁 탭바에서 DiaryViewController로 접근하기 위해 델리게이트 사용
-extension ProfileViewController: CustomTabBarControllerDelegate {
-    func didSelectPopButton(viewController: CustomTabBarController, presentController: UIViewController) {
-        guard let diaryViewController = presentController as? DiaryViewController else { return }
-        diaryViewController.delegate = self
-    }
-}
-
-// DiaryViewController에서 데이터를 받아와 Obsevable의 value를 업데이트 시켜줌
-extension ProfileViewController: DiaryViewControllerDelegate {
-    func loadData(viewController: DiaryViewController, model: DiaryModel) {
-        viewModel.appendData(model)
     }
 }
 
