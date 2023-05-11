@@ -17,28 +17,12 @@ final class MapViewController: UIViewController {
     
     private let mapView = MKMapView()
     
-    private let locationManager = CLLocationManager()
-    
-    private var currentCoordinate: CLLocationCoordinate2D?
-    
-    private var allAnnotaions: [MKAnnotation]?
-    
-    private var displayedAnnotations: [MKAnnotation]? {
-        didSet {
-            guard let newAnnotations = displayedAnnotations else { return }
-            mapView.addAnnotations(newAnnotations)
-        }
-    }
-    
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupMapView()
-        setupCurrnetLocationButton()
-        setupLocation()
-        setupNotification()
+        binding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,11 +37,15 @@ final class MapViewController: UIViewController {
     
 }
 
-// MARK: - MapViewController 설정들
+// MARK: - MapVC 설정들
 
 extension MapViewController {
     
     private func setupUI() {
+        
+        self.setupMapView()
+        self.setupCurrnetLocationButton()
+        
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
         customTabBarController.customDelegate = self
@@ -80,38 +68,17 @@ extension MapViewController {
     @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
         
-        guard let coordinate = currentCoordinate else {
-            locationManager.requestWhenInUseAuthorization()
-            return
-        }
-        
-//        viewModel.setRegion(coordinate, on: self.mapView)
-        // 현재위치에서 어느정도 영역으로 확대할지 보여주는 메서드 (currentLocationHandelr)
-        func setRegion(_ coordinate: CLLocationCoordinate2D, on mapView: MKMapView) {
-            let region = MKCoordinateRegion(center: coordinate,
-                                            latitudinalMeters: 500,
-                                            longitudinalMeters: 500)
-            
-            mapView.setRegion(region, animated: true)
-        }
-    
+        viewModel.setRegion(on: self.mapView)
     }
     
-    // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션
-    private func setupNotification() {
-        NotificationNameIs.saveButton.startNotification { [weak self] notification in
+    private func binding() {
+        viewModel.allAnnotaions.bind { [weak self] annotations in
             guard let self = self,
-                  let model = notification.object as? DiaryModel,
-                  let coordinate = model.coordinate,
-                  let dateText = model.dateText else { return }
-            
-            let image = model.images?.first ?? UIImage(named: "emptyImage")!
-            
-            self.addAnnotation(coordinate: coordinate,
-                               date: dateText,
-                               image: image)
+                  let annotations = annotations else { return }
+            self.mapView.addAnnotations(annotations)
         }
     }
+    
 }
 
 extension MapViewController: CustomTabBarDelegate {
@@ -120,12 +87,12 @@ extension MapViewController: CustomTabBarDelegate {
         case is DiaryViewController:
             print("Send current location to DiaryVC")
             guard let diaryVC = presentController as? DiaryViewController,
-                  let currentCoordinate = currentCoordinate else {
+                  let currentCoordinate = viewModel.loadCurrentCoordinate() else {
                 print("Failed to get the Current Location Coordinate")
                 return
             }
             // DiaryVC로 현재 위치 주소를 전달
-            diaryVC.viewModel.configCoordinateData(currentCoordinate)
+            diaryVC.viewModel.transferCoordinate(currentCoordinate)
 
         default: break
             
@@ -133,7 +100,7 @@ extension MapViewController: CustomTabBarDelegate {
     }
 }
 
-// MARK: - MapKit 설정 & 델리게이트
+// MARK: - MKMapView 설정 & 델리게이트
 
 extension MapViewController: MKMapViewDelegate {
     
@@ -160,15 +127,6 @@ extension MapViewController: MKMapViewDelegate {
         let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.8)
         let span = MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4)
         mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: true)
-    }
-    
-    // annotation 추가
-    private func addAnnotation(coordinate: (Double, Double), date: String, image: UIImage) {
-        let annotation = CustomAnnotation(coordinate: coordinate,
-                                          image: image)
-        
-        allAnnotaions = [annotation]
-        displayedAnnotations = allAnnotaions
     }
     
     // 재사용을 위해 식별자 생성
@@ -212,36 +170,6 @@ extension MapViewController: MKMapViewDelegate {
     }
 }
 
-
-// MARK: - 위치 설정 & 델리게이트
-extension MapViewController: CLLocationManagerDelegate {
-    
-    func setupLocation() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-    }
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
-        case .authorizedAlways, .authorizedWhenInUse:
-            manager.startUpdatingLocation()
-            debugPrint("Location Auth: Allow")
-            
-        case .notDetermined:
-            manager.requestWhenInUseAuthorization()
-            debugPrint("Location Auth: denied")
-            
-        default:
-            print("위치 서비스를 허용하지 않음")
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentCoordinate = locations[0].coordinate
-    }
-    
-}
 
 // MARK: - PreView 읽기
 import SwiftUI

@@ -26,6 +26,5 @@ struct Document: Codable {
         case placeURL = "place_url"
         case latitude = "y"
         case longitude = "x"
-        
     }
 }

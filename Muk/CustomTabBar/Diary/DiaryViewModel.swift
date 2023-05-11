@@ -21,7 +21,7 @@ final class DiaryViewModel {
     
     // MARK: - Method
     
-    func configCoordinateData(_ coordinate: CLLocationCoordinate2D) {
+    func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
         self.coordinate = (coordinate.latitude, coordinate.longitude)
     }
     
