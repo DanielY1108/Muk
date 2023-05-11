@@ -25,9 +25,8 @@ final class MapViewController: UIViewController {
     
     private var displayedAnnotations: [MKAnnotation]? {
         didSet {
-            if let newAnnotations = displayedAnnotations {
-                mapView.addAnnotations(newAnnotations)
-            }
+            guard let newAnnotations = displayedAnnotations else { return }
+            mapView.addAnnotations(newAnnotations)
         }
     }
     
@@ -81,18 +80,24 @@ extension MapViewController {
     @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
         
-        guard let coordinaite = currentCoordinate else {
+        guard let coordinate = currentCoordinate else {
             locationManager.requestWhenInUseAuthorization()
             return
         }
         
-        let region = MKCoordinateRegion(center: coordinaite,
-                                        latitudinalMeters: 500,
-                                        longitudinalMeters: 500)
-        
-        self.mapView.setRegion(region, animated: true)
+//        viewModel.setRegion(coordinate, on: self.mapView)
+        // 현재위치에서 어느정도 영역으로 확대할지 보여주는 메서드 (currentLocationHandelr)
+        func setRegion(_ coordinate: CLLocationCoordinate2D, on mapView: MKMapView) {
+            let region = MKCoordinateRegion(center: coordinate,
+                                            latitudinalMeters: 500,
+                                            longitudinalMeters: 500)
+            
+            mapView.setRegion(region, animated: true)
+        }
+    
     }
     
+    // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션
     private func setupNotification() {
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
@@ -100,7 +105,7 @@ extension MapViewController {
                   let coordinate = model.coordinate,
                   let dateText = model.dateText else { return }
             
-            let image = model.images?.first ?? UIImage(systemName: "plus")!
+            let image = model.images?.first ?? UIImage(named: "emptyImage")!
             
             self.addAnnotation(coordinate: coordinate,
                                date: dateText,
@@ -113,14 +118,14 @@ extension MapViewController: CustomTabBarDelegate {
     func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
         switch presentController {
         case is DiaryViewController:
-            print("Current Location")
+            print("Send current location to DiaryVC")
             guard let diaryVC = presentController as? DiaryViewController,
-                  let coodinate = currentCoordinate else {
+                  let currentCoordinate = currentCoordinate else {
                 print("Failed to get the Current Location Coordinate")
                 return
             }
-                  
-            diaryVC.viewModel.configCoordinateData(coodinate)
+            // DiaryVC로 현재 위치 주소를 전달
+            diaryVC.viewModel.configCoordinateData(currentCoordinate)
 
         default: break
             
@@ -160,7 +165,6 @@ extension MapViewController: MKMapViewDelegate {
     // annotation 추가
     private func addAnnotation(coordinate: (Double, Double), date: String, image: UIImage) {
         let annotation = CustomAnnotation(coordinate: coordinate,
-                                          date: date,
                                           image: image)
         
         allAnnotaions = [annotation]

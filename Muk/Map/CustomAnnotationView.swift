@@ -10,35 +10,23 @@ import MapKit
 
 final class CustomAnnotationView: MKAnnotationView {
     
+    private let size: CGFloat = 50
+    
     lazy var backgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .darkGray
         view.layer.borderWidth = 1
+        view.layer.cornerRadius = size/2
+        view.clipsToBounds = true
         return view
     }()
     
     lazy var customImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFit
-        view.backgroundColor = .lightGray
+        view.contentMode = .scaleAspectFill
+        view.layer.cornerRadius = size/2
+        view.clipsToBounds = true
         return view
     }()
-
-    lazy var dateLabel: UILabel = {
-        let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .caption1)
-        label.textColor = .orange
-        label.textAlignment = .center
-        return label
-    }()
-    
-    lazy var stacView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [customImageView, dateLabel])
-        view.spacing = 5
-        view.axis = .vertical
-        return view
-    }()
-    
     
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
@@ -51,27 +39,23 @@ final class CustomAnnotationView: MKAnnotationView {
     }
     
     func configUI() {
-        backgroundView.layer.cornerRadius = 30
-        backgroundView.clipsToBounds = true
-        
         self.addSubview(backgroundView)
         backgroundView.snp.makeConstraints {
-            $0.width.height.equalTo(60)
+            $0.width.height.equalTo(size)
         }
         
-        backgroundView.addSubview(stacView)
-        stacView.snp.makeConstraints {
-            $0.edges.equalTo(backgroundView).inset(5)
+        backgroundView.addSubview(customImageView)
+        customImageView.snp.makeConstraints {
+            $0.edges.equalTo(backgroundView)
         }
         
-        self.canShowCallout = true
+//        self.canShowCallout = true
     }
     
     // Annotation도 재사용을 하므로 재사용전 값을 초기화 시켜서 다른 값이 들어가는 것을 방지
     override func prepareForReuse() {
         super.prepareForReuse()
         customImageView.image = nil
-        dateLabel.text = nil
     }
     
     // annotation이 뷰에서 표시되기 전에 호출됩니다. (값을 정할 수 있다)
@@ -79,9 +63,7 @@ final class CustomAnnotationView: MKAnnotationView {
         super.prepareForDisplay()
         
         guard let annotation = annotation as? CustomAnnotation else { return }
-        
-        dateLabel.text = annotation.title
-        
+            
         guard let image = annotation.image else { return }
         customImageView.image = image
         
@@ -92,9 +74,9 @@ final class CustomAnnotationView: MKAnnotationView {
     override func layoutSubviews() {
         super.layoutSubviews()
         // MKAnnotationView 크기를 backgroundView 크기 만큼 정해주면 이미지를 클릭해도 동작한다.
-        frame.size = CGSize(width: 60, height: 60)
+        frame.size = CGSize(width: size, height: size)
         // 0, 0 은 어노테이션의 정중앙에 연결됨
-        centerOffset = CGPoint(x: 0, y: 30)
+        centerOffset = CGPoint(x: 0, y: 0)
 
     }
 }

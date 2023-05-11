@@ -12,11 +12,10 @@ final class CustomAnnotation: NSObject, MKAnnotation {
     
     @objc dynamic var coordinate: CLLocationCoordinate2D
     var image: UIImage?
-    var title: String?
+    var title: String? = nil
     
-    init(coordinate: (Double, Double), date: String, image: UIImage) {
+    init(coordinate: (Double, Double), image: UIImage) {
         self.coordinate = CLLocationCoordinate2D(latitude: coordinate.0, longitude: coordinate.1)
         self.image = image
-        self.title = date
     }
 }
