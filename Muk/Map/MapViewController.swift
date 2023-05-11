@@ -147,6 +147,8 @@ extension MapViewController: MKMapViewDelegate {
             let userAnnotaionView = MKUserLocationView(annotation: annotation,
                                                        reuseIdentifier: "UserAnnotation")
             userAnnotaionView.zPriority = .max
+            // 유저 어노테이션 클릭은 동작 안하게 만듬 (didSelect에서 반응을 무시해도 소용없다.⭐️)
+            userAnnotaionView.isEnabled = false
             return userAnnotaionView
         }
         
@@ -160,13 +162,19 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // 유저 어노테이션 클릭은 동작 안하게 만듬
-        guard !(view.annotation is MKUserLocation) else {
-            mapView.deselectAnnotation(view.annotation, animated: false)
-            return
-        }
-        
         print("어노테이션이 클릭 됨")
+
+        UIView.animate(withDuration: 0.3) {
+            view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        print("어노테이션이 클릭 해제됨")
+
+        UIView.animate(withDuration: 0.3) {
+            view.transform = CGAffineTransform.identity
+        }
     }
 }
 

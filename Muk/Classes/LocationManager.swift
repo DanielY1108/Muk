@@ -37,11 +37,11 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func requestLocation() {
-        // 현재 위치를 딱 한번만 전달합니다.
+        // 현재 위치를 딱 한번만 전달합니다. (그런데 뭔가 위치를 받는게 느리다.)
         locationManager.requestLocation()
     }
     
-    // 현재 위치를 받아는 있는 메서드
+    // 현재 위치를 받아오는 있는 메서드
     func fetchLocation(completion: @escaping FetchLocationCompletion) {
         self.requestLocation()
         // completion 동작을 didFetchLocation 동작에 담는다.
@@ -78,7 +78,7 @@ extension LocationManager {
         case .authorizedAlways , .authorizedWhenInUse:
             print("Location Auth: Allow")
             // 인증 메세지 늦게 클릭하면 처음 업데이트 되는 데이터를 못받게 됨. (그래서 확인을 누를 때 위치를 한번 받아 줬다)
-            self.requestLocation()
+            self.startUpdatingLocation()
         case .notDetermined , .denied , .restricted:
             print("Location Auth: denied")
             self.stopUpdatingLocation()
