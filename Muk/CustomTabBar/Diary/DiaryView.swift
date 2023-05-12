@@ -48,8 +48,8 @@ final class DiaryView: UIView {
     // MARK: - Size Properties
     
     private let titleGap: CGFloat = 30
-    let space: CGFloat = 10
     private let sideInset: CGFloat = 40
+    let space: CGFloat = 10
     let imageSize: CGFloat = 90
     
     // MARK: - Life Cyclesd

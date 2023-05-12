@@ -35,6 +35,7 @@
 		655E377229C19A9E00FBACAE /* SettingTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */; };
 		6571153C29C44C95001F52D8 /* PreView-SwfitUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */; };
 		6585975A2A0CF54300FE4173 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658597592A0CF54300FE4173 /* LocationManager.swift */; };
+		6585975C2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6585975B2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift */; };
 		658FFD7D29EFBBD800C389F6 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */; };
 		65A8689B29F1311A00251120 /* CALayer+Shadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A8689A29F1311A00251120 /* CALayer+Shadow.swift */; };
 		65A8689D29F63D1300251120 /* DiaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A8689C29F63D1300251120 /* DiaryModel.swift */; };
@@ -77,6 +78,7 @@
 		655E377129C19A9E00FBACAE /* SettingTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTabBarItem.swift; sourceTree = "<group>"; };
 		6571153B29C44C95001F52D8 /* PreView-SwfitUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreView-SwfitUI.swift"; sourceTree = "<group>"; };
 		658597592A0CF54300FE4173 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		6585975B2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileCollectionView+CompositionalLayout.swift"; sourceTree = "<group>"; };
 		658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		65A8689A29F1311A00251120 /* CALayer+Shadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Shadow.swift"; sourceTree = "<group>"; };
 		65A8689C29F63D1300251120 /* DiaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryModel.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 		6533F9AB29D167E900C66394 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				6585975B2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift */,
 				652EC4F929E83889000C795E /* ProfileCell.swift */,
 				6523D85F29BF5AFD005EFBFF /* ProfileViewController.swift */,
 				65A8689E29F6424700251120 /* ProfileViewModel.swift */,
@@ -357,6 +360,7 @@
 				65A8689F29F6424700251120 /* ProfileViewModel.swift in Sources */,
 				6533F9DF29D5C9E700C66394 /* DiaryView.swift in Sources */,
 				6533F9BB29D4994800C66394 /* DiaryViewController.swift in Sources */,
+				6585975C2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift in Sources */,
 				658FFD7D29EFBBD800C389F6 /* CustomTabBar.swift in Sources */,
 				6523D86029BF5AFD005EFBFF /* ProfileViewController.swift in Sources */,
 				6523D85429BF53EE005EFBFF /* MapViewController.swift in Sources */,

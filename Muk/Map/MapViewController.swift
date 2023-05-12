@@ -13,7 +13,7 @@ final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel = MapViewModel()
+    private(set) var viewModel = MapViewModel()
     
     private let mapView = MKMapView()
     
@@ -22,7 +22,6 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        binding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -32,12 +31,12 @@ final class MapViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationNameIs.saveButton.stopNotification()
+        viewModel.stopNotification()
     }
     
 }
 
-// MARK: - MapVC 설정들
+// MARK: - UI 설정
 
 extension MapViewController {
     
@@ -45,6 +44,7 @@ extension MapViewController {
         
         self.setupMapView()
         self.setupCurrnetLocationButton()
+        self.binding()
         
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
@@ -78,7 +78,6 @@ extension MapViewController {
             self.mapView.addAnnotations(annotations)
         }
     }
-    
 }
 
 extension MapViewController: CustomTabBarDelegate {

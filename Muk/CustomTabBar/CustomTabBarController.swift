@@ -28,7 +28,7 @@ final class CustomTabBarController: UITabBarController {
     private var middleButtonTapped = false
     
     // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
-    var popButtons = PopButtons()
+    private var popButtons = PopButtons()
     
     
     

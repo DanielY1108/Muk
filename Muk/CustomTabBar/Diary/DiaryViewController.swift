@@ -13,13 +13,13 @@ final class DiaryViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel = DiaryViewModel()
+    private(set) var viewModel = DiaryViewModel()
 
     private let diaryView = DiaryView()
     // Identifier와 PHPickerResult로 만든 Dictionary (이미지 데이터를 저장하기 위해 만들어 줌)
-    private var selections = [String: PHPickerResult]()
+    private(set) var selections = [String: PHPickerResult]()
     // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
-    private var selectedAssetIdentifiers = [String]()
+    private(set) var selectedAssetIdentifiers = [String]()
     
     // MARK: - Life Cycle
     
@@ -234,11 +234,9 @@ extension DiaryViewController: DiaryViewDelegate {
     func saveButtonTapped(_ view: DiaryView) {
         print("Save button Tapped")
         
-        // 데이터를 뷰모델로 저장 및 모델 생성 + 노티피케이션으로 ProfileVC로 전달
+        // 데이터를 뷰모델로 저장 + 노티피케이션으로 ProfileVC로 전달
         viewModel.configData(in: view)
-        let model = DiaryModel(viewModel)
-        
-        NotificationNameIs.saveButton.postNotification(with: model)
+        NotificationNameIs.saveButton.postNotification(with: viewModel)
     
         self.dismiss(animated: true)
     }

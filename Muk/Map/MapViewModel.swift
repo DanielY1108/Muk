@@ -13,10 +13,10 @@ final class MapViewModel {
     
     // MARK: - Properties
     
-    private var locationManager = LocationManager()
-    private var currentCoordinate: CLLocationCoordinate2D?
+    private(set) var locationManager = LocationManager()
+    private(set) var currentCoordinate: CLLocationCoordinate2D?
     
-    var allAnnotaions: Observable<[CustomAnnotation]> = Observable([])
+    private(set) var allAnnotaions: Observable<[CustomAnnotation]> = Observable([])
     
     // MARK: - Initializer
     
@@ -75,12 +75,12 @@ extension MapViewModel {
     private func setupNotification() {
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
-                  let model = notification.object as? DiaryModel,
-                  let coordinate = model.coordinate else {
+                  let diaryViewModel = notification.object as? DiaryViewModel,
+                  let coordinate = diaryViewModel.coordinate else {
                 return
             }
             
-            let image = model.images?.first ?? UIImage(named: "emptyImage")!
+            let image = diaryViewModel.images?.first ?? UIImage(named: "emptyImage")!
             
             // 어노테이션 생성 및 추가
             let annotation = CustomAnnotation(coordinate: coordinate, image: image)
@@ -88,6 +88,7 @@ extension MapViewModel {
         }
     }
     
-
-    
+    func stopNotification() {
+        NotificationNameIs.saveButton.stopNotification()
+    }
 }

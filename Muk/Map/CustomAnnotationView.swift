@@ -48,8 +48,6 @@ final class CustomAnnotationView: MKAnnotationView {
         customImageView.snp.makeConstraints {
             $0.edges.equalTo(backgroundView)
         }
-        
-//        self.canShowCallout = true
     }
     
     // Annotation도 재사용을 하므로 재사용전 값을 초기화 시켜서 다른 값이 들어가는 것을 방지

@@ -15,16 +15,9 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel = ProfileViewModel()
+    private(set) var viewModel = ProfileViewModel()
     
-    lazy var collectionView: UICollectionView = {
-        let layout = createCollectionViewCompositionalLayout()
-        let view = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-        view.backgroundColor = HexCode.background.color
-        view.isUserInteractionEnabled = true
-        view.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
-        return view
-    }()
+    private(set) var collectionView: UICollectionView!
     
     // MARK: - Life Cylces
     
@@ -41,33 +34,24 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationNameIs.saveButton.stopNotification()
+        viewModel.stopNotification()
     }
     
     // MARK: - Method
     
     private func configUI() {
-        setupNotification()
-        setupNavigationAppearance()
+        setupNavigationBarAppearance()
         setupCollectionView()
+        viewModel.setupNotification()
         binding()
     }
     
     private func binding() {
         // 바인딩
-        self.viewModel.models.bind { [weak self] models in
+        viewModel.models.bind { [weak self] models in
             guard let self = self else { return }
             
             self.viewModel.updateCollectionViewSnapShot()
-        }
-    }
-    
-    func setupNotification() {
-        NotificationNameIs.saveButton.startNotification { [weak self] notification in
-            guard let self = self,
-                  let model = notification.object as? DiaryModel else { return }
-            
-            self.viewModel.appendData(model)
         }
     }
 }
@@ -78,72 +62,32 @@ extension ProfileViewController {
     
     // 내부 콜렉션뷰 셋팅
     private func setupCollectionView() {
+        let layout = createCollectionViewCompositionalLayout()
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        collectionView.backgroundColor = HexCode.background.color
+        // cell의 버튼, 이미지 등 상호작용을 위해 true
+        collectionView.isUserInteractionEnabled = true
+        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
         self.view.addSubview(collectionView)
         
-        configCollectionViewDataSource()
-    }
-    
-    // 내부 콜렉션뷰 dataSource 설정
-    private func configCollectionViewDataSource() {
-        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, DiaryModel>(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
-            
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
-                fatalError("Failed Cell Load")
-            }
+        // DataSource 생성 및 cell의 커스텀 델리게이트 생성
+        viewModel.configDataSource(on: collectionView) { cell in
             cell.delegate = self
-            
-            guard let models = self.viewModel.loadModels() else {
-                fatalError("Failed Load Models")
-            }
-            
-            let model = models[indexPath.row]
-            
-            cell.configCell(model)
-            cell.hideButtonByNumberOfLines()
-            
-            return cell
         }
     }
-    
-    // 내부 콜렉션뷰 레이아웃 설정
-    private func createCollectionViewCompositionalLayout() -> UICollectionViewLayout {
-        
-        let sideInset: CGFloat = 20
-        let itemInset: CGFloat = 10
-        
-        let size = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(300)
-        )
-        
-        let layout = UICollectionViewCompositionalLayout { sectionIndext, layoutEnvironment in
-            
-            let itme = NSCollectionLayoutItem(layoutSize: size)
-            // contentInsets 대신 edgeSpacing 사용해야 디버그창에서 레이아웃 에러를 해결가능
-            itme.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(itemInset), trailing: nil, bottom: nil)
-            
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [itme])
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sideInset, bottom: sideInset, trailing: sideInset)
-            return section
-        }
-        
-        return layout
-    }
-    
 }
 
 
-// MARK: - 네비게이션 컨트롤러 세팅
+// MARK: - 네비게이션바 세팅
 
 extension ProfileViewController {
     
-    private func setupNavigationAppearance() {
+    private func setupNavigationBarAppearance() {
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.backgroundColor = HexCode.background.color
+        // 제목을 좌측으로 이동시켜줌
         appearance.titlePositionAdjustment = UIOffset(horizontal: -self.view.frame.midX,
                                                       vertical: 0)
         
@@ -157,7 +101,7 @@ extension ProfileViewController {
 }
 
 
-// MARK: - BackgroundCell Button Handler 델리게이트
+// MARK: - ProfileCell Button Handler 델리게이트
 
 extension ProfileViewController: ProfileCellDelegate {
     

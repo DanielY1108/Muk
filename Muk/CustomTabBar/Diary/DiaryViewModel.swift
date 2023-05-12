@@ -8,22 +8,28 @@
 import UIKit
 import PhotosUI
 
-final class DiaryViewModel {
+// ProfileVC의 UICollectionViewDiffableDataSource에 사용을 위해 hasable을 사용
+final class DiaryViewModel: Hashable {
     
+    static func == (lhs: DiaryViewModel, rhs: DiaryViewModel) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+    }
+
     // MARK: - Properties
     
-    var images: [UIImage]?
-    var dateText: String?
-    var placeName: String?
-    var locationName: String?
-    var detailText: String?
-    var coordinate: (Double, Double)?
+    private(set) var identifier = UUID()
+    private(set) var images: [UIImage]?
+    private(set) var dateText: String?
+    private(set) var placeName: String?
+    private(set) var locationName: String?
+    private(set) var detailText: String?
+    private(set) var coordinate: (Double, Double)?
     
     // MARK: - Method
-    
-    func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
-        self.coordinate = (coordinate.latitude, coordinate.longitude)
-    }
     
     // UI 데이터들을 저장!
     func configData(in view: DiaryView) {
@@ -40,5 +46,10 @@ final class DiaryViewModel {
     
     func makeEmptyImages() {
         images = []
+    }
+    
+    // MapView에서 coordinate를 전달받음
+    func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
+        self.coordinate = (coordinate.latitude, coordinate.longitude)
     }
 }
