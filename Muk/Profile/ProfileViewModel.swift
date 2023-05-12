@@ -32,8 +32,12 @@ final class ProfileViewModel {
     }
     
     func deleteCell(_ cell: ProfileCell, at collectionView: UICollectionView) {
-        guard let indexPaht = collectionView.indexPath(for: cell) else { return }
-        self.removeData(indexPaht.row)
+        guard let indexPath = collectionView.indexPath(for: cell),
+              let uuid = models.value?[indexPath.row].identifier else { return }
+        // 노티피케이션을 통해 MapVC로 UUID전달
+        NotificationNameIs.deleteBtton.postNotification(with: uuid)
+        self.removeData(indexPath.row)
+        
 //        self.deleteCollectionViewSnapShot(at: indexPaht.row)
     }
     

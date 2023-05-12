@@ -72,10 +72,18 @@ extension MapViewController {
     }
     
     private func binding() {
-        viewModel.allAnnotaions.bind { [weak self] annotations in
+        viewModel.selectedAnnotation.bind { [weak self] annotation in
             guard let self = self,
-                  let annotations = annotations else { return }
-            self.mapView.addAnnotations(annotations)
+                  let annotation = annotation else { return }
+            
+            // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
+            switch annotation.process {
+            case .save:
+                self.mapView.addAnnotation(annotation)
+            case .delete:
+                self.mapView.removeAnnotation(annotation)
+            default: break
+            }
         }
     }
 }

@@ -11,15 +11,17 @@ import UIKit
 enum NotificationNameIs: NotificationProtocol {
     
     case saveButton
+    case deleteBtton
     
     var name: Notification.Name {
         switch self {
         case .saveButton:
             return Notification.Name("Save Button")
+        case .deleteBtton:
+            return Notification.Name("Delete Button")
         }
     }
 }
-
 
 protocol NotificationProtocol {
     var name: Notification.Name { get }
