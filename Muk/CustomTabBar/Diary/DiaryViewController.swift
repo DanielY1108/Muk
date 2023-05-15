@@ -235,9 +235,9 @@ extension DiaryViewController: DiaryViewDelegate {
         print("Save button Tapped")
         
         // 데이터를 뷰모델로 저장 + 노티피케이션으로 ProfileVC로 전달
-        viewModel.configData(in: view)
-        NotificationNameIs.saveButton.postNotification(with: viewModel)
-    
+        viewModel.configData(on: view)
+        viewModel.postNotification()
+        
         self.dismiss(animated: true)
     }
     

@@ -18,7 +18,7 @@ final class DiaryViewModel: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(identifier)
     }
-
+    
     // MARK: - Properties
     
     private(set) var identifier = UUID()
@@ -32,7 +32,7 @@ final class DiaryViewModel: Hashable {
     // MARK: - Method
     
     // UI 데이터들을 저장!
-    func configData(in view: DiaryView) {
+    func configData(on view: DiaryView) {
         dateText = view.dateTextField.text
         placeName = view.placeTextField.text
         locationName = view.locationTextField.text
@@ -51,5 +51,9 @@ final class DiaryViewModel: Hashable {
     // MapView에서 coordinate를 전달받음
     func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
         self.coordinate = (coordinate.latitude, coordinate.longitude)
+    }
+    
+    func postNotification() {
+        NotificationNameIs.saveButton.postNotification(with: self)
     }
 }

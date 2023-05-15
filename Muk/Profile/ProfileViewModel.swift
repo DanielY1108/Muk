@@ -106,7 +106,7 @@ extension ProfileViewModel {
 
 extension ProfileViewModel {
     
-    func setupNotification() {
+    func startNotificationWithCompletion() {
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
                   let diaryViewModel = notification.object as? DiaryViewModel else { return }

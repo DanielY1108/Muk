@@ -42,7 +42,7 @@ final class ProfileViewController: UIViewController {
     private func configUI() {
         setupNavigationBarAppearance()
         setupCollectionView()
-        viewModel.setupNotification()
+        viewModel.startNotificationWithCompletion()
         binding()
     }
     

@@ -23,7 +23,7 @@ final class MapViewModel {
     
     init() {
         self.fetchLocation()
-        self.setupNotification()
+        self.startNotificationWithCompletion()
     }
     
     // MARK: - Methods
@@ -73,7 +73,7 @@ extension MapViewModel {
 
 extension MapViewModel {
     
-    private func setupNotification() {
+    private func startNotificationWithCompletion() {
         // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션 데이터를 저장한다.
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
