@@ -77,18 +77,18 @@ extension MapViewModel {
         // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션 데이터를 저장한다.
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
-                  let diaryViewModel = notification.object as? DiaryViewModel,
+                  let diaryModel = notification.object as? DiaryModel,
                   // FIXME: - 어짜피 위치는 항상 존재해야 하니까 옵셔널 형태가 필요없을 것 같다.
-                  let coordinate = diaryViewModel.coordinate else {
+                  let coordinate = diaryModel.coordinate else {
                 return
             }
             
-            let image = diaryViewModel.images?.first ?? UIImage(named: "emptyImage")!
+            let image = diaryModel.images?.first ?? UIImage(named: "emptyImage")!
             
             // 어노테이션 생성 및 추가
             let annotation = CustomAnnotation(coordinate: coordinate,
                                               image: image,
-                                              identifier: diaryViewModel.identifier)
+                                              identifier: diaryModel.identifier)
             
             self.allAnnotaions.append(annotation)
             

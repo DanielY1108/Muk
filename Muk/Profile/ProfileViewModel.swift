@@ -11,19 +11,19 @@ final class ProfileViewModel {
     
     // MARK: - Properties
     
-    private(set) var models: Observable<[DiaryViewModel]> = Observable([])
+    private(set) var models: Observable<[DiaryModel]> = Observable([])
     
-    private(set) var dataSource: UICollectionViewDiffableDataSource<Section, DiaryViewModel>!
-    private(set) var snapShot: NSDiffableDataSourceSnapshot<Section, DiaryViewModel>!
+    private(set) var dataSource: UICollectionViewDiffableDataSource<Section, DiaryModel>!
+    private(set) var snapShot: NSDiffableDataSourceSnapshot<Section, DiaryModel>!
 
     // MARK: - Methods
         
-    func loadModels() -> [DiaryViewModel]? {
+    func loadModels() -> [DiaryModel]? {
         return models.value
     }
     
     // insert로 하면 최신이 위로 올라가게 된다.
-    func appendModel(_ model: DiaryViewModel) {
+    func appendModel(_ model: DiaryModel) {
         models.value?.insert(model, at: 0)
     }
     
@@ -37,8 +37,6 @@ final class ProfileViewModel {
         // 노티피케이션을 통해 MapVC로 UUID전달
         NotificationNameIs.deleteBtton.postNotification(with: uuid)
         self.removeData(indexPath.row)
-        
-//        self.deleteCollectionViewSnapShot(at: indexPaht.row)
     }
     
 }
@@ -49,7 +47,7 @@ extension ProfileViewModel {
     
     // 내부 콜렉션뷰 dataSource 설정
     func configDataSource(on collectionView: UICollectionView, completion: @escaping (ProfileCell) -> Void) {
-        self.dataSource = UICollectionViewDiffableDataSource<Section, DiaryViewModel>(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        self.dataSource = UICollectionViewDiffableDataSource<Section, DiaryModel>(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
@@ -72,7 +70,7 @@ extension ProfileViewModel {
     // snapShot을 업데이트 시킵니다. delete 동작도 이 메서드로 대체할 예정 (binding 으로 값이 변하면 자동 업데이트)
     func updateCollectionViewSnapShot() {
         DispatchQueue.global(qos: .background).async {
-            var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryViewModel>()
+            var snapShot = NSDiffableDataSourceSnapshot<Section, DiaryModel>()
             snapShot.appendSections([.main])
             snapShot.appendItems(self.loadModels() ?? [])
             
@@ -91,15 +89,6 @@ extension ProfileViewModel {
             self.dataSource.apply(snapShot, animatingDifferences: false)
         }
     }
-    
-//    func deleteCollectionViewSnapShot(at index: Int) {
-//        var snapShot = dataSource.snapshot()
-//        let item = snapShot.itemIdentifiers[index]
-//        snapShot.deleteItems([item])
-//        DispatchQueue.main.async {
-//            self.dataSource.apply(snapShot, animatingDifferences: true)
-//        }
-//    }
 }
 
 // MARK: - Notification Methods
@@ -109,9 +98,9 @@ extension ProfileViewModel {
     func startNotificationWithCompletion() {
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
-                  let diaryViewModel = notification.object as? DiaryViewModel else { return }
+                  let diaryModel = notification.object as? DiaryModel else { return }
             
-            self.appendModel(diaryViewModel)
+            self.appendModel(diaryModel)
         }
     }
     

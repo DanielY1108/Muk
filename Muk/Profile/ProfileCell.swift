@@ -160,11 +160,11 @@ final class ProfileCell: UICollectionViewCell {
     
     // MARK: - Configuration
     
-    func configCell(_ viewModel: DiaryViewModel) {
-        photoArray = viewModel.images
-        dateLabel.text = viewModel.dateText
-        placeLabel.text = viewModel.placeName
-        detailLabel.text = viewModel.detailText
+    func configCell(_ model: DiaryModel) {
+        photoArray = model.images
+        dateLabel.text = model.dateText
+        placeLabel.text = model.placeName
+        detailLabel.text = model.detailText
     }
     
     func hideButtonByNumberOfLines() {
