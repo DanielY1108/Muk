@@ -22,6 +22,8 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        viewModel.loadDatabase()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,11 +43,11 @@ final class MapViewController: UIViewController {
 extension MapViewController {
     
     private func setupUI() {
-        
+
         self.setupMapView()
         self.setupCurrnetLocationButton()
         self.binding()
-        
+
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
         customTabBarController.customDelegate = self
@@ -88,16 +90,18 @@ extension MapViewController {
     }
 }
 
+// pop 버튼 델리게이트 핸들러
 extension MapViewController: CustomTabBarDelegate {
     func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
+
         switch presentController {
         case is DiaryViewController:
-            print("Send current location to DiaryVC")
             guard let diaryVC = presentController as? DiaryViewController,
                   let currentCoordinate = viewModel.loadCurrentCoordinate() else {
                 print("Failed to get the Current Location Coordinate")
                 return
             }
+            print("Send current location to DiaryVC")
             // DiaryVC로 현재 위치 주소를 전달
             diaryVC.viewModel.transferCoordinate(currentCoordinate)
 

@@ -77,23 +77,19 @@ extension MapViewModel {
         // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션 데이터를 저장한다.
         NotificationNameIs.saveButton.startNotification { [weak self] notification in
             guard let self = self,
-                  let diaryModel = notification.object as? DiaryModel,
-                  // FIXME: - 어짜피 위치는 항상 존재해야 하니까 옵셔널 형태가 필요없을 것 같다.
-                  let coordinate = diaryModel.coordinate else {
-                return
-            }
+                  let diaryModel = notification.object as? DiaryModel else { return }
             
             let image = diaryModel.images?.first ?? UIImage(named: "emptyImage")!
             
             // 어노테이션 생성 및 추가
-            let annotation = CustomAnnotation(coordinate: coordinate,
+            let annotation = CustomAnnotation(coordinate: diaryModel.coordinate,
                                               image: image,
-                                              identifier: diaryModel.identifier)
+                                              identifier: diaryModel.identifier,
+                                              // 전달하는 annotaion 저장 처리
+                                              process: .save)
             
             self.allAnnotaions.append(annotation)
             
-            // 전달하는 annotaion 저장 처리
-            annotation.process = .save
             self.selectedAnnotation.value = annotation
         }
         
@@ -111,6 +107,7 @@ extension MapViewModel {
             
             // 전달하는 annotaion 제거 처리
             selectedAnnotation.process = .delete
+            
             self.selectedAnnotation.value = selectedAnnotation
         }
     }
@@ -122,5 +119,26 @@ extension MapViewModel {
     
     func loadAllAnnotations() -> [MKAnnotation] {
         return self.allAnnotaions
+    }
+    
+
+}
+
+
+// MARK: - dataBase
+
+extension MapViewModel {
+    
+    // 처음 시작할 때, 한번만 데이터베이스에 저장된 데이터를 받아옵니다.
+    func loadDatabase() {
+        let databaseModels = RealmManager.shared.load(RealmModel.self)
+        // LazyMapSequence이기 때문에 먼저 배열로 감싸줘서 [CustomAnnotation]으로 만들어주는 작업이 필요하다.
+        let annotaions = Array(databaseModels).map { CustomAnnotation(databaseModel: $0, process: .save) }
+        
+        self.allAnnotaions = annotaions
+        
+        annotaions.forEach {
+            self.selectedAnnotation.value = $0
+        }
     }
 }

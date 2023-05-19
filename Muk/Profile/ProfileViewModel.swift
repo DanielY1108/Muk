@@ -11,7 +11,7 @@ final class ProfileViewModel {
     
     // MARK: - Properties
     
-    private(set) var models: Observable<[DiaryModel]> = Observable([])
+    private(set) var diaryModels: Observable<[DiaryModel]> = Observable([])
     
     private(set) var dataSource: UICollectionViewDiffableDataSource<Section, DiaryModel>!
     private(set) var snapShot: NSDiffableDataSourceSnapshot<Section, DiaryModel>!
@@ -19,21 +19,21 @@ final class ProfileViewModel {
     // MARK: - Methods
         
     func loadModels() -> [DiaryModel]? {
-        return models.value
+        return diaryModels.value
     }
     
     // insert로 하면 최신이 위로 올라가게 된다.
     func appendModel(_ model: DiaryModel) {
-        models.value?.insert(model, at: 0)
+        diaryModels.value?.insert(model, at: 0)
     }
     
     func removeData(_ index: Int) {
-        models.value?.remove(at: index)
+        diaryModels.value?.remove(at: index)
     }
     
     func deleteCell(_ cell: ProfileCell, at collectionView: UICollectionView) {
         guard let indexPath = collectionView.indexPath(for: cell),
-              let uuid = models.value?[indexPath.row].identifier else { return }
+              let uuid = diaryModels.value?[indexPath.row].identifier else { return }
         // 노티피케이션을 통해 MapVC로 UUID전달
         NotificationNameIs.deleteBtton.postNotification(with: uuid)
         self.removeData(indexPath.row)
@@ -106,5 +106,14 @@ extension ProfileViewModel {
     
     func stopNotification() {
         NotificationNameIs.saveButton.stopNotification()
+    }
+}
+
+// MARK: - Database
+
+extension ProfileViewModel {
+    func loadDatabase() {
+        let databaseModels = RealmManager.shared.load(RealmModel.self)
+        self.diaryModels.value = DiaryModels(databaseModels: databaseModels).models
     }
 }

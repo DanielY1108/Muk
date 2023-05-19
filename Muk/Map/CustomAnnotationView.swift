@@ -62,8 +62,7 @@ final class CustomAnnotationView: MKAnnotationView {
         
         guard let annotation = annotation as? CustomAnnotation else { return }
             
-        guard let image = annotation.image else { return }
-        customImageView.image = image
+        customImageView.image = annotation.image
         
         // 이미지의 크기 및 레이블의 사이즈가 변경될 수도 있으므로 레이아웃을 업데이트 한다.
         setNeedsLayout()

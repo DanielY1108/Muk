@@ -6,15 +6,25 @@
 //
 
 import UIKit
+import RealmSwift
+
+struct DiaryModels {
+    var models: [DiaryModel]
+    
+    init(databaseModels: Results<RealmModel>) {
+        let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
+        self.models = diaryModels
+    }
+}
 
 struct DiaryModel: Hashable {
-    let identifier = UUID()
+    var identifier = UUID()
     var images: [UIImage]?
     var dateText: String?
     var placeName: String?
     var locationName: String?
     var detailText: String?
-    var coordinate: (Double, Double)?
+    var coordinate: (lat: Double, lon: Double)
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(identifier)
@@ -25,11 +35,18 @@ struct DiaryModel: Hashable {
     }
     
     init() {
-        self.images = nil
-        self.dateText = nil
-        self.placeName = nil
-        self.locationName = nil
-        self.detailText = nil
-        self.coordinate = nil
+        self.coordinate = (37, 127)
+    }
+    
+    init(dataBaseModel: RealmModel) {
+        self.identifier = dataBaseModel.identifier
+        self.dateText = dataBaseModel.dateText
+        self.placeName = dataBaseModel.placeName
+        self.locationName = dataBaseModel.locationName
+        self.detailText = dataBaseModel.detailText
+        self.coordinate = (dataBaseModel.latitude, dataBaseModel.longitude)
+        
+        let images = FileManager.loadImageToDirectory(with: dataBaseModel.identifier)
+        self.images = images
     }
 }
