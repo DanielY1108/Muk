@@ -38,7 +38,7 @@ struct DiaryModel: Hashable {
         self.detailText = dataBaseModel.detailText
         self.coordinate = (dataBaseModel.latitude, dataBaseModel.longitude)
         
-        let images = FileManager.loadImageToDirectory(with: dataBaseModel.identifier)
+        let images = FileManager.loadImageFromDirectory(with: dataBaseModel.identifier)
         self.images = images
     }
 }

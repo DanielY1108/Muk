@@ -15,9 +15,9 @@ final class ProfileViewModel {
     
     private(set) var dataSource: UICollectionViewDiffableDataSource<Section, DiaryModel>!
     private(set) var snapShot: NSDiffableDataSourceSnapshot<Section, DiaryModel>!
-
+    
     // MARK: - Methods
-        
+    
     func loadModels() -> [DiaryModel]? {
         return diaryModels.value
     }
@@ -27,7 +27,7 @@ final class ProfileViewModel {
         diaryModels.value?.insert(model, at: 0)
     }
     
-    func removeData(_ index: Int) {
+    private func removeData(_ index: Int) {
         diaryModels.value?.remove(at: index)
     }
     
@@ -36,7 +36,9 @@ final class ProfileViewModel {
               let uuid = diaryModels.value?[indexPath.row].identifier else { return }
         // 노티피케이션을 통해 MapVC로 UUID전달
         NotificationNameIs.deleteBtton.postNotification(with: uuid)
+        
         self.removeData(indexPath.row)
+        self.deleteDataInDatabase(identifier: uuid)
     }
     
 }
@@ -53,7 +55,7 @@ extension ProfileViewModel {
                 fatalError("Failed Cell Load")
             }
             completion(cell)
-
+            
             guard let models = self.loadModels() else {
                 fatalError("Failed Load Models")
             }
@@ -62,7 +64,7 @@ extension ProfileViewModel {
             
             cell.configCell(model)
             cell.hideButtonByNumberOfLines()
-
+            
             return cell
         }
     }
@@ -116,7 +118,17 @@ extension ProfileViewModel {
         // 일단은 날짜 순으로 정렬 시킴
         let databaseModels = RealmManager.shared.sort(RealmModel.self, by: "date", ascending: false)
         let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
-
+        
         self.diaryModels.value = diaryModels
+    }
+    
+    private func deleteDataInDatabase(identifier: UUID) {
+        // Realm 데이터 삭제 (선택한 식별자가 같으면 제거)
+        let databaseModels = RealmManager.shared.load(RealmModel.self)
+        let selectedDatabase = Array(databaseModels.filter { $0.identifier == identifier }).first!
+        RealmManager.shared.delete(selectedDatabase)
+        
+        // 이미지 삭제
+        FileManager.deleteImageFromDirectory(with: identifier)
     }
 }

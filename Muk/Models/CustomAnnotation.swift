@@ -33,7 +33,7 @@ final class CustomAnnotation: NSObject, MKAnnotation {
         self.identifier = databaseModel.identifier
         self.process = process
         
-        let images = FileManager.loadImageToDirectory(with: databaseModel.identifier)
+        let images = FileManager.loadImageFromDirectory(with: databaseModel.identifier)
         
         self.image = images?.first ?? UIImage(named: "emptyImage")!
     }

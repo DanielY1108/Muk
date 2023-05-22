@@ -43,7 +43,7 @@ extension FileManager {
         }
     }
     
-    static func loadImageToDirectory(with identifier: UUID) -> [UIImage]? {
+    static func loadImageFromDirectory(with identifier: UUID) -> [UIImage]? {
         let fileManager = self.default
         let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         let imagesFolderDirectory = documentDirectory.appendingPathComponent("images")
@@ -62,12 +62,27 @@ extension FileManager {
             // 이미지로 변환
             let images = imageURLs.compactMap { UIImage(contentsOfFile: $0.path) }
             
-            print("Succeed load image on path: \(imagesDirectory.lastPathComponent)")
+            print("Succeed load image at path: \(imagesDirectory.lastPathComponent)")
             return images
 
         } catch {
             print("Failed to read file: \(error)")
         }
         return nil
+    }
+    
+    static func deleteImageFromDirectory(with identifier: UUID) {
+        let fileManager = self.default
+        let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let imagesFolderDirectory = documentDirectory.appendingPathComponent("images")
+        
+        let imagesDirectory = imagesFolderDirectory.appendingPathComponent("\(identifier)")
+
+        do {
+            try fileManager.removeItem(at: imagesDirectory)
+            print("Succeed delete image folder at path: \(imagesDirectory.lastPathComponent)")
+        } catch {
+            print("Failed to delete image \(error)")
+        }
     }
 }
