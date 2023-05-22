@@ -35,7 +35,7 @@ final class RealmManager {
     /// - Parameter objectTpye: 모델 타입
     /// - Returns: 선택한 모델들을 리턴
     func load<T: Object>(_ objectTpye: T.Type) -> Results<T> {
-        let realm = realm.objects(T.self)
+        let realm = realm.objects(objectTpye)
         return realm
     }
     
@@ -50,5 +50,10 @@ final class RealmManager {
         } catch {
             print(error)
         }
+    }
+    
+    // 정렬하기
+    func sort<T: Object>(_ objectTpye: T.Type, by keyPath: String, ascending: Bool) -> Results<T> {
+        return load(objectTpye).sorted(byKeyPath: keyPath, ascending: ascending)
     }
 }

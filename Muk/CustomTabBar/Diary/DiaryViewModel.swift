@@ -22,7 +22,7 @@ final class DiaryViewModel {
     
     // UI 데이터들을 저장!
     func configData(on view: DiaryView) {
-        diaryModel.dateText = view.dateTextField.text
+        diaryModel.date = view.datePicker.date
         diaryModel.placeName = view.placeTextField.text
         diaryModel.locationName = view.locationTextField.text
         diaryModel.detailText = view.detailTextView.text

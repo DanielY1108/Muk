@@ -23,6 +23,7 @@ final class DiaryView: UIView {
     
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
     let dateTextField = UnderLindTextField()
+    let datePicker = UIDatePicker()
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     let placeTextField = UnderLindTextField()
@@ -205,8 +206,6 @@ extension DiaryView: UITextViewDelegate {
 extension DiaryView {
     // datePicker
     private func setupDatePicker() {
-        
-        let datePicker = UIDatePicker()
         // 표시될 날짜 형식 설정
         datePicker.datePickerMode = .date
         // 스타일 설정

@@ -11,7 +11,7 @@ import RealmSwift
 // Object은 hashable로 동작합니다.
 final class RealmModel: Object {
     @Persisted(primaryKey: true) var identifier: UUID
-    @Persisted var dateText: String?
+    @Persisted var date: Date
     @Persisted var placeName: String?
     @Persisted var locationName: String?
     @Persisted var detailText: String?
@@ -24,7 +24,7 @@ final class RealmModel: Object {
         
         // 이 식별자를 통해서 이미지 폴더를 불러올 것 이다.
         self.identifier = diaryModel.identifier
-        self.dateText = diaryModel.dateText
+        self.date = diaryModel.date
         self.placeName = diaryModel.placeName
         self.locationName = diaryModel.locationName
         self.detailText = diaryModel.detailText

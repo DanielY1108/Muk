@@ -113,7 +113,10 @@ extension ProfileViewModel {
 
 extension ProfileViewModel {
     func loadDatabase() {
-        let databaseModels = RealmManager.shared.load(RealmModel.self)
-        self.diaryModels.value = DiaryModels(databaseModels: databaseModels).models
+        // 일단은 날짜 순으로 정렬 시킴
+        let databaseModels = RealmManager.shared.sort(RealmModel.self, by: "date", ascending: false)
+        let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
+
+        self.diaryModels.value = diaryModels
     }
 }

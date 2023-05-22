@@ -8,19 +8,10 @@
 import UIKit
 import RealmSwift
 
-struct DiaryModels {
-    var models: [DiaryModel]
-    
-    init(databaseModels: Results<RealmModel>) {
-        let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
-        self.models = diaryModels
-    }
-}
-
 struct DiaryModel: Hashable {
     var identifier = UUID()
     var images: [UIImage]?
-    var dateText: String?
+    var date: Date
     var placeName: String?
     var locationName: String?
     var detailText: String?
@@ -35,12 +26,13 @@ struct DiaryModel: Hashable {
     }
     
     init() {
+        self.date = Date()
         self.coordinate = (37, 127)
     }
     
     init(dataBaseModel: RealmModel) {
         self.identifier = dataBaseModel.identifier
-        self.dateText = dataBaseModel.dateText
+        self.date = dataBaseModel.date
         self.placeName = dataBaseModel.placeName
         self.locationName = dataBaseModel.locationName
         self.detailText = dataBaseModel.detailText

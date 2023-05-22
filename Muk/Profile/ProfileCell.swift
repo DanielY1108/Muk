@@ -162,7 +162,7 @@ final class ProfileCell: UICollectionViewCell {
     
     func configCell(_ model: DiaryModel) {
         photoArray = model.images
-        dateLabel.text = model.dateText
+        dateLabel.text = DateFormatter.custom(date: model.date)
         placeLabel.text = model.placeName
         detailLabel.text = model.detailText
     }
