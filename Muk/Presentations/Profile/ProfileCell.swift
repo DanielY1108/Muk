@@ -284,7 +284,9 @@ extension ProfileCell: UIScrollViewDelegate {
     }
     
     private func loadPhotos(_ photos: [UIImage]) {
-        
+        // 전역 photoImageViews로 하면 이미지뷰가 계속 추가되는 현상이 발생해서 따로 만들어서 전역 이미지뷰에 넣어주는 방식으로 구현
+        var photoImageViews = [UIImageView]()
+
         for (index, photo) in photos.enumerated() {
             let photoImageView = UIImageView()
             photoImageView.contentMode = .scaleAspectFill
@@ -294,9 +296,10 @@ extension ProfileCell: UIScrollViewDelegate {
             photoImageView.frame.size.width = self.bounds.size.width - 60
             photoImageView.frame.origin.x = CGFloat(index) * (self.bounds.size.width - 60)
             
-            self.photoImageViews.append(photoImageView)
+            photoImageViews.append(photoImageView)
         }
         
+        self.photoImageViews = photoImageViews
         scrollViewAddImageView()
     }
     
