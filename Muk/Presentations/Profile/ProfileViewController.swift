@@ -98,12 +98,15 @@ extension ProfileViewController {
 extension ProfileViewController: ProfileCellDelegate {
     
     func editButtonTapped(_ cell: ProfileCell) {
+        let editVC = EditDiaryViewController()
+        self.navigationController?.pushViewController(editVC, animated: true)
         print("Edit Action")
+        
     }
     
     func deleteButtonTapped(_ cell: ProfileCell) {
-        print("Delete Action")
         viewModel.deleteCell(cell, at: collectionView)
+        print("Delete Action")
     }
     
     func imageTapped(_ cell: ProfileCell, sender: [UIImage]?) {
