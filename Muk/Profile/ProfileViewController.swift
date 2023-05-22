@@ -40,20 +40,11 @@ final class ProfileViewController: UIViewController {
     // MARK: - Method
     
     private func configUI() {
+        self.setupNavigationBarAppearance()
+        self.setupCollectionView()
         viewModel.loadDatabase()
-        setupNavigationBarAppearance()
-        setupCollectionView()
         viewModel.startNotificationWithCompletion()
-        binding()
-    }
-    
-    private func binding() {
-        // 바인딩
-        viewModel.diaryModels.bind { [weak self] models in
-            guard let self = self else { return }
-            
-            self.viewModel.updateCollectionViewSnapShot()
-        }
+        viewModel.binding()
     }
 }
 

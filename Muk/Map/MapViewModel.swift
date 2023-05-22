@@ -28,6 +28,20 @@ final class MapViewModel {
     
     // MARK: - Methods
     
+    func binding(mapView: MKMapView) {
+        selectedAnnotation.bind { annotation in
+            guard let annotation = annotation else { return }
+            
+            // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
+            switch annotation.process {
+            case .save:
+                mapView.addAnnotation(annotation)
+            case .delete:
+                mapView.removeAnnotation(annotation)
+            default: break
+            }
+        }
+    }
 }
 // MARK: - Location Methods
 
@@ -120,8 +134,6 @@ extension MapViewModel {
     func loadAllAnnotations() -> [MKAnnotation] {
         return self.allAnnotaions
     }
-    
-
 }
 
 

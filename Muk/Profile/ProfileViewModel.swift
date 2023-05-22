@@ -41,6 +41,15 @@ final class ProfileViewModel {
         self.deleteDataInDatabase(identifier: uuid)
     }
     
+    
+    func binding() {
+        // 바인딩
+        diaryModels.bind { [weak self] models in
+            guard let self = self else { return }
+            
+            self.updateCollectionViewSnapShot()
+        }
+    }
 }
 
 // MARK: - CollectionView DataSource Methods

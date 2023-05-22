@@ -21,9 +21,9 @@ final class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        self.setupUI()
         viewModel.loadDatabase()
-
+        viewModel.binding(mapView: mapView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,11 +43,10 @@ final class MapViewController: UIViewController {
 extension MapViewController {
     
     private func setupUI() {
-
+        
         self.setupMapView()
         self.setupCurrnetLocationButton()
-        self.binding()
-
+        
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
         customTabBarController.customDelegate = self
@@ -72,28 +71,12 @@ extension MapViewController {
         
         viewModel.setRegion(on: self.mapView)
     }
-    
-    private func binding() {
-        viewModel.selectedAnnotation.bind { [weak self] annotation in
-            guard let self = self,
-                  let annotation = annotation else { return }
-            
-            // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
-            switch annotation.process {
-            case .save:
-                self.mapView.addAnnotation(annotation)
-            case .delete:
-                self.mapView.removeAnnotation(annotation)
-            default: break
-            }
-        }
-    }
 }
 
 // pop 버튼 델리게이트 핸들러
 extension MapViewController: CustomTabBarDelegate {
     func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
-
+        
         switch presentController {
         case is DiaryViewController:
             guard let diaryVC = presentController as? DiaryViewController,
@@ -104,7 +87,7 @@ extension MapViewController: CustomTabBarDelegate {
             print("Send current location to DiaryVC")
             // DiaryVC로 현재 위치 주소를 전달
             diaryVC.viewModel.transferCoordinate(currentCoordinate)
-
+            
         default: break
             
         }
@@ -174,7 +157,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("어노테이션이 클릭 됨")
-
+        
         UIView.animate(withDuration: 0.3) {
             view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         }
@@ -182,7 +165,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("어노테이션이 클릭 해제됨")
-
+        
         UIView.animate(withDuration: 0.3) {
             view.transform = CGAffineTransform.identity
         }
