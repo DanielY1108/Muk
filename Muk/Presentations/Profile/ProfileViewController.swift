@@ -98,8 +98,17 @@ extension ProfileViewController {
 extension ProfileViewController: ProfileCellDelegate {
     
     func editButtonTapped(_ cell: ProfileCell) {
-        let editVC = EditDiaryViewController()
-        self.navigationController?.pushViewController(editVC, animated: true)
+        let diaryVC = DiaryViewController()
+        
+        // 데이터 베이스에서 모델을 갖고 와서 넣어준다.
+        guard let indexPath = collectionView.indexPath(for: cell),
+              let diaryModels = viewModel.loadModels() else { return }
+        
+        let selectedDiaryModel = diaryModels[indexPath.row]
+        diaryVC.viewModel.diaryModel.value = selectedDiaryModel
+        
+        self.present(diaryVC, animated: true)
+        
         print("Edit Action")
         
     }

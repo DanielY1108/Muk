@@ -26,10 +26,11 @@ final class ProfileCell: UICollectionViewCell {
     var photoArray: [UIImage]? {
         didSet {
             guard let photoArray = photoArray else {
-                updatePhotoScrollView()
+                updatePhotoScrollView(isEmpty: true)
                 return
             }
             
+            updatePhotoScrollView(isEmpty: false)
             photoPageControl.numberOfPages = photoArray.count
             
             loadPhotos(photoArray)
@@ -156,6 +157,7 @@ final class ProfileCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageViews.forEach { $0.image = nil }
+        photoPageControl.numberOfPages = 0
     }
     
     // MARK: - Configuration
@@ -238,9 +240,13 @@ final class ProfileCell: UICollectionViewCell {
         }
     }
     
-    private func updatePhotoScrollView() {
+    private func updatePhotoScrollView(isEmpty: Bool) {
         photoScrollView.snp.updateConstraints {
-            $0.height.equalTo(0)
+            if isEmpty {
+                $0.height.equalTo(0)
+            } else {
+                $0.height.equalTo(photoSize)
+            }
         }
     }
     

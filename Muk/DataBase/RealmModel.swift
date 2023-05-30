@@ -16,8 +16,8 @@ final class RealmModel: Object {
     @Persisted var locationName: String?
     @Persisted var detailText: String?
     
-    @Persisted var latitude: Double
-    @Persisted var longitude: Double
+    @Persisted var location: MukLocation!
+    @Persisted var photoMetaData = List<MuKPhoto>()
     
     convenience init(diaryModel: DiaryModel) {
         self.init()
@@ -28,7 +28,31 @@ final class RealmModel: Object {
         self.placeName = diaryModel.placeName
         self.locationName = diaryModel.locationName
         self.detailText = diaryModel.detailText
-        self.latitude = diaryModel.coordinate.lat
-        self.longitude = diaryModel.coordinate.lon
+        
+        let loaction = diaryModel.coordinate
+        self.location = MukLocation()
+        self.location.latitude = loaction.lat
+        self.location.longitude = loaction.lon
+        
+        diaryModel.selectedAssetIdentifiers.forEach {
+            let mukPhoto = MuKPhoto()
+            mukPhoto.selectedAssetIdentifier = $0
+            self.photoMetaData.append(mukPhoto)
+        }
     }
+}
+
+final class MuKPhoto: EmbeddedObject {
+    @Persisted var selectedAssetIdentifier: String?
+    
+    convenience init(selectedAssetIdentifier: String?) {
+        self.init()
+        self.selectedAssetIdentifier = selectedAssetIdentifier
+    }
+}
+
+final class MukLocation: EmbeddedObject {
+    @Persisted var latitude: Double = 37
+    @Persisted var longitude: Double = 127
+
 }

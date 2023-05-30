@@ -23,7 +23,6 @@ final class DiaryView: UIView {
     
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
     let dateTextField = UnderLindTextField()
-    let datePicker = UIDatePicker()
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     let placeTextField = UnderLindTextField()
@@ -31,11 +30,11 @@ final class DiaryView: UIView {
     private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, locationTextField])
     
     private let detailLabel = UIFactory.createDiaryLabel(title: "내용")
-    private let detailTextViewPlaceHolder = "내용을 입력해주세요."
+    let detailTextViewPlaceHolder = "내용을 입력해주세요."
     lazy var detailTextView = UIFactory.createDiaryTextView(placeHolder: detailTextViewPlaceHolder)
-    private lazy var detailStackView = UIFactory.createDiaryStackView(arrangedSubviews: [detailLabel, detailTextView])
+    lazy var detailStackView = UIFactory.createDiaryStackView(arrangedSubviews: [detailLabel, detailTextView])
     
-    private let detailTextViewLetterCountLabel = UIFactory.createTextViewCountLabel()
+    let detailTextViewLetterCountLabel = UIFactory.createTextViewCountLabel()
     
     private let photoLabel = UIFactory.createDiaryLabel(title: "사진")
     
@@ -59,9 +58,6 @@ final class DiaryView: UIView {
         super.init(frame: frame)
         
         setupUI()
-        setupTextField()
-        setupButtons()
-        setupDatePicker()
     }
     
     required init?(coder: NSCoder) {
@@ -135,110 +131,24 @@ final class DiaryView: UIView {
         
         configUI()
         setupTextField()
-        setupButtons()
+        setupButtonsAction()
     }
     
     private func configUI() {
-        detailTextView.delegate = self
-        
         self.backgroundColor = HexCode.tabBarBackground.color
         titleLabel.font = .preferredFont(forTextStyle: .title3)
     }
     
     private func setupTextField() {
-        dateTextField.setPlaceHolder("2023 / 04 / 03")
+        dateTextField.setPlaceHolder("2023년 05월 24일")
         placeTextField.setPlaceHolder("장소를 입력해주세요.")
         locationTextField.setPlaceHolder("주소를 확인해주세요.")
     }
     
     // DiaryView 버튼 셋팅
-    private func setupButtons() {
+    private func setupButtonsAction() {
         saveButton.addTarget(self, action: #selector(saveButtonHandler), for: .touchUpInside)
         closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
-    }
-}
-
-// MARK: - 텍스트뷰 델리게이트
-
-extension DiaryView: UITextViewDelegate {
-    
-    // Placeholder 세팅
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.layer.borderWidth = 1
-        
-        if textView.text == detailTextViewPlaceHolder {
-            detailTextView.text = nil
-            detailTextView.textColor = .black
-        }
-    }
-    
-    // Placeholder 세팅
-    func textViewDidEndEditing(_ textView: UITextView) {
-        textView.layer.borderWidth = 0
-        
-        // 띄어쓰기, 즉 공백만 있을 경우 공백을 제거하고 플레이스 홀더를 나오게 만듬
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            detailTextView.text = detailTextViewPlaceHolder
-            detailTextView.textColor = .placeholderText
-        }
-    }
-    
-    // 동적으로 텍스트뷰 크기 조정
-    func textViewDidChange(_ textView: UITextView) {
-        let size = CGSize(width: detailStackView.frame.width, height: .infinity)
-        let estimatedSize = textView.sizeThatFits(size)
-        
-        textView.constraints.forEach { constraint in
-            // 3줄(80)보다 크고 5줄 (120)보다 작을 때 동작
-            if estimatedSize.height >= 80 && estimatedSize.height <= 120 {
-                constraint.constant = estimatedSize.height
-            }
-        }
-        
-        // 글자수 카운트
-        detailTextViewLetterCountLabel.text = "\(textView.text.count)"
-    }
-
-}
-
-// MARK: - datePicker 설정 및 Toolbar 설정
-
-extension DiaryView {
-    // datePicker
-    private func setupDatePicker() {
-        // 표시될 날짜 형식 설정
-        datePicker.datePickerMode = .date
-        // 스타일 설정
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.locale = Locale(identifier: "ko-KR")
-        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
-        
-        dateTextField.inputView = datePicker
-        dateTextField.text = DateFormatter.custom(date: Date())
-        
-        setupToolBar()
-    }
-    
-    @objc func dateChange(_ sender: UIDatePicker) {
-        dateTextField.text = DateFormatter.custom(date: sender.date)
-    }
-    
-    // DatePicker 툴바 설정
-    private func setupToolBar() {
-        let toolBar = UIToolbar()
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandler))
-        
-        toolBar.sizeToFit()
-        toolBar.items = [flexibleSpace, doneButton]
-        
-        dateTextField.inputAccessoryView = toolBar
-    }
-    
-    @objc func doneButtonHandler(_ sender: UIBarButtonItem) {
-        print("DatePicker 선택 완료")
-        self.endEditing(true)
     }
 }
 

@@ -17,7 +17,7 @@ final class MapViewModel {
     private(set) var currentCoordinate: CLLocationCoordinate2D?
     
     private(set) var allAnnotaions = [CustomAnnotation]()
-    private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(nil)
+    private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
     
     // MARK: - Initializer
     
@@ -30,8 +30,6 @@ final class MapViewModel {
     
     func binding(mapView: MKMapView) {
         selectedAnnotation.bind { annotation in
-            guard let annotation = annotation else { return }
-            
             // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
             switch annotation.process {
             case .save:

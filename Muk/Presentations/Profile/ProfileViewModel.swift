@@ -24,16 +24,17 @@ final class ProfileViewModel {
     
     // insert로 하면 최신이 위로 올라가게 된다.
     func appendModel(_ model: DiaryModel) {
-        diaryModels.value?.insert(model, at: 0)
+        diaryModels.value.insert(model, at: 0)
     }
     
     private func removeData(_ index: Int) {
-        diaryModels.value?.remove(at: index)
+        diaryModels.value.remove(at: index)
     }
     
     func deleteCell(_ cell: ProfileCell, at collectionView: UICollectionView) {
-        guard let indexPath = collectionView.indexPath(for: cell),
-              let uuid = diaryModels.value?[indexPath.row].identifier else { return }
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        let uuid = diaryModels.value[indexPath.row].identifier
         // 노티피케이션을 통해 MapVC로 UUID전달
         NotificationNameIs.deleteBtton.postNotification(with: uuid)
         
