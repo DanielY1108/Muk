@@ -18,8 +18,6 @@ final class DiaryViewController: UIViewController {
     private let diaryView = DiaryView()
     // Identifier와 PHPickerResult로 만든 Dictionary (이미지 데이터를 저장하기 위해 만들어 줌)
     private(set) var selections = [String: PHPickerResult]()
-    // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
-//    private(set) var selectedAssetIdentifiers = [String]()
     
     // MARK: - Life Cycle
     
@@ -35,10 +33,14 @@ final class DiaryViewController: UIViewController {
         setupDatePicker()
         setupKeyboardEvent()
         loadDatabaseImagesAddImageView(on: diaryView)
+        // 처음 수정할 때, 그 순간의 이미지 식별자 데이타가 필요하다. 따로 변수를 만들어줘서 담아줌
+        viewModel.saveSelectedAssetIdentifierWhenEditing()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        print("viewwillappear")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -92,12 +94,7 @@ extension DiaryViewController {
     @objc func imageViewHandler() {
         self.view.endEditing(true)
         presentPicker()
-        
-        let selectedAssetIdentifiers = viewModel.diaryModel.value.selectedAssetIdentifiers
-        
-//        selections =
     }
-    
 }
 
 // MARK: - PHPickerViewControllerDelegate & setup
@@ -190,25 +187,32 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         var imagesDict = [String: UIImage]()
 
         for (identifier, result) in selections {
-            
-            dispatchGroup.enter()
-            
             let itemProvider = result.itemProvider
+            
             // 만약 itemProvider에서 UIImage로 로드가 가능하다면?
-            // FIXME: - 이부분에서 문제가 생겼다. 저장된 데이터를 불러오면 selections의 result 값이 없어서 동작이 안넘어간다.
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                
+                dispatchGroup.enter()
                 // 이미지의 url을 받아 다운샘플링하는 동작을 정의함 (비동기적으로 동작)
                 itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                    defer { dispatchGroup.leave() }
+                    
                     guard let url = url else { return }
-                    
                     let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 1000, height: 1000))
-                    
                     imagesDict[identifier] = image
-                    dispatchGroup.leave()
+                }
+            } else {
+                // 이미지 수정 할 때, 만약 results의 식별자가 존재한다면, 즉 선택한 이미지가 같으면 이미지를 제외한 메타데이터를 전달하게 된다.
+                // 이미지가 없다면, 저장된 식별자에 이미지 추가 작업을 해준다.
+                let model = self.viewModel.diaryModel.value
+                
+                guard let images = model.images,
+                      let selectedAssetIdentifiers = viewModel.selectedAssetIdentifiers else { return }
+                
+                for (index, identifier) in selectedAssetIdentifiers.enumerated() {
+                    imagesDict[identifier] = images[index]
                 }
             }
-            
-            print(itemProvider.suggestedName)
         }
         
         dispatchGroup.notify(queue: DispatchQueue.main) { [weak self] in
@@ -224,10 +228,11 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
             for (index, identifier) in self.viewModel.diaryModel.value.selectedAssetIdentifiers.enumerated() {
                 guard let image = imagesDict[identifier] else { return }
                 self.addImageView(on: view, image: image, index: index)
-                
                 // 밖에서 사용하기 위해서 만들어 줌
                 self.viewModel.insertImage(image: image, at: index)
             }
+            // 이때가 picker 델리게이트가 종료 되는 순간이다. 또 다시 수정할 수 있으므로 따로 변수로 만든 식별자를 업데이트 시켜준다.
+            viewModel.saveSelectedAssetIdentifierWhenEditing()
         }
     }
     
@@ -242,8 +247,8 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         
         for result in results {
             let identifier = result.assetIdentifier!
+            
             // ⭐️ 여기는 WWDC에서 3분 부분을 참고하세요. (Picker의 사진의 저장 방식)
-            print(result)
             newSelections[identifier] = selections[identifier] ?? result
         }
         

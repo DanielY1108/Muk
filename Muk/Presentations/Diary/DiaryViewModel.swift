@@ -13,8 +13,10 @@ final class DiaryViewModel {
     // MARK: - Properties
     
     let datePicker = UIDatePicker()
-
+    
     var diaryModel: Observable<DiaryModel> = Observable(DiaryModel())
+    
+    var selectedAssetIdentifiers: [String]?
     
     // MARK: - Method
     
@@ -22,7 +24,7 @@ final class DiaryViewModel {
     func insertImage(image: UIImage, at index: Int) {
         diaryModel.value.images?.insert(image, at: index)
     }
-
+    
     func makeEmptyImages() {
         diaryModel.value.images = []
     }
@@ -36,6 +38,12 @@ final class DiaryViewModel {
         NotificationNameIs.saveButton.postNotification(with: diaryModel.value)
     }
     
+    func saveSelectedAssetIdentifierWhenEditing() {
+        self.selectedAssetIdentifiers = diaryModel.value.selectedAssetIdentifiers
+    }
+}
+
+extension DiaryViewModel {
     // Realm과 FileManager의 데이터 베이스에 저장
     func saveToDatabase() {
         // Realm으로 데이터 베이스에 저장

@@ -17,6 +17,7 @@ struct DiaryModel: Hashable {
     var detailText: String?
     var coordinate: (lat: Double, lon: Double)
     
+    // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
     var selectedAssetIdentifiers: [String]
     
     func hash(into hasher: inout Hasher) {
