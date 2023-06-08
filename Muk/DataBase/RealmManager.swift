@@ -52,6 +52,16 @@ final class RealmManager {
         }
     }
     
+    func update<T: Object>(_ object: T) {
+        do {
+            try realm.write {
+                realm.add(object, update: .modified)
+            }
+        } catch {
+            print("Failed Update")
+        }
+    }
+    
     // 정렬하기
     func sort<T: Object>(_ objectTpye: T.Type, by keyPath: String, ascending: Bool) -> Results<T> {
         return load(objectTpye).sorted(byKeyPath: keyPath, ascending: ascending)

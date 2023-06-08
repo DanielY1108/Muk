@@ -8,7 +8,7 @@
 import UIKit
 
 protocol DiaryViewDelegate: AnyObject {
-    func saveButtonTapped(_ view: DiaryView)
+    func saveOrEditButtonTapped(_ view: DiaryView)
     func closeButtonTapped(_ view: DiaryView)
 }
 
@@ -19,7 +19,7 @@ final class DiaryView: UIView {
     // MARK: - Properties
     
     let closeButton = UIFactory.createCloseButton()
-    let saveButton = UIFactory.createSaveButton()
+    let saveOrEditButton = UIFactory.createSaveOrEditButton()
     
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
     let dateTextField = UnderLindTextField()
@@ -123,8 +123,8 @@ final class DiaryView: UIView {
             $0.trailing.equalTo(detailStackView).offset(-space)
         }
         
-        self.addSubview(saveButton)
-        saveButton.snp.makeConstraints {
+        self.addSubview(saveOrEditButton)
+        saveOrEditButton.snp.makeConstraints {
             $0.bottom.equalTo(self.safeAreaLayoutGuide).inset(space)
             $0.leading.trailing.equalToSuperview().inset(sideInset*2)
         }
@@ -147,7 +147,7 @@ final class DiaryView: UIView {
     
     // DiaryView 버튼 셋팅
     private func setupButtonsAction() {
-        saveButton.addTarget(self, action: #selector(saveButtonHandler), for: .touchUpInside)
+        saveOrEditButton.addTarget(self, action: #selector(saveOrEditButtonHandler), for: .touchUpInside)
         closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
     }
 }
@@ -156,8 +156,8 @@ final class DiaryView: UIView {
 
 extension DiaryView {
     
-    @objc func saveButtonHandler(_ sender: UIButton) {
-        delegate?.saveButtonTapped(self)
+    @objc func saveOrEditButtonHandler(_ sender: UIButton) {
+        delegate?.saveOrEditButtonTapped(self)
     }
     
     @objc func closeButtonHandler(_ sender: UIButton) {

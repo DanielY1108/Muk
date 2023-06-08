@@ -219,7 +219,7 @@ extension UIFactory {
     }
     
     // 다이어리 저장 버튼 생성
-    static func createSaveButton() -> UIButton {
+    static func createSaveOrEditButton() -> UIButton {
         var config = UIButton.Configuration.plain()
         config.title = "저장"
         config.buttonSize = .large

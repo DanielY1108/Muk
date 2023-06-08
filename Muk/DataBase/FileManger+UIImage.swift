@@ -27,7 +27,7 @@ extension FileManager {
             if !fileManager.fileExists(atPath: imagesDirectory.path) {
                 try fileManager.createDirectory(at: imagesDirectory, withIntermediateDirectories: true)
             }
-            //
+            
             // 이미지 파일을 저장
             for (index, image) in images.enumerated() {
                 let fileName = "\(index)"
@@ -57,8 +57,10 @@ extension FileManager {
             }
             // 식별자로 지정된 폴더로 접근하여 파일들을 url로 변환해준다.
             let fileURLs = try fileManager.contentsOfDirectory(at: imagesDirectory, includingPropertiesForKeys: nil)
+            // 단순히 url을 검색하는 것 이므로 순서가 없다. 저장할 때, 이미지 순서를 index로 만들어줬으니 오름차순으로 정렬해주자.
+            let sortFileURLs = fileURLs.sorted { $0.lastPathComponent < $1.lastPathComponent}
             // image파일만 필터링하기
-            let imageURLs = fileURLs.filter { $0.pathExtension.lowercased() == "jpeg" }
+            let imageURLs = sortFileURLs.filter { $0.pathExtension.lowercased() == "jpeg" }
             // 이미지로 변환
             let images = imageURLs.compactMap { UIImage(contentsOfFile: $0.path) }
             
@@ -84,5 +86,11 @@ extension FileManager {
         } catch {
             print("Failed to delete image \(error)")
         }
+    }
+    
+    // 따로 수정하는 메서드가 없어서 지우고 추가하는 작업을 실행
+    static func updateImageFromDirectory(with identifier: UUID, images: [UIImage]) {
+        self.deleteImageFromDirectory(with: identifier)
+        self.saveImagesToDirectory(identifier: identifier, images: images)
     }
 }

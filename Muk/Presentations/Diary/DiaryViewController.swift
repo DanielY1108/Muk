@@ -15,7 +15,7 @@ final class DiaryViewController: UIViewController {
     
     private(set) var viewModel = DiaryViewModel()
 
-    private let diaryView = DiaryView()
+    private(set) var diaryView = DiaryView()
     // Identifier와 PHPickerResult로 만든 Dictionary (이미지 데이터를 저장하기 위해 만들어 줌)
     private(set) var selections = [String: PHPickerResult]()
     
@@ -139,7 +139,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
         }
         
         stackViewRemoveAllSubviews(on: view)
-        
+        print("파일매니져에서 전달 받은 이지미 \(images) ")
         for (index, image) in images.enumerated() {
             let imageView = UIFactory.createCircleImageView(size: 90)
             imageView.image = image
@@ -149,7 +149,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
     }
     
     // 스택뷰 전체를 지우는 작업
-    func stackViewRemoveAllSubviews(on view: DiaryView) {
+    private func stackViewRemoveAllSubviews(on view: DiaryView) {
         // 스크롤뷰의 콘텐츠 크기 조절
         photoContentViewInsetUpdate(view)
         
@@ -161,7 +161,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
     }
     
     // 스택뷰에 이미지를 추가함에 따라 스크롤뷰의 콘텐츠뷰의 크기를 증가시키는 메서드
-    func photoContentViewInsetUpdate(_ view: DiaryView) {
+    private func photoContentViewInsetUpdate(_ view: DiaryView) {
         // 이미지가 추가될 때 마다 커지는 크기
         let imageSizeWithSpace = ((view.imageSize) / 2) + view.space
         var inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -180,7 +180,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
     }
     
     // 이미지를 받아오는 작업 + 아래의 이미지뷰 추가 작업까지
-    func displayImage(on view: DiaryView) {
+    private func displayImage(on view: DiaryView) {
         
         let dispatchGroup = DispatchGroup()
         // identifier와 이미지로 dictionary를 만듬 (selectedAssetIdentifiers의 순서에 따라 이미지를 받을 예정입니다.)
@@ -201,17 +201,16 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
                     let image = UIImage.downsampleImage(imageAt: url, to: CGSize(width: 1000, height: 1000))
                     imagesDict[identifier] = image
                 }
-            } else {
-                // 이미지 수정 할 때, 만약 results의 식별자가 존재한다면, 즉 선택한 이미지가 같으면 이미지를 제외한 메타데이터를 전달하게 된다.
-                // 이미지가 없다면, 저장된 식별자에 이미지 추가 작업을 해준다.
-                let model = self.viewModel.diaryModel.value
-                
-                guard let images = model.images,
-                      let selectedAssetIdentifiers = viewModel.selectedAssetIdentifiers else { return }
-                
-                for (index, identifier) in selectedAssetIdentifiers.enumerated() {
-                    imagesDict[identifier] = images[index]
-                }
+            }
+        }
+        
+        // 이미지 수정 할 때, 만약 results의 식별자가 존재한다면, 즉 선택한 이미지가 같으면 이미지를 제외한 메타데이터를 전달하게 된다.
+        // 이미지가 없다면, 저장된 식별자에 이미지 추가 작업을 해준다.
+        if let images = self.viewModel.diaryModel.value.images,
+           let selectedAssetIdentifiers = viewModel.selectedAssetIdentifiers {
+            
+            for (index, identifier) in selectedAssetIdentifiers.enumerated() {
+                imagesDict[identifier] = images[index]
             }
         }
         
@@ -227,6 +226,7 @@ extension DiaryViewController : PHPickerViewControllerDelegate {
             // 선택한 이미지의 순서대로 정렬하여 스택뷰에 올리기
             for (index, identifier) in self.viewModel.diaryModel.value.selectedAssetIdentifiers.enumerated() {
                 guard let image = imagesDict[identifier] else { return }
+                print("여긴 저장된 이미지 순서 \(image)")
                 self.addImageView(on: view, image: image, index: index)
                 // 밖에서 사용하기 위해서 만들어 줌
                 self.viewModel.insertImage(image: image, at: index)
@@ -376,13 +376,21 @@ extension DiaryViewController: UITextViewDelegate {
 
 extension DiaryViewController: DiaryViewDelegate {
     
-    func saveButtonTapped(_ view: DiaryView) {
+    func saveOrEditButtonTapped(_ view: DiaryView) {
         self.view.endEditing(true)
-        print("Save button Tapped")
         
-        // 데이터를 뷰모델로 저장 + 노티피케이션으로 ProfileVC로 전달
-        viewModel.postNotificationWithModel()
-        viewModel.saveToDatabase()
+        let buttonTitle = view.saveOrEditButton.titleLabel?.text
+        switch buttonTitle {
+        case "저장":
+            print("Save button Tapped")
+            // 데이터를 뷰모델로 저장 + 노티피케이션으로 ProfileVC로 전달
+            viewModel.postNotificationWithModel(.saveButton)
+            viewModel.saveToDatabase()
+        case "수정":
+            viewModel.postNotificationWithModel(.editButton)
+            viewModel.editDatabase()
+        default: break
+        }
         
         self.dismiss(animated: true)
     }

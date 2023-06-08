@@ -34,8 +34,14 @@ final class DiaryViewModel {
         self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
     }
     
-    func postNotificationWithModel() {
-        NotificationNameIs.saveButton.postNotification(with: diaryModel.value)
+    func postNotificationWithModel(_ notificationName: NotificationNameIs) {
+        switch notificationName {
+        case .saveButton:
+            NotificationNameIs.saveButton.postNotification(with: diaryModel.value)
+        case .editButton:
+            NotificationNameIs.editButton.postNotification(with: diaryModel.value)
+        default: break
+        }
     }
     
     func saveSelectedAssetIdentifierWhenEditing() {
@@ -59,5 +65,14 @@ extension DiaryViewModel {
         let cellIdentifier = diaryModel.value.identifier
         guard let images = FileManager.loadImageFromDirectory(with: cellIdentifier) else { return nil }
         return images
+    }
+    
+    func editDatabase() {
+        let databaseModel = RealmModel(diaryModel: diaryModel.value)
+        RealmManager.shared.update(databaseModel)
+        
+        // FileManager로 이미지 저장 및 수정
+        guard let images = diaryModel.value.images else { return }
+        FileManager.updateImageFromDirectory(with: databaseModel.identifier, images: images)
     }
 }

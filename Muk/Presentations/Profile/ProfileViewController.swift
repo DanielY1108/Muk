@@ -29,7 +29,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        viewModel.reloadCollectionViewSnapShot()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -107,6 +107,7 @@ extension ProfileViewController: ProfileCellDelegate {
         let selectedDiaryModel = diaryModels[indexPath.row]
         diaryVC.viewModel.diaryModel.value = selectedDiaryModel
         
+        diaryVC.diaryView.saveOrEditButton.configuration?.title = "수정"
         self.present(diaryVC, animated: true)
         
         print("Edit Action")

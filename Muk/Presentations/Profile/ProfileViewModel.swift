@@ -27,6 +27,15 @@ final class ProfileViewModel {
         diaryModels.value.insert(model, at: 0)
     }
     
+    func updateModel(_ model: DiaryModel) {
+        // 식별자로 현재 아이템의 index를 구하기
+        guard let index = diaryModels.value.firstIndex(where: { $0.identifier == model.identifier }) else {
+            print("일치하는 식별자가 없습니다.")
+            return
+        }
+        diaryModels.value[index] = model
+    }
+    
     private func removeData(_ index: Int) {
         diaryModels.value.remove(at: index)
     }
@@ -64,6 +73,7 @@ extension ProfileViewModel {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.identifier, for: indexPath) as? ProfileCell else {
                 fatalError("Failed Cell Load")
             }
+            // cell에 접근하기 위해서 사용(델리게이트 채택을 위함)
             completion(cell)
             
             guard let models = self.loadModels() else {
@@ -113,6 +123,14 @@ extension ProfileViewModel {
                   let diaryModel = notification.object as? DiaryModel else { return }
             
             self.appendModel(diaryModel)
+        }
+        
+        NotificationNameIs.editButton.startNotification { [weak self] notification in
+            guard let self = self,
+                  let diaryModel = notification.object as? DiaryModel else { return }
+            
+            self.updateModel(diaryModel)
+            self.reloadCollectionViewSnapShot()
         }
     }
     
