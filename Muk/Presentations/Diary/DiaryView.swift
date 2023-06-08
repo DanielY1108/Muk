@@ -137,6 +137,15 @@ final class DiaryView: UIView {
     private func configUI() {
         self.backgroundColor = HexCode.tabBarBackground.color
         titleLabel.font = .preferredFont(forTextStyle: .title3)
+        
+        // 자동 교정하지 않게 만들기
+        placeTextField.autocorrectionType = .no
+        // 자동 대문자 사용 안함
+        placeTextField.autocapitalizationType = .none
+        // 맞춤법 검사
+        placeTextField.spellCheckingType = .no
+        
+        saveOrEditButton.isEnabled = false
     }
     
     private func setupTextField() {
@@ -149,6 +158,18 @@ final class DiaryView: UIView {
     private func setupButtonsAction() {
         saveOrEditButton.addTarget(self, action: #selector(saveOrEditButtonHandler), for: .touchUpInside)
         closeButton.addTarget(self, action: #selector(closeButtonHandler), for: .touchUpInside)
+    }
+    
+    func confirmButtonActivation() {
+        guard let placeName = placeTextField.text else { return }
+        
+        if placeName.isEmpty {
+            saveOrEditButton.isEnabled = false
+            saveOrEditButton.backgroundColor = .clear
+        } else {
+            saveOrEditButton.isEnabled = true
+            saveOrEditButton.backgroundColor = HexCode.unselected.color
+        }
     }
 }
 

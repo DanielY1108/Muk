@@ -76,7 +76,9 @@ extension DiaryViewController {
         diaryView.detailTextView.delegate = self
         diaryView.placeTextField.delegate = self
         diaryView.locationTextField.delegate = self
-        
+        // 처음에 place 이름이 있으면 버튼을 활성화
+        diaryView.confirmButtonActivation()
+
         imageTapGesture()
     }
     
@@ -326,6 +328,8 @@ extension DiaryViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         // binding 밸류 변화
         viewModel.diaryModel.value.placeName = textField.text
+        
+        diaryView.confirmButtonActivation()
     }
 }
 
@@ -339,8 +343,9 @@ extension DiaryViewController: UITextViewDelegate {
         
         if textView.text == diaryView.detailTextViewPlaceHolder {
             diaryView.detailTextView.text = nil
-            diaryView.detailTextView.textColor = .black
         }
+        
+        diaryView.detailTextView.textColor = .black
     }
     
     // Placeholder 세팅

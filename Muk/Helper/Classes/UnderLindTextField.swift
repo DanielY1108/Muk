@@ -40,7 +40,7 @@ final class UnderLindTextField: UITextField {
     func setPlaceHolder(_ text: String, color: UIColor = .placeholderText) {
         placeholderColor = color
         
-        let textAttribute = [NSAttributedString.Key.foregroundColor: placeholderColor]
+        let textAttribute = [NSAttributedString.Key.foregroundColor: UIColor.systemRed]
         
         self.attributedPlaceholder = NSAttributedString(string: text,
                                                         attributes: textAttribute)
