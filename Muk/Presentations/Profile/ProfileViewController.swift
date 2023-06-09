@@ -35,6 +35,10 @@ final class ProfileViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         viewModel.stopNotification()
+        
+        // 만약 텍스트뷰를 열어놨다면, 종료 시 닫아서 다시 킬 때 초기상태로 만듬
+        guard let visibleCells = collectionView.visibleCells as? [ProfileCell] else { return }
+        visibleCells.forEach { $0.showHideButton(isOn: false) }
     }
     
     // MARK: - Method
@@ -127,30 +131,8 @@ extension ProfileViewController: ProfileCellDelegate {
     func showHideButtonTapped(_ cell: ProfileCell, button: UIButton) {
         print("show,Hide Button Tapped")
         
-        // 아마도 타이틀을 AttributedString로 만들어줘서 currentTitle값이 nil인 듯 싶다.
-        switch button.titleLabel?.text {
-        case "Show":
-            cell.detailLabel.numberOfLines = 0
-            
-            var titleAttribute = AttributedString.init("Hide")
-            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
-            
-            button.configuration?.attributedTitle = titleAttribute
-            
-            viewModel.reloadCollectionViewSnapShot()
-            
-        case "Hide":
-            cell.detailLabel.numberOfLines = 2
-            
-            var titleAttribute = AttributedString.init("Show")
-            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
-            
-            button.configuration?.attributedTitle = titleAttribute
-            
-            viewModel.reloadCollectionViewSnapShot()
-            
-        default: break
-        }
+        cell.showHideButtonAction()
+        viewModel.reloadCollectionViewSnapShot()
     }
 }
 

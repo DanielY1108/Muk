@@ -240,6 +240,9 @@ extension CustomTabBarController {
         switch sender.tag {
         case 0:
             print("Search")
+            let vc = UIViewController()
+            vc.view.backgroundColor = HexCode.unselected.color
+        
         case 1:
             // Current Location Button Tapped
             let diaryVC = DiaryViewController()

@@ -269,6 +269,42 @@ final class ProfileCell: UICollectionViewCell {
     }
 }
 
+// MARK: - Show Hide Button methods
+
+extension ProfileCell {
+    
+    func showHideButton(isOn: Bool) {
+        switch isOn {
+        case true:
+            detailLabel.numberOfLines = 0
+            
+            var titleAttribute = AttributedString.init("Hide")
+            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
+            
+            showHideButton.configuration?.attributedTitle = titleAttribute
+            
+        case false:
+            detailLabel.numberOfLines = 2
+            
+            var titleAttribute = AttributedString.init("Show")
+            titleAttribute.font = .preferredFont(forTextStyle: .footnote)
+            
+            showHideButton.configuration?.attributedTitle = titleAttribute
+        }
+    }
+
+    func showHideButtonAction() {
+        // 아마도 타이틀을 AttributedString로 만들어줘서 currentTitle값이 nil인 듯 싶다.
+        switch showHideButton.titleLabel?.text {
+        case "Show":
+            showHideButton(isOn: true)
+        case "Hide":
+            showHideButton(isOn: false)
+        default: break
+        }
+    }
+}
+
 
 // MARK: - 스크롤뷰 델리게이트 & pagecontrol
 
