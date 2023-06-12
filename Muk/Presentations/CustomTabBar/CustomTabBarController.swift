@@ -40,6 +40,11 @@ final class CustomTabBarController: UITabBarController {
         setupTabBar()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
@@ -240,9 +245,10 @@ extension CustomTabBarController {
         switch sender.tag {
         case 0:
             print("Search")
-            let vc = UIViewController()
-            vc.view.backgroundColor = HexCode.unselected.color
-        
+            let searchVC = SearchViewController()
+            searchVC.modalPresentationStyle = .fullScreen
+            customDelegate?.didSelectedPopButton(self, presentController: searchVC)
+            show(searchVC, sender: nil)
         case 1:
             // Current Location Button Tapped
             let diaryVC = DiaryViewController()

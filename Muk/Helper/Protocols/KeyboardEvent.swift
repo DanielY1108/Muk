@@ -12,6 +12,7 @@ protocol KeyboardEvent where Self: UIViewController {
     func setupKeyboardEvent()
 }
 
+// 키보드가 올라갈 때 화면도 같이 올라가게 하는 메서드
 extension KeyboardEvent where Self: UIViewController {
     func setupKeyboardEvent() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,

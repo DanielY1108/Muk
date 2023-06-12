@@ -78,15 +78,33 @@ extension MapViewController: CustomTabBarDelegate {
     func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
         
         switch presentController {
-        case is DiaryViewController:
-            guard let diaryVC = presentController as? DiaryViewController,
-                  let currentCoordinate = viewModel.loadCurrentCoordinate() else {
-                print("Failed to get the Current Location Coordinate")
+        case is SearchViewController:
+            guard let searchVC = presentController as? SearchViewController else {
                 return
             }
-            print("Send current location to DiaryVC")
-            // DiaryVC로 현재 위치 주소를 전달
-            diaryVC.viewModel.transferCoordinate(currentCoordinate)
+            
+            if let currentCoordinate = viewModel.loadCurrentCoordinate() {
+                print("Successed send current location to searchVC")
+                searchVC.searchListViewModel = SearchListViewModel(currentLoaction: currentCoordinate)
+            } else {
+                print("Failed to get the Current Location Coordinate - Search")
+                searchVC.searchListViewModel = SearchListViewModel(documents: [])
+            }
+            
+        case is DiaryViewController:
+            guard let diaryVC = presentController as? DiaryViewController else {
+                return
+            }
+            
+            if let currentCoordinate = viewModel.loadCurrentCoordinate() {
+                print("Successed send current location to DiaryVC")
+                // DiaryVC로 현재 위치 주소를 전달
+                diaryVC.viewModel.transferCoordinate(currentCoordinate)
+            } else {
+                print("Failed to get the Current Location Coordinate - Diary")
+                // TODO: - 여기서 일단 주소를 사용안할 때, 현재 위치에서 어노테이션 추가가 불가능 하니, 다시 위치를 허용하는지 여부를 물어봐야한다. 아니면 무조건 위치 허용 안하면 앱 사용 불가능하게 만들어야 됨
+            }
+            
             
         default: break
             

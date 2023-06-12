@@ -9,9 +9,9 @@ import CoreLocation
 
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     
-    typealias FetchLocationCompletion = (CLLocationCoordinate2D?, Error?) -> Void
-
     private let locationManager = CLLocationManager()
+    
+    typealias FetchLocationCompletion = (CLLocationCoordinate2D?, Error?) -> Void
     // 동작을 담아주기 위해 클로저를 만들어 줌
     private var fetchLocationCompletion: FetchLocationCompletion?
     
@@ -82,6 +82,7 @@ extension LocationManager {
         case .notDetermined , .denied , .restricted:
             print("Location Auth: denied")
             self.stopUpdatingLocation()
+            // TODO: - 위치 정보를 무조건 사용해야 하므로, 알람 후 설정창을 띄어준다.
         default: break
         }
     }

@@ -30,7 +30,7 @@ final class DiaryView: UIView {
     private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, locationTextField])
     
     private let detailLabel = UIFactory.createDiaryLabel(title: "내용")
-    let detailTextViewPlaceHolder = "내용을 입력해주세요."
+    let detailTextViewPlaceHolder = "내용을 입력해 주세요."
     lazy var detailTextView = UIFactory.createDiaryTextView(placeHolder: detailTextViewPlaceHolder)
     lazy var detailStackView = UIFactory.createDiaryStackView(arrangedSubviews: [detailLabel, detailTextView])
     
@@ -150,8 +150,8 @@ final class DiaryView: UIView {
     
     private func setupTextField() {
         dateTextField.setPlaceHolder("2023년 05월 24일")
-        placeTextField.setPlaceHolder("장소를 입력해주세요.")
-        locationTextField.setPlaceHolder("주소를 확인해주세요.")
+        placeTextField.setPlaceHolder("장소를 입력해 주세요.")
+        locationTextField.setPlaceHolder("주소를 확인해 주세요.")
     }
     
     // DiaryView 버튼 셋팅

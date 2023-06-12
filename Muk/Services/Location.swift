@@ -18,6 +18,7 @@ struct Document: Codable {
     let placeURL: String
     let latitude: String
     let longitude: String
+    let distance: String
     
     enum CodingKeys: String, CodingKey {
         case addressName = "address_name"
@@ -26,5 +27,6 @@ struct Document: Codable {
         case placeURL = "place_url"
         case latitude = "y"
         case longitude = "x"
+        case distance
     }
 }
