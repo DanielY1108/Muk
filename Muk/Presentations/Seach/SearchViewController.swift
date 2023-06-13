@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
     
     // MARK: - Properites
     
@@ -183,9 +183,10 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let searchViewModel = searchListViewModel.documentAtIndex(indexPath.row)
-        
-        print(searchViewModel.latitude, searchViewModel.longitude)
-        print(searchViewModel.distance)
+    
+        let searchMap = SearchMapViewController()
+        searchMap.viewModel = SearchMapViewModel(searchViewModel: searchViewModel)
+        show(searchMap, sender: nil)
     }
 }
 

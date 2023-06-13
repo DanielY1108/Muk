@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-class SearchListViewModel {
+final class SearchListViewModel {
     
     private(set) var documents: [Document]
     private(set) var currentLoaction: CLLocationCoordinate2D?
@@ -45,7 +45,7 @@ class SearchListViewModel {
 
 struct SearchViewModel {
     
-    private let document: Document
+    private(set) var document: Document
     private(set) var placaeName: String
     private(set) var addressName: String
     private(set) var latitude: String

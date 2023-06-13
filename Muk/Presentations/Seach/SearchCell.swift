@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchCell: UITableViewCell {
+final class SearchCell: UITableViewCell {
     
     private var placeNameLabel = UILabel()
     private var detailAddressLabel = UILabel()
