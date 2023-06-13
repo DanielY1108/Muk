@@ -83,10 +83,7 @@ extension SearchViewController {
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.placeholder = "장소를 검색해 주세요."
         
-        let label = UILabel()
-        label.text = "팁: 주소를 같이 쓰면 더욱 정확해져요. (예: 맥도날드 강남)"
-        label.font = .preferredFont(forTextStyle: .footnote)
-        label.textColor = HexCode.selected.color
+        let label = UIFactory.createTipLabel()
 
         searchController.searchBar.addSubview(label)
         label.snp.makeConstraints {
@@ -101,6 +98,7 @@ extension SearchViewController {
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints {
+            // 검색창 밑 TipLabel 의 크기를 고려해서 만들어 줌
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.leading.trailing.bottom.equalToSuperview()
         }
@@ -113,6 +111,7 @@ extension SearchViewController {
 }
 
 // MARK: - Search Delegate
+
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

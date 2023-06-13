@@ -247,6 +247,19 @@ extension UIFactory {
     }
 }
 
+// MARK: - SearchViewController UI
+
+extension UIFactory {
+    static func createTipLabel() -> UILabel {
+        let label = UILabel()
+        label.text = "팁: 주소를 같이 쓰면 더욱 정확해져요. (예: 맥도날드 강남)"
+        label.font = .preferredFont(forTextStyle: .footnote)
+        label.textColor = HexCode.selected.color
+        
+        return label
+    }
+}
+
 
 // MARK: - PreView 읽기
 import SwiftUI

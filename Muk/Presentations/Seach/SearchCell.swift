@@ -53,8 +53,8 @@ class SearchCell: UITableViewCell {
         guard let distance = Double(searchViewModel.distance) else { return }
         
         if distance >= 1000 {
-            let convertDistanceToKm = distance / 1000
-            distanceLabel.text = String(format: "%.1fkm", convertDistanceToKm)
+            let convertMeterToKm = distance / 1000
+            distanceLabel.text = String(format: "%.1fkm", convertMeterToKm)
         } else {
             distanceLabel.text = "\(searchViewModel.distance)m"
         }
