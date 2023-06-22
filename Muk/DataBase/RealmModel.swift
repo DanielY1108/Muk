@@ -13,7 +13,7 @@ final class RealmModel: Object {
     @Persisted(primaryKey: true) var identifier: UUID
     @Persisted var date: Date
     @Persisted var placeName: String?
-    @Persisted var locationName: String?
+    @Persisted var addressName: String?
     @Persisted var detailText: String?
     
     @Persisted var location: MukLocation!
@@ -26,7 +26,7 @@ final class RealmModel: Object {
         self.identifier = diaryModel.identifier
         self.date = diaryModel.date
         self.placeName = diaryModel.placeName
-        self.locationName = diaryModel.locationName
+        self.addressName = diaryModel.addressName
         self.detailText = diaryModel.detailText
         
         let loaction = diaryModel.coordinate

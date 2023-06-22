@@ -22,8 +22,8 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        viewModel.loadDatabase()
         viewModel.binding(mapView: mapView)
+        viewModel.loadDatabase()
     }
     
     override func viewWillAppear(_ animated: Bool) {

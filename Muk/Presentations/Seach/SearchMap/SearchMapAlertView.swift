@@ -7,7 +7,18 @@
 
 import UIKit
 
+enum AlertButtonAction: Int {
+    case done
+    case cancel
+}
+
+protocol SearchMapAlertViewDelegate: AnyObject {
+    func buttonTapped(_ view: SearchMapAlertView, action: AlertButtonAction)
+}
+ 
 class SearchMapAlertView: UIView {
+    
+    weak var delegate: SearchMapAlertViewDelegate?
 
     let baseView = UIView()
     private let titleLabel = UILabel()
@@ -65,6 +76,8 @@ class SearchMapAlertView: UIView {
         let doneButtonAttributedTitle = NSAttributedString(string: "여기에요!", attributes: doneButtonAttributes)
         doneButtonConfig.attributedTitle = AttributedString(doneButtonAttributedTitle)
         doneButton.configuration = doneButtonConfig
+        doneButton.tag = 0
+        doneButton.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
         
         var cancelButtonConfig = UIButton.Configuration.filled()
         cancelButtonConfig.cornerStyle = .large
@@ -77,6 +90,9 @@ class SearchMapAlertView: UIView {
         let cancelButtonAttributedTitle = NSAttributedString(string: "여기가 아니에요", attributes: cancelButtonAttributes)
         cancelButtonConfig.attributedTitle = AttributedString(cancelButtonAttributedTitle)
         cancelButton.configuration = cancelButtonConfig
+        cancelButton.tag = 1
+        cancelButton.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
+
         
         self.setupLayout()
     }
@@ -110,6 +126,25 @@ class SearchMapAlertView: UIView {
             $0.top.equalTo(titleStack.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(10)
             $0.bottom.equalToSuperview().inset(10)
+        }
+    }
+}
+
+// MARK: - Button Handler
+extension SearchMapAlertView {
+    
+    private func performButtonAction(_ action: AlertButtonAction) {
+        switch action {
+        case .done:
+            self.delegate?.buttonTapped(self, action: action)
+        case .cancel:
+            self.delegate?.buttonTapped(self, action: action)
+        }
+    }
+    
+    @objc func buttonHandler(_ sender: UIButton) {
+        if let buttonAction = AlertButtonAction(rawValue: sender.tag) {
+            performButtonAction(buttonAction)
         }
     }
 }

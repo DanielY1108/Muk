@@ -36,6 +36,10 @@ final class SearchMapViewController: UIViewController {
         setupAlert()
     }
     
+    deinit {
+        print("SearchMapViewController 제거 됨")
+    }
+    
     // 한국을 중심으로 지도를 보여줌 (극적인 애니메이션 효과를 위해)
     private func centerMapOnKorea() {
         let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.8)
@@ -65,7 +69,8 @@ final class SearchMapViewController: UIViewController {
     private func setupAlert() {
         self.alertView = SearchMapAlertView(title: viewModel.placaeName,
                                             messege: viewModel.addressName)
-   
+        alertView.delegate = self
+
         self.mapView.addSubview(alertView)
         alertView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -78,10 +83,41 @@ final class SearchMapViewController: UIViewController {
     }
 }
 
+// MARK: - MKMapViewDelegate
+
 extension SearchMapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
         self.focusAnnotation(latitude: viewModel.latitude,
                              longitude: viewModel.longitude)
+    }
+}
+
+
+// MARK: - SearchMapAlertView 델리게이트
+
+extension SearchMapViewController: SearchMapAlertViewDelegate {
+    
+    func buttonTapped(_ view: SearchMapAlertView, action: AlertButtonAction) {
+        switch action {
+        case .done:
+            let diaryVC = DiaryViewController()
+            let coordinate = CLLocationCoordinate2D(latitude: viewModel.latitude,
+                                                    longitude: viewModel.longitude)
+            diaryVC.viewModel.transferLocationInfo(place: viewModel.placaeName,
+                                                               address: viewModel.addressName,
+                                                               coordinate: coordinate)
+            
+            // 주소 텍스트 필드 수정 금지
+            diaryVC.textFieldIsUserInteraction(enable: false)
+            
+            self.navigationController?.popToRootViewController(animated: false)
+            
+            diaryVC.modalPresentationStyle = .fullScreen
+            self.present(diaryVC, animated: true)
+            
+        case .cancel:
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }

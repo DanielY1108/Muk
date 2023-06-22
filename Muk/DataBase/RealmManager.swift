@@ -24,7 +24,7 @@ final class RealmManager {
         do {
             try realm.write {
                 realm.add(object)
-//                print("Sucess save \(realm.configuration.fileURL)")
+                print("Sucess save \(realm.configuration.fileURL)")
             }
         } catch {
             print(error)

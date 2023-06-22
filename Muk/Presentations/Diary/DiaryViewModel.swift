@@ -34,6 +34,13 @@ final class DiaryViewModel {
         self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
     }
     
+    // SearchMapViewController에서 위치 및 주소를 전달 받음
+    func transferLocationInfo(place: String, address: String, coordinate: CLLocationCoordinate2D) {
+        self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
+        self.diaryModel.value.placeName = place
+        self.diaryModel.value.addressName = address
+    }
+    
     func postNotificationWithModel(_ notificationName: NotificationNameIs) {
         switch notificationName {
         case .saveButton:

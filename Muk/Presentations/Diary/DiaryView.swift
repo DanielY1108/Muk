@@ -26,8 +26,8 @@ final class DiaryView: UIView {
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     let placeTextField = UnderLindTextField()
-    let locationTextField = UnderLindTextField()
-    private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, locationTextField])
+    let addressTextField = UnderLindTextField()
+    private lazy var placeNameStackView = UIFactory.createDiaryStackView(arrangedSubviews: [placeNameLabel, placeTextField, addressTextField])
     
     private let detailLabel = UIFactory.createDiaryLabel(title: "내용")
     let detailTextViewPlaceHolder = "내용을 입력해 주세요."
@@ -70,7 +70,7 @@ final class DiaryView: UIView {
         
         self.addSubview(closeButton)
         closeButton.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide).offset(space)
+            $0.top.equalTo(self.safeAreaLayoutGuide).offset(5)
             $0.leading.equalToSuperview().inset(space)
         }
         
@@ -151,7 +151,7 @@ final class DiaryView: UIView {
     private func setupTextField() {
         dateTextField.setPlaceHolder("2023년 05월 24일")
         placeTextField.setPlaceHolder("장소를 입력해 주세요.")
-        locationTextField.setPlaceHolder("주소를 확인해 주세요.")
+        addressTextField.setPlaceHolder("주소를 입력해 주세요.")
     }
     
     // DiaryView 버튼 셋팅

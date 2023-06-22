@@ -13,7 +13,7 @@ struct DiaryModel: Hashable {
     var images: [UIImage]?
     var date: Date
     var placeName: String?
-    var locationName: String?
+    var addressName: String?
     var detailText: String?
     var coordinate: (lat: Double, lon: Double)
     
@@ -40,7 +40,7 @@ struct DiaryModel: Hashable {
         self.identifier = dataBaseModel.identifier
         self.date = dataBaseModel.date
         self.placeName = dataBaseModel.placeName
-        self.locationName = dataBaseModel.locationName
+        self.addressName = dataBaseModel.addressName
         self.detailText = dataBaseModel.detailText
         self.coordinate = (dataBaseModel.location.latitude,
                            dataBaseModel.location.longitude)

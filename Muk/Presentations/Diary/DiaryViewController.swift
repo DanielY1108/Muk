@@ -61,7 +61,7 @@ extension DiaryViewController {
         viewModel.diaryModel.bind { model in
             view.dateTextField.text = DateFormatter.custom(date: model.date)
             view.placeTextField.text = model.placeName
-            view.locationTextField.text = model.locationName
+            view.addressTextField.text = model.addressName
             view.detailTextView.text = model.detailText
         }
     }
@@ -75,7 +75,7 @@ extension DiaryViewController {
         diaryView.photoScrollView.delegate = self
         diaryView.detailTextView.delegate = self
         diaryView.placeTextField.delegate = self
-        diaryView.locationTextField.delegate = self
+        diaryView.addressTextField.delegate = self
         // 처음에 place 이름이 있으면 버튼을 활성화
         diaryView.confirmButtonActivation()
 
@@ -325,10 +325,20 @@ extension DiaryViewController {
 // MARK: - 텍스트필드 델리게이트
 
 extension DiaryViewController: UITextFieldDelegate {
+    
+    // 주소 변경을 방지하기 위해서 만듬
+    func textFieldIsUserInteraction(enable: Bool) {
+        diaryView.placeTextField.isUserInteractionEnabled = enable
+        diaryView.addressTextField.isUserInteractionEnabled = enable
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         // binding 밸류 변화
-        viewModel.diaryModel.value.placeName = textField.text
-        
+        if textField == diaryView.placeTextField {
+            viewModel.diaryModel.value.placeName = textField.text
+        } else {
+            viewModel.diaryModel.value.addressName = textField.text
+        }
         diaryView.confirmButtonActivation()
     }
 }
@@ -397,12 +407,12 @@ extension DiaryViewController: DiaryViewDelegate {
         default: break
         }
         
-        self.dismiss(animated: true)
+        self.dismiss(animated: false)
     }
     
     func closeButtonTapped(_ view: DiaryView) {
-        dismiss(animated: true)
         print("Close button Tapped")
+        self.dismiss(animated: false)
     }
 }
 

@@ -112,6 +112,9 @@ extension ProfileViewController: ProfileCellDelegate {
         diaryVC.viewModel.diaryModel.value = selectedDiaryModel
         
         diaryVC.diaryView.saveOrEditButton.configuration?.title = "수정"
+        
+        // 주소 텍스트 필드 수정 금지
+        diaryVC.textFieldIsUserInteraction(enable: false)
         self.present(diaryVC, animated: true)
         
         print("Edit Action")
