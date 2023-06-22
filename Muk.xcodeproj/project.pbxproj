@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		651659CA2A3994FF00018AEF /* SearchMapAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651659C92A3994FF00018AEF /* SearchMapAlertView.swift */; };
 		652126FD2A0B84B1003AF26A /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652126FC2A0B84B1003AF26A /* MapViewModel.swift */; };
 		6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D83929BF526D005EFBFF /* AppDelegate.swift */; };
 		6523D83C29BF526D005EFBFF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523D83B29BF526D005EFBFF /* SceneDelegate.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		651659C92A3994FF00018AEF /* SearchMapAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMapAlertView.swift; sourceTree = "<group>"; };
 		652126FC2A0B84B1003AF26A /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		6523D83629BF526D005EFBFF /* Muk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Muk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6523D83929BF526D005EFBFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 		65920AF42A382F2F009F358B /* SearchMap */ = {
 			isa = PBXGroup;
 			children = (
+				651659C92A3994FF00018AEF /* SearchMapAlertView.swift */,
 				65920AF22A382F26009F358B /* SearchMapViewController.swift */,
 				65920AF52A383211009F358B /* SearchMapViewModel.swift */,
 			);
@@ -419,6 +422,7 @@
 				655E377229C19A9E00FBACAE /* TabBarItems.swift in Sources */,
 				6533F9B129D333D400C66394 /* SearchService.swift in Sources */,
 				65A8689B29F1311A00251120 /* CALayer+Shadow.swift in Sources */,
+				651659CA2A3994FF00018AEF /* SearchMapAlertView.swift in Sources */,
 				655E376F29C199E500FBACAE /* UIColor+HexCodeColor.swift in Sources */,
 				65FF0DCE29C891A200ACF031 /* UIFactory.swift in Sources */,
 				652EC4FA29E83889000C795E /* ProfileCell.swift in Sources */,

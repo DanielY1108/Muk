@@ -13,6 +13,7 @@ final class SearchMapViewController: UIViewController {
     
     var viewModel: SearchMapViewModel!
     
+    private var alertView: SearchMapAlertView!
     private let mapView = MKMapView()
     private let annotation = MKPointAnnotation()
 
@@ -20,7 +21,6 @@ final class SearchMapViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
-        
     }
     
     private func setupUI() {
@@ -63,20 +63,18 @@ final class SearchMapViewController: UIViewController {
     }
     
     private func setupAlert() {
-        let alert = UIAlertController(title: viewModel.placaeName,
-                                      message: viewModel.addressName,
-                                      preferredStyle: .actionSheet)
-        let nextButton = UIAlertAction(title: "여기가 맞아요!", style: .default) { action in
-            
+        self.alertView = SearchMapAlertView(title: viewModel.placaeName,
+                                            messege: viewModel.addressName)
+   
+        self.mapView.addSubview(alertView)
+        alertView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
-        
-        let closeButton = UIAlertAction(title: "여기가 아니에요.", style: .cancel) { action in
-            self.navigationController?.popViewController(animated: true)
-        }
-        
-        alert.addAction(nextButton)
-        alert.addAction(closeButton)
-        present(alert, animated: true)
+    
+        // 그림자 크기를 구하기 위해 드로윙 사이클을 강제로 업데이트
+        self.view.layoutIfNeeded()
+        let baseViewShadowPathSize = alertView.baseView.bounds.size
+        alertView.baseView.layer.createShadow(size: baseViewShadowPathSize)
     }
 }
 
@@ -85,7 +83,5 @@ extension SearchMapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
         self.focusAnnotation(latitude: viewModel.latitude,
                              longitude: viewModel.longitude)
-        
-        
     }
 }

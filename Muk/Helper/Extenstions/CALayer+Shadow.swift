@@ -28,4 +28,16 @@ extension CALayer {
         self.shadowOpacity = 0.9                            // 흐려지는 반경
         self.shadowRadius = 5                               // 불투명도 (0 ~ 1)
     }
+    
+    func createShadow(size: CGSize) {
+        let currnetSize = size
+        let currnetRect = CGRect(origin: .zero, size: currnetSize)
+        let path = UIBezierPath(roundedRect: currnetRect, cornerRadius: cornerRadius)
+        
+        self.shadowPath = path.cgPath
+        self.shadowColor = HexCode.selected.color.cgColor   // 그림자 색
+        self.shadowOffset = CGSize(width: 0, height: 1)     // 밑면 그림자 크기
+        self.shadowOpacity = 0.9                            // 흐려지는 반경
+        self.shadowRadius = 5                               // 불투명도 (0 ~ 1)
+    }
 }
