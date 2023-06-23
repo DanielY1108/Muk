@@ -53,10 +53,6 @@ extension MapViewModel {
         }
     }
     
-    func loadCurrentCoordinate() -> CLLocationCoordinate2D? {
-        return self.currentCoordinate
-    }
-    
     // 현재 위치를 딱 한번 요청해서 업데이트시켜 줍니다.
     func requestLocation() {
         locationManager.requestLocation()

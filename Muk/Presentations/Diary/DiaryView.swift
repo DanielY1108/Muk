@@ -148,6 +148,7 @@ final class DiaryView: UIView {
         saveOrEditButton.isEnabled = false
     }
     
+    // 밑줄 관련 지우면 안됨!
     private func setupTextField() {
         dateTextField.setPlaceHolder("2023년 05월 24일")
         placeTextField.setPlaceHolder("장소를 입력해 주세요.")

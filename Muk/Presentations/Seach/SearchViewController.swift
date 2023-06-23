@@ -117,7 +117,7 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let currentCoordinate = searchListViewModel.currentLoaction else {
             // 위치 정보가 없을 때, distance 없이 데이터 얻음
-            SearchService.getLocation(name: searchText) { [weak self] result in
+            Service.getLocation(name: searchText) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
@@ -136,7 +136,9 @@ extension SearchViewController: UISearchBarDelegate {
         }
 
         // 위치 정보가 있을 때, distance 정보를 포함한 데이터를 얻음
-        SearchService.getLocationWithCurrentLocation(name: searchText, x: currentCoordinate.longitude, y: currentCoordinate.latitude) { [weak self] result in
+        Service.getLocationWithDistance(name: searchText,
+                                                     lat: currentCoordinate.latitude,
+                                                     lng: currentCoordinate.longitude) { [weak self] result in
             guard let self = self else { return }
             
             switch result {

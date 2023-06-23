@@ -29,16 +29,9 @@ final class DiaryViewModel {
         diaryModel.value.images = []
     }
     
-    // MapView에서 coordinate(위치)를 전달받음
-    func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
-        self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
-    }
-    
-    // SearchMapViewController에서 위치 및 주소를 전달 받음
-    func transferLocationInfo(place: String, address: String, coordinate: CLLocationCoordinate2D) {
-        self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
-        self.diaryModel.value.placeName = place
-        self.diaryModel.value.addressName = address
+    // 이미지 수정 시, 순번을 저장하는 메서드
+    func saveSelectedAssetIdentifierWhenEditing() {
+        self.selectedAssetIdentifiers = diaryModel.value.selectedAssetIdentifiers
     }
     
     func postNotificationWithModel(_ notificationName: NotificationNameIs) {
@@ -50,11 +43,51 @@ final class DiaryViewModel {
         default: break
         }
     }
+}
+
+
+// MARK: - SearchMapViewController Method
+
+extension DiaryViewModel {
     
-    func saveSelectedAssetIdentifierWhenEditing() {
-        self.selectedAssetIdentifiers = diaryModel.value.selectedAssetIdentifiers
+    // SearchMapViewController에서 위치 및 주소를 전달 받음
+    func transferLocationInfo(place: String, address: String, coordinate: CLLocationCoordinate2D) {
+        self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
+        self.diaryModel.value.placeName = place
+        self.diaryModel.value.addressName = address
     }
 }
+
+// MARK: - MapView Method
+
+extension DiaryViewModel {
+    
+    // MapView에서 coordinate(위치)를 전달받음
+    func transferCoordinate(_ coordinate: CLLocationCoordinate2D) {
+        self.diaryModel.value.coordinate = (coordinate.latitude, coordinate.longitude)
+        // 주소값 얻어서 주소 텍스트 필드에 바인딩으로 처리해 줌
+        self.getAddress(currentCoordinate: coordinate)
+    }
+    
+    // 현재 위, 경도를 통해서 주소값 얻기
+    private func getAddress(currentCoordinate: CLLocationCoordinate2D) {
+        Service.getAddressFromCoordinate(lat: currentCoordinate.latitude,
+                                         lng: currentCoordinate.longitude) { [weak self] result in
+            
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let address):
+                guard let document = address.documents.first else { return }
+                self.diaryModel.value.addressName = document.addressName
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+}
+
+// MARK: - Database Method
 
 extension DiaryViewModel {
     // Realm과 FileManager의 데이터 베이스에 저장

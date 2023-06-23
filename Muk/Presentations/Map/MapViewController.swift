@@ -83,7 +83,7 @@ extension MapViewController: CustomTabBarDelegate {
                 return
             }
             
-            if let currentCoordinate = viewModel.loadCurrentCoordinate() {
+            if let currentCoordinate = viewModel.currentCoordinate {
                 print("Successed send current location to searchVC")
                 searchVC.searchListViewModel = SearchListViewModel(currentLoaction: currentCoordinate)
             } else {
@@ -96,9 +96,9 @@ extension MapViewController: CustomTabBarDelegate {
                 return
             }
             
-            if let currentCoordinate = viewModel.loadCurrentCoordinate() {
+            if let currentCoordinate = viewModel.currentCoordinate {
                 print("Successed send current location to DiaryVC")
-                // DiaryVC로 현재 위치 주소를 전달
+                // DiaryVC로 현재 위치를 전달 및 주소를 API를 통해 받아옴
                 diaryVC.viewModel.transferCoordinate(currentCoordinate)
             } else {
                 print("Failed to get the Current Location Coordinate - Diary")

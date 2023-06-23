@@ -9,7 +9,7 @@ import Foundation
 
 struct SearchMapViewModel {
     
-    private var documnet: Document
+    private var documnet: LDocument
         
     init(searchViewModel: SearchViewModel) {
         self.documnet = searchViewModel.document

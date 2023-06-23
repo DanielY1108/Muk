@@ -15,7 +15,7 @@ struct DiaryModel: Hashable {
     var placeName: String?
     var addressName: String?
     var detailText: String?
-    var coordinate: (lat: Double, lon: Double)
+    var coordinate: (lat: Double, lng: Double)
     
     // 선택한 사진의 순서에 맞게 Identifier들을 배열로 저장해줄 겁니다.
     var selectedAssetIdentifiers: [String]
@@ -32,7 +32,7 @@ struct DiaryModel: Hashable {
     init() {
         self.date = Date()
         self.coordinate = (37, 127)
-        self.detailText = "내용을 입력해주세요."
+        self.detailText = "내용을 입력해 주세요."
         self.selectedAssetIdentifiers = []
     }
     

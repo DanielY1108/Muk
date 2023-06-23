@@ -32,7 +32,7 @@ final class RealmModel: Object {
         let loaction = diaryModel.coordinate
         self.location = MukLocation()
         self.location.latitude = loaction.lat
-        self.location.longitude = loaction.lon
+        self.location.longitude = loaction.lng
         
         diaryModel.selectedAssetIdentifiers.forEach {
             let mukPhoto = MuKPhoto()

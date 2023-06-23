@@ -8,10 +8,10 @@
 import Foundation
 
 struct Location: Codable {
-    let documents: [Document]
+    let documents: [LDocument]
 }
 
-struct Document: Codable {
+struct LDocument: Codable {
     let addressName: String
     let roadAddressName: String
     let placeName: String

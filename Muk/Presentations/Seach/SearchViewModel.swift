@@ -10,11 +10,11 @@ import CoreLocation
 
 final class SearchListViewModel {
     
-    private(set) var documents: [Document]
+    private(set) var documents: [LDocument]
     private(set) var currentLoaction: CLLocationCoordinate2D?
     
     // 현재 위치가 없을 때, 생성자 (mapVC에서 사용)
-    init(documents: [Document]) {
+    init(documents: [LDocument]) {
         self.documents = documents
     }
     
@@ -38,21 +38,21 @@ final class SearchListViewModel {
     }
     
     // API 통신 중, documents 데이터를 업데이트
-    func updateDocuments(_ documents: [Document]) {
+    func updateDocuments(_ documents: [LDocument]) {
         self.documents = documents
     }
 }
 
 struct SearchViewModel {
     
-    private(set) var document: Document
+    private(set) var document: LDocument
     private(set) var placaeName: String
     private(set) var addressName: String
     private(set) var latitude: String
     private(set) var longitude: String
     private(set) var distance: String
     
-    init(document: Document) {
+    init(document: LDocument) {
         self.document = document
         self.placaeName = document.placeName
         self.addressName = document.addressName

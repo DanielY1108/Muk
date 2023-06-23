@@ -59,10 +59,12 @@ extension DiaryViewController {
     
     func binding(on view: DiaryView) {
         viewModel.diaryModel.bind { model in
-            view.dateTextField.text = DateFormatter.custom(date: model.date)
-            view.placeTextField.text = model.placeName
-            view.addressTextField.text = model.addressName
-            view.detailTextView.text = model.detailText
+            DispatchQueue.main.async {
+                view.dateTextField.text = DateFormatter.custom(date: model.date)
+                view.placeTextField.text = model.placeName
+                view.addressTextField.text = model.addressName
+                view.detailTextView.text = model.detailText
+            }
         }
     }
     
@@ -352,6 +354,7 @@ extension DiaryViewController: UITextViewDelegate {
         textView.layer.borderWidth = 1
         
         if textView.text == diaryView.detailTextViewPlaceHolder {
+            print(1)
             diaryView.detailTextView.text = nil
         }
         
