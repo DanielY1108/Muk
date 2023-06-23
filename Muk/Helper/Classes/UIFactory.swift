@@ -162,6 +162,7 @@ extension UIFactory {
     static func createDiaryLabel(title text: String, style: UIFont.TextStyle = .headline) -> UILabel {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: style)
+        label.textColor = HexCode.selected.color
         label.text = text
         label.textAlignment = .center
         

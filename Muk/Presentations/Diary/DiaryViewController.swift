@@ -290,6 +290,7 @@ extension DiaryViewController {
         viewModel.datePicker.datePickerMode = .date
         // 스타일 설정
         viewModel.datePicker.preferredDatePickerStyle = .wheels
+        viewModel.datePicker.backgroundColor = HexCode.tabBarBackground.color
         viewModel.datePicker.locale = Locale(identifier: "ko-KR")
         viewModel.datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
         
@@ -308,6 +309,10 @@ extension DiaryViewController {
     // DatePicker 툴바 설정
     private func setupToolBar() {
         let toolBar = UIToolbar()
+        let toolBarAppearance = UIToolbarAppearance()
+        toolBarAppearance.backgroundColor = HexCode.unselected.color
+        toolBar.tintColor = HexCode.selected.color
+        toolBar.standardAppearance = toolBarAppearance
         
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandler))
