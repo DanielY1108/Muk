@@ -58,13 +58,16 @@ final class DiaryViewController: UIViewController {
 extension DiaryViewController {
     
     func binding(on view: DiaryView) {
-        viewModel.diaryModel.bind { model in
+        viewModel.diaryModel.bind { [weak self] model in
             DispatchQueue.main.async {
                 view.dateTextField.text = DateFormatter.custom(date: model.date)
                 view.placeTextField.text = model.placeName
                 view.addressTextField.text = model.addressName
                 view.detailTextView.text = model.detailText
             }
+            
+            guard let self = self else { return }
+            self.diaryView.confirmButtonActivation()
         }
     }
     
@@ -333,7 +336,7 @@ extension DiaryViewController {
 
 extension DiaryViewController: UITextFieldDelegate {
     
-    // 주소 변경을 방지하기 위해서 만듬
+    // 주소 변경을 방지하기 위해서 만듬(프로필 뷰컨, 서치 뷰컨)
     func textFieldIsUserInteraction(enable: Bool) {
         diaryView.placeTextField.isUserInteractionEnabled = enable
         diaryView.addressTextField.isUserInteractionEnabled = enable
@@ -346,7 +349,6 @@ extension DiaryViewController: UITextFieldDelegate {
         } else {
             viewModel.diaryModel.value.addressName = textField.text
         }
-        diaryView.confirmButtonActivation()
     }
 }
 

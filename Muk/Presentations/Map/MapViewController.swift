@@ -43,6 +43,8 @@ final class MapViewController: UIViewController {
 extension MapViewController {
     
     private func setupUI() {
+        // 다크 모드
+        self.overrideUserInterfaceStyle = .dark
         
         self.setupMapView()
         self.setupCurrnetLocationButton()
