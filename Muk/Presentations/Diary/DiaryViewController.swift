@@ -59,15 +59,16 @@ extension DiaryViewController {
     
     func binding(on view: DiaryView) {
         viewModel.diaryModel.bind { [weak self] model in
+            guard let self = self else { return }
+
             DispatchQueue.main.async {
                 view.dateTextField.text = DateFormatter.custom(date: model.date)
                 view.placeTextField.text = model.placeName
                 view.addressTextField.text = model.addressName
                 view.detailTextView.text = model.detailText
+                
+                self.diaryView.confirmButtonActivation()
             }
-            
-            guard let self = self else { return }
-            self.diaryView.confirmButtonActivation()
         }
     }
     

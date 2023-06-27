@@ -66,10 +66,10 @@ final class CustomTabBarController: UITabBarController {
         }
         
         // DiaryVC에서 델리게이트로 데이터를 전달하려면 profileVC를 한번은 실행시켜줘야 델리게이트가 동작
-        self.selectedViewController = self.viewControllers?[TabBarItems.profileVC.rawValue]
-        DispatchQueue.main.async {
-            self.selectedViewController = self.viewControllers?[TabBarItems.mapVC.rawValue]
-        }
+//        self.selectedViewController = self.viewControllers?[TabBarItems.profileVC.rawValue]
+//        DispatchQueue.main.async {
+//            self.selectedViewController = self.viewControllers?[TabBarItems.mapVC.rawValue]
+//        }
     }
     
     private func viewControllerForTabBarItem(_ itme: TabBarItems) -> UIViewController {
@@ -94,6 +94,30 @@ final class CustomTabBarController: UITabBarController {
 // MARK: - 탭바 컨트롤러 델리게이트
 
 extension CustomTabBarController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        // 현재 뷰와 선택한 뷰를 뽑아 니다.. 뷰가 존재 하지 않으면 탭바 전환 없음 (false)으로 만들어 줌
+        guard let fromView = tabBarController.selectedViewController?.view,
+              let toView = viewController.view else { return false }
+        
+        // 현재 뷰와 바뀔 뷰가 같다면 동작 안함. (shouldSelect 메서드는 클릭할 때마다 동작하므로 멈춰주는 조건이 필요함)
+        if fromView == toView {
+            return false
+        } else {
+            toView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            
+            // options에서 뷰 전환 애니메이션은 transition으로 시작하는 값을 사용
+            UIView.animateKeyframes(withDuration: 0.5, delay: 0) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 3/5) {
+                    toView.transform = .identity
+                }
+                UIView.addKeyframe(withRelativeStartTime: 3/5, relativeDuration: 1) {
+                    UIView.transition(from: fromView, to: toView, duration: 0.5, options: .transitionCrossDissolve)
+                }
+            }
+            return true
+        }
+    }
     
     // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
