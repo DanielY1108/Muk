@@ -7,6 +7,17 @@
 
 import UIKit
 
+enum SettingTitle: String {
+    case MapType = "지도 종류"
+    case ZoomRange = "사용자 위치 표시 범위"
+    case Review = "앱 리뷰"
+    case Question = "문의사항"
+    case Help = "도움말"
+    case PrivacyPolicy = "개인정보 정책"
+    case TermsAndConditions = "이용약관"
+    case Version = "버전"
+}
+
 class SettingViewModel {
     
     private var dataSource: [TableSection]!
@@ -20,20 +31,20 @@ class SettingViewModel {
     
     private func setupDataSource() {
         mapRows = [
-            TableItem(name: "지도 종류", option: "표준"),
-            TableItem(name: "지도 표시 범위", option: "500m")
+            TableItem(name: SettingTitle.MapType.rawValue, option: "표준"),
+            TableItem(name: SettingTitle.ZoomRange.rawValue, option: "500m")
         ]
         
         feedbackRows = [
-            TableItem(name: "앱 리뷰"),
-            TableItem(name: "문의사항")
+            TableItem(name: SettingTitle.Review.rawValue),
+            TableItem(name: SettingTitle.Question.rawValue)
         ]
         
         infoRows = [
-            TableItem(name: "도움말"),
-            TableItem(name: "개인정보 정책"),
-            TableItem(name: "이용약관"),
-            TableItem(name: "버전", option: "1.0")
+            TableItem(name: SettingTitle.Help.rawValue),
+            TableItem(name: SettingTitle.PrivacyPolicy.rawValue),
+            TableItem(name: SettingTitle.TermsAndConditions.rawValue),
+            TableItem(name: SettingTitle.Version.rawValue, option: "1.0")
         ]
         
         dataSource = [
