@@ -29,7 +29,7 @@ extension UIFactory {
     static func createMiddleButton(size: CGFloat) -> UIButton {
         // 현재 심볼 이미지를 변형(size, font 등)
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20,
-                                                      weight: .heavy,
+                                                      weight: .bold,
                                                       scale: .large)
         
         let button = UIButton(configuration: .plain())
@@ -57,7 +57,7 @@ extension UIFactory {
         button.layer.cornerRadius = size / 2
         
         // 버튼 그림자 설정
-        button.layer.createShadow(size: size)
+//        button.layer.createShadow(size: size)
         
         // 버튼 색상
         button.tintColor = HexCode.unselected.color

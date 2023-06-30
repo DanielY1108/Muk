@@ -78,6 +78,11 @@ extension ProfileViewController {
 
 extension ProfileViewController {
     
+    enum BarItem: Int {
+        case setting
+        case sort
+    }
+    
     private func setupNavigationBarAppearance() {
         
         let appearance = UINavigationBarAppearance()
@@ -89,9 +94,39 @@ extension ProfileViewController {
         
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.tintColor = HexCode.selected.color
         
         let titleLabel = UIFactory.createNavigationTitleLabel("Profile")
         navigationItem.titleView = titleLabel
+        
+        self.setupNaviationBarItme()
+    }
+  
+    private func setupNaviationBarItme() {
+        
+        let settingBarItem = UIBarButtonItem(image: UIImage(systemName: "gearshape.fill"),
+                                             style: .plain,
+                                             target: self,
+                                             action: #selector(settingButtonHandler))
+        settingBarItem.tag = BarItem.setting.rawValue
+        let sortBarItem = UIBarButtonItem(image: UIImage(systemName: "list.dash"),
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(settingButtonHandler))
+        sortBarItem.tag = BarItem.sort.rawValue
+        navigationItem.rightBarButtonItems = [settingBarItem, sortBarItem]
+        
+    }
+    
+    @objc func settingButtonHandler(_ sender: UIBarButtonItem) {
+        switch sender.tag {
+        case BarItem.setting.rawValue:
+            let settingViewController = SettingViewController()
+            self.show(settingViewController, sender: nil)
+        case BarItem.sort.rawValue:
+            print("sort")
+        default: break
+        }
     }
     
 }

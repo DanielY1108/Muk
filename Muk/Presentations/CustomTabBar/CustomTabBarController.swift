@@ -21,7 +21,7 @@ final class CustomTabBarController: UITabBarController {
     private let customTabBar = CustomTabBar()
     
     // 중간 버튼 생성
-    private let middleButtonSize: CGFloat = 50
+    private let middleButtonSize: CGFloat = 45
     private lazy var middleButton = UIFactory.createMiddleButton(size: middleButtonSize)
     
     // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
@@ -188,7 +188,7 @@ extension CustomTabBarController {
             self.middleButton.backgroundColor = HexCode.unselected.color
             
             // 버튼 테두리 설정
-            self.middleButton.layer.borderWidth = 4
+            self.middleButton.layer.borderWidth = 2
             self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
             
             self.middleButtonTapped = anitaion
