@@ -22,8 +22,9 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        viewModel.binding(mapView: mapView)
-        viewModel.loadDatabase()
+        self.binding()
+        // 바인딩 후, setupDatabase 작업을 해줘야 한다!
+        viewModel.setupDatabase()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +36,6 @@ final class MapViewController: UIViewController {
         super.viewDidDisappear(animated)
         viewModel.stopNotification()
     }
-    
 }
 
 // MARK: - UI 설정
@@ -71,9 +71,37 @@ extension MapViewController {
     @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
         
-        viewModel.setRegion(on: self.mapView)
+        guard let currentRegion = viewModel.currentRegion else { return }
+        mapView.setRegion(currentRegion, animated: true)
     }
 }
+
+// MARK: - Methods
+
+extension MapViewController {
+    
+    func binding() {
+        // 어노테이션 바인딩
+        viewModel.selectedAnnotation.bind { [weak self] annotation in
+             guard let self = self else { return }
+            // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
+            switch annotation.process {
+            case .save:
+                self.mapView.addAnnotation(annotation)
+            case .delete:
+                self.mapView.removeAnnotation(annotation)
+            default: break
+            }
+        }
+        
+        // 현재 위치 표시 범위를 위한 바인딩 (버튼에서 Region 사용)
+        viewModel.mapZoomRange.bind { [weak self] mapZoomRange in
+            guard let self = self else { return }
+            self.viewModel.setupCurrentRegion()
+        }
+    }
+}
+
 
 // pop 버튼 델리게이트 핸들러
 extension MapViewController: CustomTabBarDelegate {
@@ -191,19 +219,3 @@ extension MapViewController: MKMapViewDelegate {
         }
     }
 }
-
-
-// MARK: - PreView 읽기
-import SwiftUI
-
-#if DEBUG
-struct PreView1: PreviewProvider {
-    static var previews: some View {
-        // 사용할 뷰 컨트롤러를 넣어주세요
-        MapViewController()
-            .toPreview()
-    }
-}
-#endif
-
-

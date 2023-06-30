@@ -117,7 +117,11 @@ extension SettingViewController {
     
     private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange) {
         // 선택된 MapZoomRange 처리 로직
-        print("MapZoomRange selected:", mapZoomRange)
+        print("MapZoomRange selected:", mapZoomRange.rawValue)
+        
+        // 노티피케이션 전달 및 유저 디폴트에 저장
+        NotificationNameIs.zoomRange.postNotification(with: mapZoomRange.rawValue)
+        UserDefaults.standard.setValue(mapZoomRange.rawValue, forKey: MapSetting.zoomRange.rawValue)
     }
     
     private func showAlert(_ mapSetting: MapSetting) {
@@ -170,7 +174,7 @@ extension SettingViewController {
 
 // MARK: - Helper
 
-fileprivate enum MapSetting {
+enum MapSetting: String {
     case mapType
     case zoomRange
 }
@@ -194,14 +198,14 @@ fileprivate enum MapType: CaseIterable {
     }
 }
 
-fileprivate enum MapZoomRange: CaseIterable {
+fileprivate enum MapZoomRange: Int, CaseIterable {
     static var title: String = "사용자 위치 표시 범위 선택"
     
-    case twoHundred
-    case threeHundred
-    case fiveHundred
-    case tenHundred
-    case twentyHundred
+    case twoHundred = 200
+    case threeHundred = 300
+    case fiveHundred = 500
+    case tenHundred = 1000
+    case twentyHundred = 2000
     
     var name: String {
         switch self {

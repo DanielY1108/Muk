@@ -18,38 +18,28 @@ final class MapViewModel {
     
     private(set) var allAnnotaions = [CustomAnnotation]()
     private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
+    private(set) var mapZoomRange: Observable<Int> = Observable(500)
+    private(set) var currentRegion: MKCoordinateRegion?
     
     // MARK: - Initializer
     
     init() {
         self.fetchLocation()
-        self.startNotificationWithCompletion()
-    }
-    
-    // MARK: - Methods
-    
-    func binding(mapView: MKMapView) {
-        selectedAnnotation.bind { annotation in
-            // AnnotaionProcess을 갖고 각각을 다른 동작을 하게 함.
-            switch annotation.process {
-            case .save:
-                mapView.addAnnotation(annotation)
-            case .delete:
-                mapView.removeAnnotation(annotation)
-            default: break
-            }
-        }
+        self.setupNotification()
     }
 }
+
 // MARK: - Location Methods
 
 extension MapViewModel {
-    
+
     // currentCoordinate에 현재 위치주소를 담는 핸들러
     private func fetchLocation() {
         locationManager.fetchLocation { [weak self] location, error in
             guard let self = self else { return }
+            
             self.currentCoordinate = location
+            self.setupCurrentRegion()
         }
     }
     
@@ -62,24 +52,25 @@ extension MapViewModel {
 // MARK: - MKMapView Methods
 
 extension MapViewModel {
-    // 현재위치에서 어느정도 영역으로 확대할지 보여주는 메서드 (currentLocationHandelr)
-    func setRegion(on mapView: MKMapView) {
-        guard let coordinate = currentCoordinate else {
-            locationManager.requestLocation()
-            return
-        }
+    
+    func setupCurrentRegion() {
+        guard let currentCoordinate = self.currentCoordinate else { return }
         
-        let region = MKCoordinateRegion(center: coordinate,
-                                        latitudinalMeters: 500,
-                                        longitudinalMeters: 500)
-        
-        mapView.setRegion(region, animated: true)
+        let currentRegion = MKCoordinateRegion(center: currentCoordinate,
+                                               latitudinalMeters: CLLocationDistance(mapZoomRange.value),
+                                               longitudinalMeters: CLLocationDistance(mapZoomRange.value))
+        self.currentRegion = currentRegion
     }
 }
 
 // MARK: - Notification & Annotaion Methods
 
 extension MapViewModel {
+    
+    private func setupNotification() {
+        startNotificationWithCompletion()
+        startZoomRangeNotificationWithCompletion()
+    }
     
     private func startNotificationWithCompletion() {
         // DiaryVC에서 Save버튼을 클릭하면 받는 노티피케이션 데이터를 저장한다.
@@ -120,9 +111,19 @@ extension MapViewModel {
         }
     }
     
+    func startZoomRangeNotificationWithCompletion() {
+        NotificationNameIs.zoomRange.startNotification { [weak self] notification in
+            guard let self = self,
+                  let zoomRange = notification.object as? Int else { return }
+            
+            self.mapZoomRange.value = zoomRange
+        }
+    }
+    
     func stopNotification() {
         NotificationNameIs.saveButton.stopNotification()
         NotificationNameIs.deleteBtton.stopNotification()
+        NotificationNameIs.zoomRange.stopNotification()
     }
     
     func loadAllAnnotations() -> [MKAnnotation] {
@@ -130,13 +131,17 @@ extension MapViewModel {
     }
 }
 
-
-// MARK: - dataBase
+// MARK: - dataBase & UserDefault
 
 extension MapViewModel {
     
+    func setupDatabase() {
+        loadDatabase()
+        loadUserDefault()
+    }
+  
     // 처음 시작할 때, 한번만 데이터베이스에 저장된 데이터를 받아옵니다.
-    func loadDatabase() {
+    private func loadDatabase() {
         let databaseModels = RealmManager.shared.load(RealmModel.self)
         // LazyMapSequence이기 때문에 먼저 배열로 감싸줘서 [CustomAnnotation]으로 만들어주는 작업이 필요하다.
         let annotaions = Array(databaseModels).map { CustomAnnotation(databaseModel: $0, process: .save) }
@@ -146,5 +151,11 @@ extension MapViewModel {
         annotaions.forEach {
             self.selectedAnnotation.value = $0
         }
+    }
+    
+    // 처음 시작할 때, 저장된 맵 설정관련 데이터를 받아옵니다.
+    private func loadUserDefault() {
+        guard let zoomRange = UserDefaults.standard.value(forKey: MapSetting.zoomRange.rawValue) as? Int else { return }
+        mapZoomRange.value = zoomRange
     }
 }

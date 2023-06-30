@@ -8,21 +8,15 @@
 import UIKit
 
 // 이름을 추가해서 사용하자
-enum NotificationNameIs: NotificationProtocol {
+enum NotificationNameIs: String, NotificationProtocol {
     
     case saveButton
     case deleteBtton
     case editButton
+    case zoomRange
     
     var name: Notification.Name {
-        switch self {
-        case .saveButton:
-            return Notification.Name("Save Button")
-        case .deleteBtton:
-            return Notification.Name("Delete Button")
-        case .editButton:
-            return Notification.Name("Edit Button")
-        }
+        return Notification.Name(self.rawValue)
     }
 }
 
