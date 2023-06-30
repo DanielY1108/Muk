@@ -45,7 +45,8 @@ final class Service {
             }
             
             guard let safeData = data,
-                  let jsonData = try? JSONDecoder().decode(Location.self, from: safeData) else {
+                  let jsonData = try? JSONDecoder().decode(Location.self, from: safeData)
+            else {
                 completion(.failure(.failedParseJSON))
                 return
             }
@@ -80,7 +81,8 @@ final class Service {
             }
             
             guard let safeData = data,
-                  let jsonData = try? JSONDecoder().decode(Location.self, from: safeData) else {
+                  let jsonData = try? JSONDecoder().decode(Location.self, from: safeData)
+            else {
                 completion(.failure(.failedParseJSON))
                 return
             }
@@ -115,7 +117,8 @@ final class Service {
             }
             
             guard let safeData = data,
-                  let jsonData = try? JSONDecoder().decode(Address.self, from: safeData) else {
+                  let jsonData = try? JSONDecoder().decode(Address.self, from: safeData)
+            else {
                 completion(.failure(.failedParseJSON))
                 return
             }

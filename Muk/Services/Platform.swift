@@ -38,7 +38,8 @@ enum Platform: String {
         }
         
         guard let plistData = try? Data(contentsOf: plistUrl),
-              let dict = try? PropertyListSerialization.propertyList(from: plistData, format: nil) as? NSDictionary else {
+              let dict = try? PropertyListSerialization.propertyList(from: plistData, format: nil) as? NSDictionary
+        else {
             fatalError("Couldn't load dictionary from data.")
         }
         
