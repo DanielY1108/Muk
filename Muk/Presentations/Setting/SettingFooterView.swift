@@ -10,7 +10,7 @@ import UIKit
 class SettingFooterView: UITableViewHeaderFooterView {
     
     private var separatorView: UIView!
-
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         

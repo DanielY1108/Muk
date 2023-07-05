@@ -7,44 +7,47 @@
 
 import UIKit
 
-enum SettingTitle: String {
-    case MapType = "지도 종류"
-    case ZoomRange = "사용자 위치 표시 범위"
-    case Review = "앱 리뷰"
-    case Question = "문의사항"
-    case Help = "도움말"
-    case PrivacyPolicy = "개인정보 정책"
-    case TermsAndConditions = "이용약관"
-    case Version = "버전"
+struct TableSection {
+    let name: String
+    let rows: [SettingCellViewModel]
 }
 
 class SettingViewModel {
     
-    private var dataSource: [TableSection]!
-    private var mapRows: [TableItem]!
-    private var feedbackRows: [TableItem]!
-    private var infoRows: [TableItem]!
+    private(set) var dataSource: [TableSection]!
+    
+    // 초기 ZoomRange 저장값을 시작 시, 로드해서 표시
+    private var settingZoomRangeUserDefault: String? {
+        guard let zoomRangeValue = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int else { return nil }
+        
+        if zoomRangeValue < 1000 {
+            return "\(zoomRangeValue)m"
+        } else {
+            return "\(zoomRangeValue/1000)km"
+        }
+    }
     
     init() {
         setupDataSource()
     }
     
     private func setupDataSource() {
-        mapRows = [
-            TableItem(name: SettingTitle.MapType.rawValue, option: "표준"),
-            TableItem(name: SettingTitle.ZoomRange.rawValue, option: "500m")
+        
+        let mapRows: [SettingCellViewModel] = [
+            SettingCellViewModel(category: .map(.mapType), option: "표준"),
+            SettingCellViewModel(category: .map(.zoomRange), option: settingZoomRangeUserDefault)
         ]
         
-        feedbackRows = [
-            TableItem(name: SettingTitle.Review.rawValue),
-            TableItem(name: SettingTitle.Question.rawValue)
+        let feedbackRows: [SettingCellViewModel] = [
+            SettingCellViewModel(category: .feedback(.appReview)),
+            SettingCellViewModel(category: .feedback(.question))
         ]
         
-        infoRows = [
-            TableItem(name: SettingTitle.Help.rawValue),
-            TableItem(name: SettingTitle.PrivacyPolicy.rawValue),
-            TableItem(name: SettingTitle.TermsAndConditions.rawValue),
-            TableItem(name: SettingTitle.Version.rawValue, option: "1.0")
+        let infoRows: [SettingCellViewModel] = [
+            SettingCellViewModel(category: .appInfo(.help)),
+            SettingCellViewModel(category: .appInfo(.privacyPolicy)),
+            SettingCellViewModel(category: .appInfo(.termsAndCondtions)),
+            SettingCellViewModel(category: .appInfo(.version), option: "1.0")
         ]
         
         dataSource = [
@@ -54,29 +57,23 @@ class SettingViewModel {
         ]
     }
     
-    func getTable(_ section: Int) -> TableSection {
+    // 각 섹션
+    func getTable(at section: Int) -> TableSection {
         return dataSource[section]
     }
     
-    func getTableItem(forRowAt indexPath: IndexPath) -> TableItem {
+    // 각 섹션의 아이템
+    func getTableItem(at indexPath: IndexPath) -> SettingCellViewModel {
         return dataSource[indexPath.section].rows[indexPath.row]
     }
-        
+    
+    // 섹션의 갯수
     func numberOfSections() -> Int {
         return dataSource.count
     }
     
+    // 셀(아이템)의 갯수
     func numberOfRows(in section: Int) -> Int {
         return dataSource[section].rows.count
     }
-}
-
-struct TableSection {
-    let name: String
-    let rows: [TableItem]
-}
-
-struct TableItem {
-    let name: String
-    var option: String?
 }

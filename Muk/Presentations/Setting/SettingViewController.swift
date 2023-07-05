@@ -23,7 +23,7 @@ class SettingViewController: UIViewController {
         table.register(SettingFooterView.self, forHeaderFooterViewReuseIdentifier: NSStringFromClass(SettingFooterView.self))
         return table
     }()
- 
+    
     // MARK: - Life Cycles
     
     override func viewDidLoad() {
@@ -45,12 +45,13 @@ class SettingViewController: UIViewController {
 }
 
 extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
-
+    
     // MARK: - UITableView DataDase
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: NSStringFromClass(SettingHeaderView.self)) as? SettingHeaderView else { return nil }
-        header.name.value = viewModel.getTable(section).name
+        let name = viewModel.getTable(at: section).name
+        header.setupText(name)
         return header
     }
     
@@ -72,11 +73,9 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                                                        for: indexPath) as? SettingCell else {
             fatalError("Failed Load Cell")
         }
-     
-        cell.name.value = viewModel.getTableItem(forRowAt: indexPath).name
-        if let option = viewModel.getTableItem(forRowAt: indexPath).option {
-            cell.option.value = option
-        }
+        
+        let cellViewModel = viewModel.getTableItem(at: indexPath)
+        cell.bindingText(with: cellViewModel)
         
         return cell
     }
@@ -94,13 +93,15 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let selectedCell = viewModel.getTableItem(forRowAt: indexPath)
+        let cellViewModel = viewModel.getTableItem(at: indexPath)
         
-        switch selectedCell.name {
-        case SettingTitle.MapType.rawValue:
-            showAlert(.mapType)
-        case SettingTitle.ZoomRange.rawValue:
-            showAlert(.zoomRange)
+        switch cellViewModel.category {
+        case .map(.mapType):
+            let alert = makeAlert(.mapType, with: cellViewModel)
+            self.present(alert, animated: true)
+        case .map(.zoomRange):
+            let alert = makeAlert(.zoomRange, with: cellViewModel)
+            self.present(alert, animated: true)
         default: break
         }
     }
@@ -112,34 +113,31 @@ extension SettingViewController {
     
     private func mapTypeHandler(_ mapTpye: MapType) {
         // 선택된 MapSetting 처리 로직
-        print("MapSetting selected:", mapTpye)
+        print("MapSetting selected:", mapTpye.name)
     }
     
-    private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange) {
+    private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange, with cell: SettingCellViewModel) {
         // 선택된 MapZoomRange 처리 로직
-        print("MapZoomRange selected:", mapZoomRange.rawValue)
+        print("MapZoomRange selected:", mapZoomRange.name)
+        
+        DispatchQueue.main.async {
+            // 바인딩 값 변경
+            cell.option.value = mapZoomRange.name
+            self.tableView.reloadData()
+        }
         
         // 노티피케이션 전달 및 유저 디폴트에 저장
         NotificationNameIs.zoomRange.postNotification(with: mapZoomRange.rawValue)
-        UserDefaults.standard.setValue(mapZoomRange.rawValue, forKey: MapSetting.zoomRange.rawValue)
+        UserDefaults.standard.setValue(mapZoomRange.rawValue, forKey: MapZoomRange.title)
     }
     
-    private func showAlert(_ mapSetting: MapSetting) {
-        switch mapSetting {
-        case .mapType:
-            self.present(makeAlert(mapSetting), animated: true)
-        case .zoomRange:
-            self.present(makeAlert(mapSetting), animated: true)
-        }
-    }
-    
-    private func makeAlert(_ mapSetting: MapSetting) -> UIAlertController {
-        switch mapSetting {
+    private func makeAlert(_ mapCategory: MapSubCategory, with cell: SettingCellViewModel) -> UIAlertController {
+        switch mapCategory {
         case .mapType:
             let alert = UIAlertController(title: "\(MapType.title)",
                                           message: nil,
                                           preferredStyle: .actionSheet)
-    
+            
             for mapTpye in MapType.allCases {
                 let action = UIAlertAction(title: mapTpye.name,
                                            style: .default) { [weak self] _ in
@@ -149,37 +147,32 @@ extension SettingViewController {
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
             alert.addAction(cancel)
-    
+            
             return alert
-    
+            
         case .zoomRange:
             let alert = UIAlertController(title: "\(MapZoomRange.title)",
                                           message: nil,
                                           preferredStyle: .actionSheet)
-    
-            for zoomRange in MapZoomRange.allCases {
-                let action = UIAlertAction(title: zoomRange.name,
+            
+            for mapZoomRange in MapZoomRange.allCases {
+                let action = UIAlertAction(title: "사용자 중심 \(mapZoomRange.name)",
                                            style: .default) { [weak self] _ in
-                    self?.mapZoomRangeHandler(zoomRange)
+                    self?.mapZoomRangeHandler(mapZoomRange, with: cell)
                 }
                 alert.addAction(action)
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
             alert.addAction(cancel)
-    
+            
             return alert
         }
     }
 }
 
-// MARK: - Helper
+// MARK: - 맵 관련 옵션 세팅 (Alert 창 관련 값)
 
-enum MapSetting: String {
-    case mapType
-    case zoomRange
-}
-
-fileprivate enum MapType: CaseIterable {
+enum MapType: CaseIterable {
     static var title: String = "지도 종류 선택"
     
     case standard
@@ -198,7 +191,7 @@ fileprivate enum MapType: CaseIterable {
     }
 }
 
-fileprivate enum MapZoomRange: Int, CaseIterable {
+enum MapZoomRange: Int, CaseIterable {
     static var title: String = "사용자 위치 표시 범위 선택"
     
     case twoHundred = 200
@@ -207,18 +200,19 @@ fileprivate enum MapZoomRange: Int, CaseIterable {
     case tenHundred = 1000
     case twentyHundred = 2000
     
+    // Alert를 띄어 줄 때만 사용 (value로 계산해서 해도 되지만, 코드가 지저분해보임)
     var name: String {
         switch self {
         case .twoHundred:
-            return "사용자 중심 200m"
+            return "200m"
         case .threeHundred:
-            return "사용자 중심 300m"
+            return "300m"
         case .fiveHundred:
-            return "사용자 중심 500m"
+            return "500m"
         case .tenHundred:
-            return "사용자 중심 1km"
+            return "1km"
         case .twentyHundred:
-            return "사용자 중심 2km"
+            return "2km"
         }
     }
 }

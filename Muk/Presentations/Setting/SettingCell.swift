@@ -9,9 +9,8 @@ import UIKit
 
 class SettingCell: UITableViewCell {
     
-    var name: Observable<String> = Observable("")
-    var option: Observable<String> = Observable("")
-
+    private var config: UIListContentConfiguration!
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -24,21 +23,21 @@ class SettingCell: UITableViewCell {
     private func setupUI() {
         self.backgroundColor = HexCode.background.color
         
-        var config = self.defaultContentConfiguration()
+        config = self.defaultContentConfiguration()
         config.prefersSideBySideTextAndSecondaryText = true
         config.textProperties.font = .systemFont(ofSize: 15, weight: .light)
         config.secondaryTextProperties.font = .systemFont(ofSize: 15)
         config.secondaryTextProperties.color = HexCode.selected.color
+        self.contentConfiguration = config
+    }
+    
+    func bindingText(with viewModel: SettingCellViewModel) {
+        config.text = viewModel.category.title
         
-        name.bind { name in
-            config.text = name
-            self.contentConfiguration = config
+        viewModel.option.bind { [weak self] option in
+            self?.config.secondaryText = option
         }
         
-        option.bind { option in
-            config.secondaryText = option
-            self.contentConfiguration = config
-        }
-        
+        self.contentConfiguration = config
     }
 }

@@ -9,8 +9,8 @@ import UIKit
 
 class SettingHeaderView: UITableViewHeaderFooterView {
     
-    var name: Observable<String> = Observable("")
-
+    private var config: UIListContentConfiguration!
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         
@@ -22,13 +22,14 @@ class SettingHeaderView: UITableViewHeaderFooterView {
     }
     
     private func configUI() {
-        var config = self.defaultContentConfiguration()
+        config = self.defaultContentConfiguration()
         config.textProperties.font = .systemFont(ofSize: 17, weight: .black)
         config.textProperties.color = HexCode.selected.color
-        
-        name.bind { name in
-            config.text = name
-            self.contentConfiguration = config
-        }
+        self.contentConfiguration = config
+    }
+    
+    func setupText(_ text: String) {
+        config.text = text
+        self.contentConfiguration = config
     }
 }

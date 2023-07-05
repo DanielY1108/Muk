@@ -155,7 +155,7 @@ extension MapViewModel {
     
     // 처음 시작할 때, 저장된 맵 설정관련 데이터를 받아옵니다.
     private func loadUserDefault() {
-        guard let zoomRange = UserDefaults.standard.value(forKey: MapSetting.zoomRange.rawValue) as? Int else { return }
+        guard let zoomRange = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int else { return }
         mapZoomRange.value = zoomRange
     }
 }
