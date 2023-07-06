@@ -18,6 +18,7 @@ final class MapViewModel {
     
     private(set) var allAnnotaions = [CustomAnnotation]()
     private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
+    private(set) var mapType: Observable<String> = Observable("표준")
     private(set) var mapZoomRange: Observable<Int> = Observable(500)
     private(set) var currentRegion: MKCoordinateRegion?
     
@@ -69,6 +70,7 @@ extension MapViewModel {
     
     private func setupNotification() {
         startNotificationWithCompletion()
+        startMapTypeNotificationWithCompletion()
         startZoomRangeNotificationWithCompletion()
     }
     
@@ -111,8 +113,17 @@ extension MapViewModel {
         }
     }
     
-    func startZoomRangeNotificationWithCompletion() {
-        NotificationNameIs.zoomRange.startNotification { [weak self] notification in
+    private func startMapTypeNotificationWithCompletion() {
+        NotificationNameIs.mapType.startNotification { [weak self] notification in
+            guard let self = self,
+                  let mapType = notification.object as? String else { return }
+            
+            self.mapType.value = mapType
+        }
+    }
+    
+    private func startZoomRangeNotificationWithCompletion() {
+        NotificationNameIs.mapZoomRange.startNotification { [weak self] notification in
             guard let self = self,
                   let zoomRange = notification.object as? Int else { return }
             
@@ -123,7 +134,8 @@ extension MapViewModel {
     func stopNotification() {
         NotificationNameIs.saveButton.stopNotification()
         NotificationNameIs.deleteBtton.stopNotification()
-        NotificationNameIs.zoomRange.stopNotification()
+        NotificationNameIs.mapZoomRange.stopNotification()
+        NotificationNameIs.mapType.stopNotification()
     }
     
     func loadAllAnnotations() -> [MKAnnotation] {
@@ -155,7 +167,13 @@ extension MapViewModel {
     
     // 처음 시작할 때, 저장된 맵 설정관련 데이터를 받아옵니다.
     private func loadUserDefault() {
-        guard let zoomRange = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int else { return }
-        mapZoomRange.value = zoomRange
+        if let mapType = UserDefaults.standard.value(forKey: MapType.title) as? String {
+            self.mapType.value = mapType
+        }
+        
+        if let mapZoomRange = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int {
+            self.mapZoomRange.value = mapZoomRange
+        }
+        
     }
 }

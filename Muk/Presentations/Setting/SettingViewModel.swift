@@ -17,25 +17,19 @@ class SettingViewModel {
     private(set) var dataSource: [TableSection]!
     
     // 초기 ZoomRange 저장값을 시작 시, 로드해서 표시
-    private var settingZoomRangeUserDefault: String? {
-        guard let zoomRangeValue = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int else { return nil }
-        
-        if zoomRangeValue < 1000 {
-            return "\(zoomRangeValue)m"
-        } else {
-            return "\(zoomRangeValue/1000)km"
-        }
-    }
+    private(set) var mapTypeUserDefaultValue: String?
+    private var mapZoomRangeUserDefaultValue: String?
     
     init() {
+        loadUserDefault()
         setupDataSource()
     }
     
     private func setupDataSource() {
         
         let mapRows: [SettingCellViewModel] = [
-            SettingCellViewModel(category: .map(.mapType), option: "표준"),
-            SettingCellViewModel(category: .map(.zoomRange), option: settingZoomRangeUserDefault)
+            SettingCellViewModel(category: .map(.mapType), option: mapTypeUserDefaultValue),
+            SettingCellViewModel(category: .map(.zoomRange), option: mapZoomRangeUserDefaultValue)
         ]
         
         let feedbackRows: [SettingCellViewModel] = [
@@ -75,5 +69,26 @@ class SettingViewModel {
     // 셀(아이템)의 갯수
     func numberOfRows(in section: Int) -> Int {
         return dataSource[section].rows.count
+    }
+}
+
+// MARK: - UserDefault 로드 작업 (초기값 작업)
+
+extension SettingViewModel {
+    
+    private func loadUserDefault() {
+        // Map Type
+        if let mapTypeValue = UserDefaults.standard.value(forKey: MapType.title) as? String {
+            self.mapTypeUserDefaultValue = mapTypeValue
+        }
+        
+        // Zoom Range
+        if let zoomRangeValue = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int {
+            if zoomRangeValue < 1000 {
+                self.mapZoomRangeUserDefaultValue = "\(zoomRangeValue)m"
+            } else {
+                self.mapZoomRangeUserDefaultValue = "\(zoomRangeValue/1000)km"
+            }
+        }
     }
 }

@@ -111,9 +111,18 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SettingViewController {
     
-    private func mapTypeHandler(_ mapTpye: MapType) {
+    private func mapTypeHandler(_ mapTpye: MapType, with cell: SettingCellViewModel) {
         // 선택된 MapSetting 처리 로직
         print("MapSetting selected:", mapTpye.name)
+        
+        DispatchQueue.main.async {
+            // 바인딩 값 변경
+            cell.option.value = mapTpye.name
+            self.tableView.reloadData()
+        }
+        // 노티피케이션 전달 및 유저 디폴트에 저장
+        NotificationNameIs.mapType.postNotification(with: mapTpye.name)
+        UserDefaults.standard.setValue(mapTpye.name, forKey: MapType.title)
     }
     
     private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange, with cell: SettingCellViewModel) {
@@ -127,7 +136,7 @@ extension SettingViewController {
         }
         
         // 노티피케이션 전달 및 유저 디폴트에 저장
-        NotificationNameIs.zoomRange.postNotification(with: mapZoomRange.rawValue)
+        NotificationNameIs.mapZoomRange.postNotification(with: mapZoomRange.rawValue)
         UserDefaults.standard.setValue(mapZoomRange.rawValue, forKey: MapZoomRange.title)
     }
     
@@ -141,7 +150,7 @@ extension SettingViewController {
             for mapTpye in MapType.allCases {
                 let action = UIAlertAction(title: mapTpye.name,
                                            style: .default) { [weak self] _ in
-                    self?.mapTypeHandler(mapTpye)
+                    self?.mapTypeHandler(mapTpye, with: cell)
                 }
                 alert.addAction(action)
             }

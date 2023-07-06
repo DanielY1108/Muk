@@ -13,7 +13,8 @@ enum NotificationNameIs: String, NotificationProtocol {
     case saveButton
     case deleteBtton
     case editButton
-    case zoomRange
+    case mapType
+    case mapZoomRange
     
     var name: Notification.Name {
         return Notification.Name(self.rawValue)

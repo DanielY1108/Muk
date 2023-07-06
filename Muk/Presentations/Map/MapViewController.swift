@@ -80,7 +80,7 @@ extension MapViewController {
 
 extension MapViewController {
     
-    func binding() {
+    private func binding() {
         // 어노테이션 바인딩
         viewModel.selectedAnnotation.bind { [weak self] annotation in
              guard let self = self else { return }
@@ -90,6 +90,30 @@ extension MapViewController {
                 self.mapView.addAnnotation(annotation)
             case .delete:
                 self.mapView.removeAnnotation(annotation)
+            default: break
+            }
+        }
+        
+        viewModel.mapType.bind { mapType in
+            switch mapType {
+            case MapType.standard.name:
+                if #available(iOS 16.0, *) {
+                    self.mapView.preferredConfiguration = MKStandardMapConfiguration()
+                } else {
+                    self.mapView.mapType = .standard
+                }
+            case MapType.satellite.name:
+                if #available(iOS 16.0, *) {
+                    self.mapView.preferredConfiguration = MKImageryMapConfiguration()
+                } else {
+                    self.mapView.mapType = .satellite
+                }
+            case MapType.hybrid.name:
+                if #available(iOS 16.0, *) {
+                    self.mapView.preferredConfiguration = MKHybridMapConfiguration()
+                } else {
+                    self.mapView.mapType = .hybrid
+                }
             default: break
             }
         }
@@ -135,9 +159,7 @@ extension MapViewController: CustomTabBarDelegate {
                 // TODO: - 여기서 일단 주소를 사용안할 때, 현재 위치에서 어노테이션 추가가 불가능 하니, 다시 위치를 허용하는지 여부를 물어봐야한다. 아니면 무조건 위치 허용 안하면 앱 사용 불가능하게 만들어야 됨
             }
             
-            
         default: break
-            
         }
     }
 }
