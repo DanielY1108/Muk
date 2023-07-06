@@ -193,38 +193,38 @@ final class ProfileCell: UICollectionViewCell {
     }
     
     private func setupLayout() {
-        self.addSubview(optionButton)
+        contentView.addSubview(optionButton)
         optionButton.snp.makeConstraints {
             $0.top.trailing.equalToSuperview().inset(sideInset/2)
         }
         
-        self.addSubview(dateLabel)
+        contentView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints {
             $0.centerY.equalTo(optionButton)
             $0.leading.equalToSuperview().inset(sideInset)
         }
         
-        self.addSubview(photoScrollView)
+        contentView.addSubview(photoScrollView)
         photoScrollView.snp.makeConstraints {
             $0.top.equalTo(optionButton.snp.bottom).offset(space)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
             $0.height.equalTo(photoSize)
         }
         
-        self.addSubview(photoPageControl)
+        contentView.addSubview(photoPageControl)
         photoPageControl.snp.makeConstraints {
             $0.top.equalTo(photoScrollView.snp.bottom).offset(space/2)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(space)
         }
         
-        self.addSubview(placeStackView)
+        contentView.addSubview(placeStackView)
         placeStackView.snp.makeConstraints {
             $0.top.equalTo(photoPageControl.snp.bottom).offset(space)
             $0.leading.equalTo(photoScrollView)
         }
         
-        self.addSubview(detailLabel)
+        contentView.addSubview(detailLabel)
         detailLabel.snp.makeConstraints {
             $0.top.equalTo(placeStackView.snp.bottom).offset(space)
             $0.leading.equalToSuperview().inset(sideInset)
@@ -232,7 +232,7 @@ final class ProfileCell: UICollectionViewCell {
             $0.bottom.equalToSuperview().inset(space*2)
         }
         
-        self.addSubview(showHideButton)
+        contentView.addSubview(showHideButton)
         showHideButton.snp.makeConstraints {
             $0.leading.equalTo(detailLabel.snp.trailing)
             $0.trailing.equalToSuperview().inset(space/2)
