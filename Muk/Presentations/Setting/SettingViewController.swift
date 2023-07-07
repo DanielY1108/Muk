@@ -42,6 +42,28 @@ class SettingViewController: UIViewController {
         
         view.addSubview(tableView)
     }
+    
+    private func mapSettingBinding(with cell: SettingCellViewModel) {
+        viewModel.mapType.bind { [weak self] mapType in
+            guard let self = self else { return }
+            // mapTpye 값이 업데이트 되면, cell에서 만든 바인딩 밸류도 동시에 업데이트 시켜줌
+            self.viewModel.updateCellBindingValue(with: cell)
+            
+            // 노티피케이션 전달 및 유저 디폴트에 저장 (String value)
+            NotificationNameIs.mapType.postNotification(with: mapType)
+            UserDefaults.standard.setValue(mapType, forKey: MapType.title)
+        }
+        
+        viewModel.mapZoomRange.bind { [weak self] mapZoomRange in
+            guard let self = self else { return }
+            // mapZoomRange 값이 업데이트 되면, cell에서 만든 바인딩 밸류도 동시에 업데이트 시켜줌
+            self.viewModel.updateCellBindingValue(with: cell)
+            
+            // 노티피케이션 전달 및 유저 디폴트에 저장 (Int value)
+            NotificationNameIs.mapZoomRange.postNotification(with: mapZoomRange)
+            UserDefaults.standard.setValue(mapZoomRange, forKey: MapZoomRange.title)
+        }
+    }
 }
 
 extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
@@ -94,14 +116,13 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let cellViewModel = viewModel.getTableItem(at: indexPath)
+        mapSettingBinding(with: cellViewModel)
         
         switch cellViewModel.category {
         case .map(.mapType):
-            let alert = makeAlert(.mapType, with: cellViewModel)
-            self.present(alert, animated: true)
+            presentAlert(.mapType)
         case .map(.zoomRange):
-            let alert = makeAlert(.zoomRange, with: cellViewModel)
-            self.present(alert, animated: true)
+            presentAlert(.zoomRange)
         default: break
         }
     }
@@ -111,70 +132,63 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SettingViewController {
     
-    private func mapTypeHandler(_ mapTpye: MapType, with cell: SettingCellViewModel) {
+    private func mapTypeHandler(_ mapTpye: MapType) {
         // 선택된 MapSetting 처리 로직
         print("MapSetting selected:", mapTpye.name)
         
         DispatchQueue.main.async {
-            // 바인딩 값 변경
-            cell.option.value = mapTpye.name
+            // 바인딩 값 변경 (String)
+            self.viewModel.mapType.value = mapTpye.name
             self.tableView.reloadData()
         }
-        // 노티피케이션 전달 및 유저 디폴트에 저장
-        NotificationNameIs.mapType.postNotification(with: mapTpye.name)
-        UserDefaults.standard.setValue(mapTpye.name, forKey: MapType.title)
     }
     
-    private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange, with cell: SettingCellViewModel) {
+    private func mapZoomRangeHandler(_ mapZoomRange: MapZoomRange) {
         // 선택된 MapZoomRange 처리 로직
         print("MapZoomRange selected:", mapZoomRange.name)
         
         DispatchQueue.main.async {
-            // 바인딩 값 변경
-            cell.option.value = mapZoomRange.name
+            // 바인딩 값 변경 (Int)
+            self.viewModel.mapZoomRange.value = mapZoomRange.rawValue
             self.tableView.reloadData()
         }
-        
-        // 노티피케이션 전달 및 유저 디폴트에 저장
-        NotificationNameIs.mapZoomRange.postNotification(with: mapZoomRange.rawValue)
-        UserDefaults.standard.setValue(mapZoomRange.rawValue, forKey: MapZoomRange.title)
     }
     
-    private func makeAlert(_ mapCategory: MapSubCategory, with cell: SettingCellViewModel) -> UIAlertController {
+    private func presentAlert(_ mapCategory: MapSubCategory) {
         switch mapCategory {
         case .mapType:
-            let alert = UIAlertController(title: "\(MapType.title)",
-                                          message: nil,
-                                          preferredStyle: .actionSheet)
+            let alertController = UIAlertController(title: "\(MapType.title)",
+                                                    message: nil,
+                                                    preferredStyle: .actionSheet)
             
             for mapTpye in MapType.allCases {
                 let action = UIAlertAction(title: mapTpye.name,
                                            style: .default) { [weak self] _ in
-                    self?.mapTypeHandler(mapTpye, with: cell)
+                    self?.mapTypeHandler(mapTpye)
                 }
-                alert.addAction(action)
+                alertController.addAction(action)
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alert.addAction(cancel)
+            alertController.addAction(cancel)
             
-            return alert
+            self.present(alertController, animated: true)
             
         case .zoomRange:
-            let alert = UIAlertController(title: "\(MapZoomRange.title)",
-                                          message: nil,
-                                          preferredStyle: .actionSheet)
+            let alertController = UIAlertController(title: "\(MapZoomRange.title)",
+                                                    message: nil,
+                                                    preferredStyle: .actionSheet)
             
             for mapZoomRange in MapZoomRange.allCases {
                 let action = UIAlertAction(title: "사용자 중심 \(mapZoomRange.name)",
                                            style: .default) { [weak self] _ in
-                    self?.mapZoomRangeHandler(mapZoomRange, with: cell)
+                    self?.mapZoomRangeHandler(mapZoomRange)
                 }
-                alert.addAction(action)
+                alertController.addAction(action)
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alert.addAction(cancel)
+            alertController.addAction(cancel)
             
-            return alert
+            self.present(alertController, animated: true)
         }
     }
 }

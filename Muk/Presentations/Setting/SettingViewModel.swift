@@ -16,9 +16,13 @@ class SettingViewModel {
     
     private(set) var dataSource: [TableSection]!
     
-    // 초기 ZoomRange 저장값을 시작 시, 로드해서 표시
-    private(set) var mapTypeUserDefaultValue: String?
-    private var mapZoomRangeUserDefaultValue: String?
+    // 초기 저장값을 시작 시, 로드해서 표시
+    private(set) var mapType: Observable<String> = Observable("표준")
+    private(set) var mapZoomRange: Observable<Int> = Observable(500)
+    
+    private var stringMapZoomRange: String {
+        return calcAndStringConvert(for: mapZoomRange.value)
+    }
     
     init() {
         loadUserDefault()
@@ -28,8 +32,8 @@ class SettingViewModel {
     private func setupDataSource() {
         
         let mapRows: [SettingCellViewModel] = [
-            SettingCellViewModel(category: .map(.mapType), option: mapTypeUserDefaultValue),
-            SettingCellViewModel(category: .map(.zoomRange), option: mapZoomRangeUserDefaultValue)
+            SettingCellViewModel(category: .map(.mapType), option: mapType.value),
+            SettingCellViewModel(category: .map(.zoomRange), option: stringMapZoomRange)
         ]
         
         let feedbackRows: [SettingCellViewModel] = [
@@ -70,6 +74,26 @@ class SettingViewModel {
     func numberOfRows(in section: Int) -> Int {
         return dataSource[section].rows.count
     }
+    
+    // 셀(SettingCellViewModel)과 SettingViewModel을 바인딩
+    func updateCellBindingValue(with cell: SettingCellViewModel) {
+        switch cell.category {
+        case .map(.mapType):
+            cell.option.value = mapType.value
+        case .map(.zoomRange):
+            cell.option.value = stringMapZoomRange
+        default: break
+        }
+    }
+    
+    // ZoomRange값을 String 값으로 변환 (mapview에서는 Int값이 사용되고, 여기선 String 값이 필요)
+    private func calcAndStringConvert(for zoomRange: Int) -> String {
+        if zoomRange < 1000 {
+            return "\(zoomRange)m"
+        } else {
+            return "\(zoomRange/1000)km"
+        }
+    }
 }
 
 // MARK: - UserDefault 로드 작업 (초기값 작업)
@@ -79,16 +103,12 @@ extension SettingViewModel {
     private func loadUserDefault() {
         // Map Type
         if let mapTypeValue = UserDefaults.standard.value(forKey: MapType.title) as? String {
-            self.mapTypeUserDefaultValue = mapTypeValue
+            self.mapType.value = mapTypeValue
         }
         
         // Zoom Range
         if let zoomRangeValue = UserDefaults.standard.value(forKey: MapZoomRange.title) as? Int {
-            if zoomRangeValue < 1000 {
-                self.mapZoomRangeUserDefaultValue = "\(zoomRangeValue)m"
-            } else {
-                self.mapZoomRangeUserDefaultValue = "\(zoomRangeValue/1000)km"
-            }
+            self.mapZoomRange.value = zoomRangeValue
         }
     }
 }
