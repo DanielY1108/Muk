@@ -20,8 +20,8 @@ struct PopButtons {
                             image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "addSearch")!),
             PopButtonOption(name: "Current Location",
                             image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "currentLocationPin")!),
-            PopButtonOption(name: "Pin",
-                            image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "addPin")!)
+//            PopButtonOption(name: "Pin",
+//                            image: UIImage.imageWithRenderingModeAlwaysTemplate(named: "addPin")!)
             ]
     }
 }

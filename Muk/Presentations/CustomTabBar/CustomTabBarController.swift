@@ -221,8 +221,8 @@ extension CustomTabBarController {
 extension CustomTabBarController {
     // pop 버튼 셋팅
     private func setupPopButton(radius: CGFloat) {
-        // 45° 마다 배치
-        let degrees: CGFloat = 45
+        // 버튼의 갯수로 각도를 설정해 줌 (180 / 4 == 45도)
+        let degrees = CGFloat(180 / (self.popButtons.options.count + 1))
         
         // 만약에 버튼의 갯수 및 이미지등을 변경하고 싶으면 구조체 PopButtons에서 변경
         let popButtonCount = self.popButtons.options.count
