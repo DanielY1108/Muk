@@ -78,11 +78,6 @@ extension ProfileViewController {
 
 extension ProfileViewController {
     
-    enum BarItem: Int {
-        case setting
-        case sort
-    }
-    
     private func setupNavigationBarAppearance() {
         
         let appearance = UINavigationBarAppearance()
@@ -103,32 +98,46 @@ extension ProfileViewController {
     }
   
     private func setupNaviationBarItme() {
-        
         let settingBarItem = UIBarButtonItem(image: UIImage(systemName: "gearshape.fill"),
                                              style: .plain,
                                              target: self,
                                              action: #selector(settingButtonHandler))
-        settingBarItem.tag = BarItem.setting.rawValue
-        let sortBarItem = UIBarButtonItem(image: UIImage(systemName: "list.dash"),
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(settingButtonHandler))
-        sortBarItem.tag = BarItem.sort.rawValue
-        navigationItem.rightBarButtonItems = [settingBarItem, sortBarItem]
         
+        let sortBarItem = UIBarButtonItem(image: UIImage(systemName: "list.dash"),
+                                          menu: createMenu())
+        
+        navigationItem.rightBarButtonItems = [settingBarItem, sortBarItem]
+    }
+    
+    private func createMenu() -> UIMenu {
+        let menuActions = menuActions()
+        let menu = UIMenu(title: "정렬하기", children: menuActions)
+        
+        return menu
+    }
+    
+    private func menuActions() -> [UIAction] {
+        let descendingByDate = MenuAction(.descendingByDate) { action in
+            self.viewModel.sortDiaryModel(.descendingByDate)
+        }
+        
+        let ascendingByDate = MenuAction(.ascendingByDate){ action in
+            self.viewModel.sortDiaryModel(.ascendingByDate)
+        }
+        
+        let menus = [descendingByDate, ascendingByDate]
+        let menuActions = menus.map {
+            UIAction(title: $0.option.rawValue,
+                     handler: $0.handler)
+        }
+        
+        return menuActions
     }
     
     @objc func settingButtonHandler(_ sender: UIBarButtonItem) {
-        switch sender.tag {
-        case BarItem.setting.rawValue:
-            let settingViewController = SettingViewController()
-            self.show(settingViewController, sender: nil)
-        case BarItem.sort.rawValue:
-            print("sort")
-        default: break
-        }
+        let settingViewController = SettingViewController()
+        self.show(settingViewController, sender: nil)
     }
-    
 }
 
 

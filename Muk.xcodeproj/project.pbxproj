@@ -40,6 +40,7 @@
 		655B11422A0A444C004BC84B /* NotificationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B11412A0A444C004BC84B /* NotificationProtocol.swift */; };
 		655E376F29C199E500FBACAE /* UIColor+HexCodeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */; };
 		655E377229C19A9E00FBACAE /* TabBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E377129C19A9E00FBACAE /* TabBarItems.swift */; };
+		655F23632A5C44DE00DCCD17 /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655F23622A5C44DE00DCCD17 /* MenuAction.swift */; };
 		65634A0B2A456EC5005DDAD4 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65634A0A2A456EC5005DDAD4 /* Address.swift */; };
 		65634A2E2A4970A5005DDAD4 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65634A2D2A4970A5005DDAD4 /* SettingViewController.swift */; };
 		65634A322A4BFAA4005DDAD4 /* SettingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65634A312A4BFAA4005DDAD4 /* SettingHeaderView.swift */; };
@@ -100,6 +101,7 @@
 		655B11412A0A444C004BC84B /* NotificationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationProtocol.swift; sourceTree = "<group>"; };
 		655E376E29C199E500FBACAE /* UIColor+HexCodeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexCodeColor.swift"; sourceTree = "<group>"; };
 		655E377129C19A9E00FBACAE /* TabBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItems.swift; sourceTree = "<group>"; };
+		655F23622A5C44DE00DCCD17 /* MenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAction.swift; sourceTree = "<group>"; };
 		65634A0A2A456EC5005DDAD4 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		65634A2D2A4970A5005DDAD4 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		65634A312A4BFAA4005DDAD4 /* SettingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingHeaderView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				653B60BF29D6F7880043F239 /* UnderLindTextField.swift */,
 				65A868A129F649CD00251120 /* Observable.swift */,
 				658597592A0CF54300FE4173 /* LocationManager.swift */,
+				655F23622A5C44DE00DCCD17 /* MenuAction.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				654464B42A126CFC00338CF9 /* RealmManager.swift in Sources */,
 				65634A0B2A456EC5005DDAD4 /* Address.swift in Sources */,
 				6523D83A29BF526D005EFBFF /* AppDelegate.swift in Sources */,
+				655F23632A5C44DE00DCCD17 /* MenuAction.swift in Sources */,
 				65FAE68629C624C5006D1038 /* UIImage+Resize&Retint.swift in Sources */,
 				653B60C029D6F7880043F239 /* UnderLindTextField.swift in Sources */,
 				654464B62A12778A00338CF9 /* RealmModel.swift in Sources */,

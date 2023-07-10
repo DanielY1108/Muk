@@ -139,12 +139,30 @@ extension ProfileViewModel {
     }
 }
 
+// MARK: - Sort
+extension ProfileViewModel {
+    func sortDiaryModel(_ option: MenuOption) {
+        switch option {
+        case .descendingByDate:
+            let model = diaryModels.value.sorted { $0.date > $1.date }
+            // 밸류를 업데이트하면 바인딩에 의해서 자동으로 셀이 리로드 됨!
+            diaryModels.value = model
+            UserDefaults.standard.setValue(false, forKey: "SortMenu")
+        case .ascendingByDate:
+            let model = diaryModels.value.sorted { $0.date < $1.date }
+            diaryModels.value = model
+            UserDefaults.standard.setValue(true, forKey: "SortMenu")
+        }
+    }
+}
+
 // MARK: - Database
 
 extension ProfileViewModel {
     func loadDatabase() {
         // 일단은 날짜 순으로 정렬 시킴
-        let databaseModels = RealmManager.shared.sort(RealmModel.self, by: "date", ascending: false)
+        let isAscending = UserDefaults.standard.bool(forKey: "SortMenu")
+        let databaseModels = RealmManager.shared.sort(RealmModel.self, by: "date", ascending: isAscending)
         let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
         
         self.diaryModels.value = diaryModels
