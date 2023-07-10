@@ -8,8 +8,8 @@
 import UIKit
 
 enum MenuOption: String {
-    case descendingByDate = "날짜별 내림차순"
-    case ascendingByDate = "날짜별 오름차순"
+    case descendingByDate = "최신 날짜순"
+    case ascendingByDate = "이전 날짜순"
 }
 
 struct MenuAction {

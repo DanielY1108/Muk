@@ -22,9 +22,11 @@ final class ProfileViewModel {
         return diaryModels.value
     }
     
-    // insert로 하면 최신이 위로 올라가게 된다.
     func appendModel(_ model: DiaryModel) {
-        diaryModels.value.insert(model, at: 0)
+        diaryModels.value.append(model)
+        // 추가 시, 날짜별로 정렬
+        let isAscending = UserDefaults.standard.bool(forKey: "SortMenuAscending")
+        sortDiaryModel(ascending: isAscending)
     }
     
     func updateModel(_ model: DiaryModel) {
@@ -141,17 +143,17 @@ extension ProfileViewModel {
 
 // MARK: - Sort
 extension ProfileViewModel {
-    func sortDiaryModel(_ option: MenuOption) {
-        switch option {
-        case .descendingByDate:
+    func sortDiaryModel(ascending: Bool) {
+        switch ascending {
+        case true:
+            let model = diaryModels.value.sorted { $0.date < $1.date }
+            diaryModels.value = model
+            UserDefaults.standard.setValue(true, forKey: "SortMenuAscending")
+        case false:
             let model = diaryModels.value.sorted { $0.date > $1.date }
             // 밸류를 업데이트하면 바인딩에 의해서 자동으로 셀이 리로드 됨!
             diaryModels.value = model
-            UserDefaults.standard.setValue(false, forKey: "SortMenu")
-        case .ascendingByDate:
-            let model = diaryModels.value.sorted { $0.date < $1.date }
-            diaryModels.value = model
-            UserDefaults.standard.setValue(true, forKey: "SortMenu")
+            UserDefaults.standard.setValue(false, forKey: "SortMenuAscending")
         }
     }
 }
@@ -160,8 +162,7 @@ extension ProfileViewModel {
 
 extension ProfileViewModel {
     func loadDatabase() {
-        // 일단은 날짜 순으로 정렬 시킴
-        let isAscending = UserDefaults.standard.bool(forKey: "SortMenu")
+        let isAscending = UserDefaults.standard.bool(forKey: "SortMenuAscending")
         let databaseModels = RealmManager.shared.sort(RealmModel.self, by: "date", ascending: isAscending)
         let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
         

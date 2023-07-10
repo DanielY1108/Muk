@@ -111,18 +111,21 @@ extension ProfileViewController {
     
     private func createMenu() -> UIMenu {
         let menuActions = menuActions()
-        let menu = UIMenu(title: "정렬하기", children: menuActions)
+        let menu = UIMenu(title: "정렬", children: menuActions)
         
         return menu
     }
     
+    // 메뉴 동작 설정
     private func menuActions() -> [UIAction] {
-        let descendingByDate = MenuAction(.descendingByDate) { action in
-            self.viewModel.sortDiaryModel(.descendingByDate)
+        let descendingByDate = MenuAction(.descendingByDate) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.sortDiaryModel(ascending: false)
         }
         
-        let ascendingByDate = MenuAction(.ascendingByDate){ action in
-            self.viewModel.sortDiaryModel(.ascendingByDate)
+        let ascendingByDate = MenuAction(.ascendingByDate){ [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.sortDiaryModel(ascending: true)
         }
         
         let menus = [descendingByDate, ascendingByDate]
