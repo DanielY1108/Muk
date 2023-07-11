@@ -33,7 +33,7 @@ enum MapSubCategory: String {
 
 enum FeedbackSubCategory: String {
     case appReview = "앱 리뷰"
-    case question = "문의사항"
+    case question = "문의 사항"
 }
 
 enum AppInfoSubCategory: String {

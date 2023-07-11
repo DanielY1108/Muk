@@ -10,6 +10,7 @@ import UIKit
 class SettingViewController: UIViewController {
     
     var viewModel = SettingViewModel()
+    var mailManager: MailManager?
     
     private lazy var tableView: UITableView = {
         // 테이블뷰의 기본 스타일은 plain인데, 헤더가 고정되어 보여진다. grouped를 사용하면 같이 움직임
@@ -123,6 +124,10 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             presentAlert(.mapType)
         case .map(.zoomRange):
             presentAlert(.zoomRange)
+        case .feedback(.question):
+            mailManager = MailManager(viewController: self)
+            let emailComponent = EmailComponent()
+            mailManager?.presentEmail(with: emailComponent)
         default: break
         }
     }
