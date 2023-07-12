@@ -33,11 +33,6 @@ class SettingViewController: UIViewController {
         setupUI()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.navigationController?.popToRootViewController(animated: false)
-    }
-    
     private func setupUI() {
         let titleLabel = UIFactory.createNavigationTitleLabel("Setting")
         navigationItem.titleView = titleLabel

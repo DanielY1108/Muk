@@ -131,6 +131,10 @@ extension CustomTabBarController: UITabBarControllerDelegate {
             // 이렇게 터치만 안되게 설정만들어 주면 틴트 설정을 건드릴 필요 없이 코드가 짧아진다.
             middleButton.isUserInteractionEnabled = false
             middleButtonAnimationStart(anitaion: true)
+            
+            // profileVC에 접근하면, 항상 네이게이션의 최하단 부분으로 이동!
+            guard let profileNav = viewController as? UINavigationController else { return }
+            profileNav.popToRootViewController(animated: false)
         }
     }
 }
