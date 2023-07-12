@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class SettingViewController: UIViewController {
     
@@ -120,14 +121,16 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         mapSettingBinding(with: cellViewModel)
         
         switch cellViewModel.category {
-        case .map(.mapType):
-            presentAlert(.mapType)
-        case .map(.zoomRange):
-            presentAlert(.zoomRange)
+        case .map(let subCategory):
+            presentAlert(subCategory)
         case .feedback(.question):
             mailManager = MailManager(viewController: self)
             let emailComponent = EmailComponent()
             mailManager?.presentEmail(with: emailComponent)
+        case .appInfo(let subCategory):
+            guard let urlLink = subCategory.urlLink else { return }
+            let safariVC = SFSafariViewController(url: urlLink)
+            present(safariVC, animated: true)
         default: break
         }
     }
