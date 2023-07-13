@@ -188,8 +188,8 @@ extension MapViewController: MKMapViewDelegate {
     
     // 한국 중심으로 지도를 시작
     private func centerMapOnKorea() {
-        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.8)
-        let span = MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4)
+        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.7)
+        let span = MKCoordinateSpan(latitudeDelta: 4.5, longitudeDelta: 4.5)
         mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: true)
     }
     
