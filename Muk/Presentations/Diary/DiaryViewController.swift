@@ -388,8 +388,8 @@ extension DiaryViewController: UITextViewDelegate {
         let estimatedSize = textView.sizeThatFits(size)
         
         textView.constraints.forEach { constraint in
-            // 3줄(80)보다 크고 5줄 (120)보다 작을 때 동작
-            if estimatedSize.height >= 80 && estimatedSize.height <= 120 {
+            // 3줄(80)보다 크고 6줄 (140)보다 작을 때 동작
+            if estimatedSize.height >= 80 && estimatedSize.height <= 140 {
                 constraint.constant = estimatedSize.height
             }
         }
