@@ -111,10 +111,10 @@ extension SearchMapViewController: SearchMapAlertViewDelegate {
             // 주소 텍스트 필드 수정 금지
             diaryVC.textFieldIsUserInteraction(enable: false)
             
-            self.navigationController?.popToRootViewController(animated: false)
-            
             diaryVC.modalPresentationStyle = .fullScreen
             self.present(diaryVC, animated: true)
+            // 만약, popToRootViewController를 먼저 사용하게 된다면, 다크모드가 활성화 되서 문제가 발생.
+            self.navigationController?.popToRootViewController(animated: false)
             
         case .cancel:
             self.navigationController?.popViewController(animated: true)
