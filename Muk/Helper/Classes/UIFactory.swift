@@ -118,9 +118,8 @@ extension UIFactory {
         
         let button = UIButton(type: .custom)
         
-        //        let image = UIImage(named: "currentLocation")
-        let image = UIImage(named: "currentLocation_v1")
-        let resizedImage = image?.resized(to: size - 5,
+        let image = UIImage(named: "currentLocation_v2")
+        let resizedImage = image?.resized(to: size - 15,
                                           tintColor: HexCode.selected.color)
         
         button.setImage(resizedImage, for: .normal)

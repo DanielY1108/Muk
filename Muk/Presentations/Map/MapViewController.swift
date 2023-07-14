@@ -68,11 +68,45 @@ extension MapViewController {
         currentLocationButton.addTarget(self, action: #selector(currentLocationHandelr), for: .touchUpInside)
     }
     
+    // 버튼을 클릭하면, 아이콘이 바뀌면서 동작을 다르게 설정해 줌
     @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
         
-        guard let currentRegion = viewModel.currentRegion else { return }
-        mapView.setRegion(currentRegion, animated: true)
+        sender.isSelected.toggle()
+        
+        switch sender.isSelected {
+        case true:
+            changeCurrentButtonImage(sender, type: .currnetLoaction)
+            // 현재 위치로 이동
+            guard let currentRegion = viewModel.currentRegion else { return }
+            mapView.setRegion(currentRegion, animated: true)
+            
+        case false:
+            changeCurrentButtonImage(sender, type: .mapCenteredOnKorea)
+            // 한국이 중심에 보이게 이동
+            self.mapCenteredOnKorea()
+        }
+    }
+    
+    private enum CurrnetButton {
+        case currnetLoaction
+        case mapCenteredOnKorea
+    }
+    
+    private func changeCurrentButtonImage(_ button: UIButton, type: CurrnetButton) {
+        switch type {
+        case .currnetLoaction:
+            let image = UIImage(named: "currentLocation_v1")
+            let resizedImage = image?.resized(to: 44 - 10,
+                                              tintColor: HexCode.selected.color)
+            button.setImage(resizedImage, for: .normal)
+        case .mapCenteredOnKorea:
+            let image = UIImage(named: "currentLocation_v2")
+            let resizedImage = image?.resized(to: 44 - 15,
+                                              tintColor: HexCode.selected.color)
+            button.setImage(resizedImage, for: .normal)
+        }
+    
     }
 }
 
@@ -183,12 +217,12 @@ extension MapViewController: MKMapViewDelegate {
         mapView.isRotateEnabled = false
         
         registerMapAnnotationViews()
-        centerMapOnKorea()
+        mapCenteredOnKorea()
     }
     
     // 한국 중심으로 지도를 시작
-    private func centerMapOnKorea() {
-        let center = CLLocationCoordinate2D(latitude: 36.2, longitude: 127.7)
+    private func mapCenteredOnKorea() {
+        let center = CLLocationCoordinate2D(latitude: 36.3, longitude: 127.8)
         let span = MKCoordinateSpan(latitudeDelta: 4.5, longitudeDelta: 4.5)
         mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: true)
     }
