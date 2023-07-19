@@ -36,7 +36,6 @@ final class CustomTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UserDefaults.standard.set(false, forKey: "tutorial")
 
         setupTabBar()
     }
