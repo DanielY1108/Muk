@@ -33,6 +33,12 @@ class SettingViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = false
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     private func setupUI() {
         let titleLabel = UIFactory.createNavigationTitleLabel("Setting")
         navigationItem.titleView = titleLabel
@@ -123,9 +129,17 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             let emailComponent = EmailComponent()
             mailManager?.presentEmail(with: emailComponent)
         case .appInfo(let subCategory):
-            guard let urlLink = subCategory.urlLink else { return }
-            let safariVC = SFSafariViewController(url: urlLink)
-            present(safariVC, animated: true)
+            switch subCategory {
+            case .tutorial:
+                let tutorialVC = TutorialViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                tutorialVC.modalPresentationStyle = .fullScreen
+                show(tutorialVC, sender: nil)
+            default:
+                guard let urlLink = subCategory.urlLink else { return }
+                let safariVC = SFSafariViewController(url: urlLink)
+                present(safariVC, animated: true)
+            }
+
         default: break
         }
     }

@@ -19,17 +19,17 @@ class LocationPermissionViewController: UIViewController {
     private var imageView = UIImageView()
     private var titleLabel = UILabel()
     private var subTitleLabel = UILabel()
-
+    
     private var buttonStackView: UIStackView!
     private var startButton: UIButton!
     private var descriptionLabel = UILabel()
     private var checkBoxButton: UIButton!
     
     private var totalStackView: UIStackView!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupUI()
         setupLayout()
         setupData()
@@ -66,7 +66,7 @@ class LocationPermissionViewController: UIViewController {
         descriptionLabel.textAlignment = .center
         
         var checkBoxButtonConfig = UIButton.Configuration.plain()
-        checkBoxButtonConfig.image = CheckButton.empty.imgae
+        checkBoxButtonConfig.image = fisrtCheckBoxImage()
         checkBoxButtonConfig.imagePadding = 5
         checkBoxButtonConfig.title = "다음부터 보지 않기"
         checkBoxButtonConfig.baseForegroundColor = HexCode.selected.color
@@ -137,22 +137,33 @@ class LocationPermissionViewController: UIViewController {
             UserDefaults.standard.set(false, forKey: "tutorial")
         }
     }
+    
+    private func fisrtCheckBoxImage() -> UIImage {
+        let userDefaults = UserDefaults.standard
+        var isCheckedButton = userDefaults.bool(forKey: "tutorial")
+        
+        if isCheckedButton {
+            return CheckButton.check.imgae
+        } else {
+            return CheckButton.empty.imgae
+        }
+    }
 }
 
 fileprivate enum CheckButton {
     case empty
     case check
     
-    var imgae: UIImage? {
+    var imgae: UIImage {
         switch self {
         case .empty:
             let image = UIImage(named: "checkBox")
             let resizeImage = image?.resized(to: 22, tintColor: HexCode.selected.color)
-            return resizeImage
+            return resizeImage!
         case .check:
             let image = UIImage(named: "checkBox-correct")
             let resizeImage = image?.resized(to: 22, tintColor: HexCode.selected.color)
-            return resizeImage
+            return resizeImage!
         }
     }
 }

@@ -38,6 +38,7 @@ enum FeedbackSubCategory: String {
 
 enum AppInfoSubCategory: String {
     case help = "도움말"
+    case tutorial = "튜토리얼"
     case privacyPolicy = "개인정보 정책"
     case termsAndCondtions = "이용약관"
     case version = "버전"
@@ -50,8 +51,7 @@ enum AppInfoSubCategory: String {
             return URL(string: "https://daniel-yang.notion.site/025db00c7a6e4a898ebadf3625c9fd0f?pvs=4")!
         case .termsAndCondtions:
             return URL(string: "https://daniel-yang.notion.site/c308c3ab90d6449b996fe5b77a2a2e54?pvs=4")!
-        case .version:
-             return nil
+        default: return nil
         }
     }
 }
