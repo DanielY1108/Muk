@@ -30,13 +30,14 @@ final class CustomTabBarController: UITabBarController {
     // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
     private var popButtons = PopButtons()
     
-    
+    private var tutorialVC: TutorialViewController!
     
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UserDefaults.standard.set(false, forKey: "tutorial")
+
         setupTabBar()
     }
     
@@ -50,6 +51,17 @@ final class CustomTabBarController: UITabBarController {
     }
     
     // MARK: - Setup
+    
+    func checkFirstRun() {
+        let userDefaults = UserDefaults.standard
+        let isChecked = userDefaults.bool(forKey: "tutorial")
+        
+        if !isChecked {
+            self.tutorialVC = TutorialViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            tutorialVC.modalPresentationStyle = .fullScreen
+            show(tutorialVC, sender: nil)
+        }
+    }
     
     // 탭바를 설정
     private func setupTabBar() {

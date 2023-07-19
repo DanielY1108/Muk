@@ -132,21 +132,25 @@ extension MapViewController {
             switch mapType {
             case MapType.standard.name:
                 if #available(iOS 16.0, *) {
-                    self.mapView.preferredConfiguration = MKStandardMapConfiguration()
+                    let config = MKStandardMapConfiguration(elevationStyle: .realistic)
+                    self.mapView.preferredConfiguration = config
                 } else {
                     self.mapView.mapType = .standard
                 }
             case MapType.satellite.name:
                 if #available(iOS 16.0, *) {
-                    self.mapView.preferredConfiguration = MKImageryMapConfiguration()
+                    let config = MKImageryMapConfiguration(elevationStyle: .realistic)
+                    self.mapView.preferredConfiguration = config
                 } else {
-                    self.mapView.mapType = .satellite
+                    self.mapView.mapType = .satelliteFlyover
                 }
             case MapType.hybrid.name:
                 if #available(iOS 16.0, *) {
-                    self.mapView.preferredConfiguration = MKHybridMapConfiguration()
+                    let config = MKHybridMapConfiguration(elevationStyle: .realistic)
+                    self.mapView.preferredConfiguration = config
                 } else {
-                    self.mapView.mapType = .hybrid
+                    self.mapView.mapType = .hybridFlyover
+                    
                 }
             default: break
             }

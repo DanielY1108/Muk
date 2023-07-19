@@ -18,11 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = .light
         
-        let customTabBarController = UINavigationController(rootViewController: CustomTabBarController())
-        window.rootViewController = customTabBarController
+        let navigationContoller = UINavigationController(rootViewController: CustomTabBarController())
+        // 튜토리얼뷰를 체크하고 실행
+        (navigationContoller.topViewController as! CustomTabBarController).checkFirstRun()
+
+        window.rootViewController = navigationContoller
         window.makeKeyAndVisible()
         
-        self.window = window        
+        self.window = window  
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
