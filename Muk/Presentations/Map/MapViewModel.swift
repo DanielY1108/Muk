@@ -13,18 +13,18 @@ final class MapViewModel {
     
     // MARK: - Properties
     
-    private(set) var locationManager = LocationManager()
     private(set) var currentCoordinate: CLLocationCoordinate2D?
+    private(set) var currentRegion: MKCoordinateRegion?
     
     private(set) var allAnnotaions = [CustomAnnotation]()
     private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
     private(set) var mapType: Observable<String> = Observable("표준")
     private(set) var mapZoomRange: Observable<Int> = Observable(500)
-    private(set) var currentRegion: MKCoordinateRegion?
     
     // MARK: - Initializer
     
     init() {
+        self.requestLocationIfTutorialBoxSelected()
         self.fetchLocation()
         self.setupNotification()
     }
@@ -33,20 +33,25 @@ final class MapViewModel {
 // MARK: - Location Methods
 
 extension MapViewModel {
+    
+    // 튜토리얼에서 다시 보지 않음 박스를 클릭할 경우, 위치 요청 시작
+    private func requestLocationIfTutorialBoxSelected() {
+        let userDefaults = UserDefaults.standard
+        let isCheckedCheckBox = userDefaults.bool(forKey: "tutorial")
+        
+        if isCheckedCheckBox {
+            LocationManager.shared.requestStart()
+        }
+    }
 
     // currentCoordinate에 현재 위치주소를 담는 핸들러
     private func fetchLocation() {
-        locationManager.fetchLocation { [weak self] location, error in
+        LocationManager.shared.fetchLocation { [weak self] location, error in
             guard let self = self else { return }
             
             self.currentCoordinate = location
             self.setupCurrentRegion()
         }
-    }
-    
-    // 현재 위치를 딱 한번 요청해서 업데이트시켜 줍니다.
-    func requestLocation() {
-        locationManager.requestLocation()
     }
 }
 

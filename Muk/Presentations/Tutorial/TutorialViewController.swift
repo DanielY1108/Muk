@@ -197,6 +197,7 @@ extension TutorialViewController: TutorialDelegate {
     }
     
     func startButtonTapped(_ viewController: UIViewController, sender: UIButton) {
+        LocationManager.shared.requestStart()
         self.navigationController?.popViewController(animated: true)
     }
 }
