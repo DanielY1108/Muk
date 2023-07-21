@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class TutorialContentsViewController: UIViewController {
     
@@ -14,6 +15,8 @@ class TutorialContentsViewController: UIViewController {
     private var imageView = UIImageView()
     private var titleLabel = UILabel()
     private var subTitleLabel = UILabel()
+    
+    private var stackViewConstraint: Constraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,8 +66,13 @@ class TutorialContentsViewController: UIViewController {
         view.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(imageView.snp.bottom)
-            $0.width.equalToSuperview()
+            stackViewConstraint = $0.top.equalTo(imageView.snp.bottom).constraint
+            $0.width.equalTo(view).inset(20)
         }
     }
+    
+    func updateLayout() {
+        stackViewConstraint?.update(offset: -50)
+    }
 }
+

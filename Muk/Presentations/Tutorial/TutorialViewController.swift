@@ -35,7 +35,20 @@ final class TutorialViewController: UIPageViewController {
         tabBarController?.tabBar.isHidden = true
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let logoPage = pages[initialPage] as! TutorialContentsViewController
+        logoPage.updateLayout()
+    }
+    
     private func setupDatabase() {
+        let logoPage = TutorialContentsViewController(
+            imageName: "logo",
+            title: "먹부림",
+            subTitle: """
+                      '먹다' + '몸부림'의 합성어로, '멋스럽게 먹다' 또는 '너무 맛있어서 몸부림친다' 또는 '먹을 것을 자랑하다'와 같은 의미를 갖고 있습니다.
+                      """
+        )
         let page1 = TutorialContentsViewController(
             imageName: "page1",
             title: "나만의 지도 만들기",
@@ -70,7 +83,7 @@ final class TutorialViewController: UIPageViewController {
         let locationPermisstionPage = LocationPermissionViewController()
         locationPermisstionPage.delegate = self
         
-        let pages = [page1, page2, page3, page4, page5, locationPermisstionPage]
+        let pages = [logoPage, page1, page2, page3, page4, page5, locationPermisstionPage]
         pages.forEach { self.pages.append($0) }
     }
     
