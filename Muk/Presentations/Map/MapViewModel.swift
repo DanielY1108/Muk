@@ -45,10 +45,9 @@ extension MapViewModel {
     }
 
     // currentCoordinate에 현재 위치주소를 담는 핸들러
-    private func fetchLocation() {
+    func fetchLocation() {
         LocationManager.shared.fetchLocation { [weak self] location, error in
             guard let self = self else { return }
-            
             self.currentCoordinate = location
             self.setupCurrentRegion()
         }

@@ -72,41 +72,55 @@ extension MapViewController {
     @objc func currentLocationHandelr(_ sender: UIButton) {
         print("Current Location")
         
-        sender.isSelected.toggle()
+        // 위치 권한 허용됐을 때, 버튼의 기등들을 실행 (이미지 변경, 확대)
+        whenAuthorizationStatusAllowed {
+            sender.isSelected.toggle()
+
+            switch sender.isSelected {
+            case true:
+                changeCurrentButtonImage(sender, type: .currnetLoaction)
+                // 현재 위치로 이동
+                guard let currentRegion = viewModel.currentRegion else { return }
+                mapView.setRegion(currentRegion, animated: true)
+
+            case false:
+                changeCurrentButtonImage(sender, type: .mapCenteredOnKorea)
+                // 한국이 중심에 보이게 이동
+                mapCenteredOnKorea()
+            }
+        }
+    }
+    
+    private func whenAuthorizationStatusAllowed(action completion: () -> Void) {
         
-        switch sender.isSelected {
-        case true:
-            changeCurrentButtonImage(sender, type: .currnetLoaction)
-            // 현재 위치로 이동
-            guard let currentRegion = viewModel.currentRegion else { return }
-            mapView.setRegion(currentRegion, animated: true)
-            
-        case false:
-            changeCurrentButtonImage(sender, type: .mapCenteredOnKorea)
-            // 한국이 중심에 보이게 이동
-            self.mapCenteredOnKorea()
+        switch LocationManager.shared.authorizationStatus {
+        case .notDetermined, .denied, .restricted:
+            self.presentAppSettingsAlert()
+        default:
+            viewModel.fetchLocation()
+            completion()
         }
     }
     
-    private enum CurrnetButton {
-        case currnetLoaction
-        case mapCenteredOnKorea
+    private func presentAppSettingsAlert() {
+        let alertController = UIAlertController(
+            title: "위치 접근 요청",
+            message: "위치 정보를 얻을 수 없습니다. 위치 권한을 '항상 허용'으로 변경해 주세요.",
+            preferredStyle: .alert
+        )
+        
+        let action = UIAlertAction(title: "설정창 이동", style: .default, handler: goToAppSettings)
+        alertController.addAction(action)
+        
+        self.present(alertController, animated: true)
     }
     
-    private func changeCurrentButtonImage(_ button: UIButton, type: CurrnetButton) {
-        switch type {
-        case .currnetLoaction:
-            let image = UIImage(named: "currentLocation_v1")
-            let resizedImage = image?.resized(to: 44 - 10,
-                                              tintColor: HexCode.selected.color)
-            button.setImage(resizedImage, for: .normal)
-        case .mapCenteredOnKorea:
-            let image = UIImage(named: "currentLocation_v2")
-            let resizedImage = image?.resized(to: 44 - 15,
-                                              tintColor: HexCode.selected.color)
-            button.setImage(resizedImage, for: .normal)
+    private func goToAppSettings(_ sender: UIAlertAction) {
+        guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+        
+        if UIApplication.shared.canOpenURL(settingURL) {
+            UIApplication.shared.open(settingURL)
         }
-    
     }
 }
 
@@ -194,7 +208,7 @@ extension MapViewController: CustomTabBarDelegate {
                 diaryVC.viewModel.transferCoordinate(currentCoordinate)
             } else {
                 print("Failed to get the Current Location Coordinate - Diary")
-                // TODO: - 여기서 일단 주소를 사용안할 때, 현재 위치에서 어노테이션 추가가 불가능 하니, 다시 위치를 허용하는지 여부를 물어봐야한다. 아니면 무조건 위치 허용 안하면 앱 사용 불가능하게 만들어야 됨
+                presentAppSettingsAlert()
             }
             
         default: break
@@ -277,5 +291,27 @@ extension MapViewController: MKMapViewDelegate {
         UIView.animate(withDuration: 0.3) {
             view.transform = CGAffineTransform.identity
         }
+    }
+}
+
+// MARK: - Helper
+
+fileprivate enum CurrnetButton {
+    case currnetLoaction
+    case mapCenteredOnKorea
+}
+
+fileprivate func changeCurrentButtonImage(_ button: UIButton, type: CurrnetButton) {
+    switch type {
+    case .currnetLoaction:
+        let image = UIImage(named: "currentLocation_v1")
+        let resizedImage = image?.resized(to: 44 - 10,
+                                          tintColor: HexCode.selected.color)
+        button.setImage(resizedImage, for: .normal)
+    case .mapCenteredOnKorea:
+        let image = UIImage(named: "currentLocation_v2")
+        let resizedImage = image?.resized(to: 44 - 15,
+                                          tintColor: HexCode.selected.color)
+        button.setImage(resizedImage, for: .normal)
     }
 }
