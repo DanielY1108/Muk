@@ -134,6 +134,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 let tutorialVC = TutorialViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                 tutorialVC.modalPresentationStyle = .fullScreen
                 show(tutorialVC, sender: nil)
+            case .appSettins:
+                guard let urlLink = subCategory.urlLink else { return }
+                if UIApplication.shared.canOpenURL(urlLink) {
+                    UIApplication.shared.open(urlLink)
+                }
             default:
                 guard let urlLink = subCategory.urlLink else { return }
                 let safariVC = SFSafariViewController(url: urlLink)

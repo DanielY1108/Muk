@@ -107,7 +107,7 @@ class LocationPermissionViewController: UIViewController {
         imageView.image = retintImage
         titleLabel.text = "위치 권한 요청"
         subTitleLabel.text = """
-                             사용자가 위치 접근을 허용하면, 위치를 사용하여 사용자 주변 장소 찾기 및 현재 위치를 기준으로 새로운 '추억'을 생성할 수 있습니다.
+                             사용자가 위치 접근을 허용하면, 위치를 사용하여 사용자 주변 장소 찾기 및 현재 위치를 기준으로 '새로운 추억'을 생성할 수 있습니다.
                              
                              원활한 앱 사용을 위해, 위치 권한 설정을
                              '항상 허용'으로 설정해 주세요.

@@ -5,10 +5,13 @@
 //  Created by JINSEOK on 2023/07/05.
 //
 
-import Foundation
+import UIKit
 
 // MARK: - 기본 타이틀 설정
 
+/// 만약 추가 또는 수정이 필요하면, 아래 코드들도 같이 수정해줘야 함 (개방/폐쇠 원칙에 어긋나지만, 관리를 위해)
+/// SettingViewController의 테이블 뷰 didSelectRowAt
+/// SettingViewModel의 setupDataSource
 enum SettingCategory {
     case map(MapSubCategory)
     case feedback(FeedbackSubCategory)
@@ -39,6 +42,7 @@ enum FeedbackSubCategory: String {
 enum AppInfoSubCategory: String {
     case help = "도움말"
     case tutorial = "튜토리얼"
+    case appSettins = "앱 설정"
     case privacyPolicy = "개인정보 정책"
     case termsAndCondtions = "이용약관"
     case version = "버전"
@@ -51,6 +55,8 @@ enum AppInfoSubCategory: String {
             return URL(string: "https://daniel-yang.notion.site/025db00c7a6e4a898ebadf3625c9fd0f?pvs=4")!
         case .termsAndCondtions:
             return URL(string: "https://daniel-yang.notion.site/c308c3ab90d6449b996fe5b77a2a2e54?pvs=4")!
+        case .appSettins:
+            return URL(string: UIApplication.openSettingsURLString)!
         default: return nil
         }
     }

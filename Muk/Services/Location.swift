@@ -11,6 +11,8 @@ struct Location: Codable {
     let documents: [LDocument]
 }
 
+// Location Doument
+
 struct LDocument: Codable {
     let addressName: String
     let roadAddressName: String

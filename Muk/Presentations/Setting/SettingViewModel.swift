@@ -44,6 +44,7 @@ class SettingViewModel {
         let infoRows: [SettingCellViewModel] = [
             SettingCellViewModel(category: .appInfo(.help)),
             SettingCellViewModel(category: .appInfo(.tutorial)),
+            SettingCellViewModel(category: .appInfo(.appSettins)),
             SettingCellViewModel(category: .appInfo(.privacyPolicy)),
             SettingCellViewModel(category: .appInfo(.termsAndCondtions)),
             SettingCellViewModel(category: .appInfo(.version), option: "1.0")

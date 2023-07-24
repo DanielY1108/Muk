@@ -12,6 +12,7 @@ struct Address: Codable {
     let documents: [ADoument]
 }
 
+// Address Doument (위, 경도 -> 장소)
 struct ADoument: Codable {
     let addressName: String
     let longitude: Double

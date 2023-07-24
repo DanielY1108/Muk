@@ -59,7 +59,7 @@ extension ProfileViewController {
     // 내부 콜렉션뷰 셋팅
     private func setupCollectionView() {
         let layout = createCollectionViewCompositionalLayout()
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = HexCode.background.color
         // cell의 버튼, 이미지 등 상호작용을 위해 true
         collectionView.isUserInteractionEnabled = true
