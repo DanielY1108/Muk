@@ -16,7 +16,7 @@ final class CustomTabBarController: UITabBarController {
     
     // MARK: - Properties
     
-    var customDelegate: CustomTabBarDelegate?
+    var customTabBarDelegate: CustomTabBarDelegate?
     
     private let customTabBar = CustomTabBar()
     
@@ -163,9 +163,11 @@ extension CustomTabBarController {
             }
         }
         
-        // layer의 중간 위치 (layer 높이/2 - 기본 layer에서 추가된 높이 - 버튼 사이즈/2)
-        let y: CGFloat = (customTabBar.currentHeight/2) - customTabBar.addHeight - (middleButtonSize/2)
-        
+        // MiddleButton의 중심을 Y축의 원점으로 이동
+        let initialY: CGFloat = customTabBar.y - middleButtonSize/2
+        // 원점에서 높이의 절반 만큼(중심)으로 이동
+        let y: CGFloat = initialY + customTabBar.height/2
+                
         // layout 설정
         middleButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -286,13 +288,13 @@ extension CustomTabBarController {
             print("Search")
             let searchVC = SearchViewController()
             searchVC.modalPresentationStyle = .fullScreen
-            customDelegate?.didSelectedPopButton(self, presentController: searchVC)
+            customTabBarDelegate?.didSelectedPopButton(self, presentController: searchVC)
             show(searchVC, sender: nil)
         case 1:
             // Current Location Button Tapped
             let diaryVC = DiaryViewController()
             diaryVC.modalPresentationStyle = .fullScreen
-            customDelegate?.didSelectedPopButton(self, presentController: diaryVC)
+            customTabBarDelegate?.didSelectedPopButton(self, presentController: diaryVC)
             self.present(diaryVC, animated: true)
         default:
             print("Pin")

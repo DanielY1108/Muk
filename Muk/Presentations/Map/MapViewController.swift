@@ -51,7 +51,7 @@ extension MapViewController {
         
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
-        customTabBarController.customDelegate = self
+        customTabBarController.customTabBarDelegate = self
     }
     
     // 현재 위치 버튼 생성
