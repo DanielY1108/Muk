@@ -47,16 +47,16 @@ final class SearchCell: UITableViewCell {
     }
     
     func cellConfig(_ searchViewModel: SearchViewModel) {
-        placeNameLabel.text = searchViewModel.placaeName
-        detailAddressLabel.text = searchViewModel.addressName
+        placeNameLabel.text = searchViewModel.document.placeName
+        detailAddressLabel.text = searchViewModel.document.addressName
         
-        guard let distance = Double(searchViewModel.distance) else { return }
+        guard let distance = Double(searchViewModel.document.distance) else { return }
         
         if distance >= 1000 {
             let convertMeterToKm = distance / 1000
             distanceLabel.text = String(format: "%.1fkm", convertMeterToKm)
         } else {
-            distanceLabel.text = "\(searchViewModel.distance)m"
+            distanceLabel.text = "\(searchViewModel.document.distance)m"
         }
     }
     

@@ -15,7 +15,7 @@ final class SearchViewController: UIViewController {
     
     var searchController: UISearchController!
     var tableView: UITableView!
-
+    
     // MARK: - Life Cycles
     
     override func viewDidLoad() {
@@ -47,7 +47,7 @@ extension SearchViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
-
+    
     @objc func tapHandler() {
         searchController.searchBar.resignFirstResponder()
     }
@@ -59,7 +59,7 @@ extension SearchViewController {
         
         appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: HexCode.selected.color]
         appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: HexCode.selected.color]
-
+        
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.tintColor = HexCode.selected.color
@@ -84,7 +84,7 @@ extension SearchViewController {
         searchController.searchBar.placeholder = "장소를 검색해 주세요."
         
         let label = UIFactory.createTipLabel()
-
+        
         searchController.searchBar.addSubview(label)
         label.snp.makeConstraints {
             $0.top.equalTo(searchController.searchBar.snp.bottom).offset(-5)
@@ -134,17 +134,17 @@ extension SearchViewController: UISearchBarDelegate {
             }
             return
         }
-
+        
         // 위치 정보가 있을 때, distance 정보를 포함한 데이터를 얻음
         Service.getLocationWithDistance(name: searchText,
-                                                     lat: currentCoordinate.latitude,
-                                                     lng: currentCoordinate.longitude) { [weak self] result in
+                                        lat: currentCoordinate.latitude,
+                                        lng: currentCoordinate.longitude) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let location):
                 self.searchListViewModel.updateDocuments(location.documents)
-
+                
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -171,7 +171,7 @@ extension SearchViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(SearchCell.self), for: indexPath) as? SearchCell else {
             fatalError("Failed Cell Load")
         }
-
+        
         let searchViewModel = searchListViewModel.documentAtIndex(indexPath.row)
         
         cell.cellConfig(searchViewModel)
@@ -185,7 +185,7 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let searchViewModel = searchListViewModel.documentAtIndex(indexPath.row)
-    
+        
         let searchMap = SearchMapViewController()
         searchMap.viewModel = SearchMapViewModel(searchViewModel: searchViewModel)
         show(searchMap, sender: nil)

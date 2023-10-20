@@ -46,18 +46,8 @@ final class SearchListViewModel {
 struct SearchViewModel {
     
     private(set) var document: LDocument
-    private(set) var placaeName: String
-    private(set) var addressName: String
-    private(set) var latitude: String
-    private(set) var longitude: String
-    private(set) var distance: String
     
     init(document: LDocument) {
         self.document = document
-        self.placaeName = document.placeName
-        self.addressName = document.addressName
-        self.latitude = document.latitude
-        self.longitude = document.longitude
-        self.distance = document.distance
     }
 }

@@ -140,7 +140,7 @@ class LocationPermissionViewController: UIViewController {
     
     private func fisrtCheckBoxImage() -> UIImage {
         let userDefaults = UserDefaults.standard
-        var isCheckedButton = userDefaults.bool(forKey: "tutorial")
+        let isCheckedButton = userDefaults.bool(forKey: "tutorial")
         
         if isCheckedButton {
             return CheckButton.check.imgae
