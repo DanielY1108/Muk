@@ -23,6 +23,15 @@ final class SearchMapViewController: UIViewController {
         setupUI()
     }
     
+    init(viewModel: SearchMapViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupUI() {
         mapView.delegate = self
         

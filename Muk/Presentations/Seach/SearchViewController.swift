@@ -11,7 +11,7 @@ final class SearchViewController: UIViewController {
     
     // MARK: - Properites
     
-    var searchListViewModel: SearchListViewModel!
+    var viewModels: SearchListViewModel!
     
     var searchController: UISearchController!
     var tableView: UITableView!
@@ -115,42 +115,9 @@ extension SearchViewController {
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let currentCoordinate = searchListViewModel.currentLoaction else {
-            // 위치 정보가 없을 때, distance 없이 데이터 얻음
-            Service.getLocation(name: searchText) { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let location):
-                    self.searchListViewModel.updateDocuments(location.documents)
-                    
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                    
-                case .failure(let error):
-                    print(error)
-                }
-            }
-            return
-        }
-        
-        // 위치 정보가 있을 때, distance 정보를 포함한 데이터를 얻음
-        Service.getLocationWithDistance(name: searchText,
-                                        lat: currentCoordinate.latitude,
-                                        lng: currentCoordinate.longitude) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let location):
-                self.searchListViewModel.updateDocuments(location.documents)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-                
-            case .failure(let error):
-                print(error)
+        viewModels.getLocation(name: searchText) {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
     }
@@ -164,7 +131,7 @@ extension SearchViewController: UISearchBarDelegate {
 
 extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchListViewModel == nil ? 0 : searchListViewModel.numberOfRowsInSection(section)
+        return viewModels == nil ? 0 : viewModels.numberOfRowsInSection(section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,9 +139,9 @@ extension SearchViewController: UITableViewDataSource {
             fatalError("Failed Cell Load")
         }
         
-        let searchViewModel = searchListViewModel.documentAtIndex(indexPath.row)
+        let viewModel = viewModels.viewModelAtIndex(indexPath.row)
         
-        cell.cellConfig(searchViewModel)
+        cell.cellConfig(viewModel)
         
         return cell
     }
@@ -184,11 +151,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let searchViewModel = searchListViewModel.documentAtIndex(indexPath.row)
-        
-        let searchMap = SearchMapViewController()
-        searchMap.viewModel = SearchMapViewModel(searchViewModel: searchViewModel)
-        show(searchMap, sender: nil)
+        viewModels.goNextVC(indexPath.row, fromCurrentVC: self)
     }
 }
 

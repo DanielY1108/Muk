@@ -191,10 +191,10 @@ extension MapViewController: CustomTabBarDelegate {
             
             if let currentCoordinate = viewModel.currentCoordinate {
                 print("Successed send current location to searchVC")
-                searchVC.searchListViewModel = SearchListViewModel(currentLoaction: currentCoordinate)
+                searchVC.viewModels = SearchListViewModel(currentLoaction: currentCoordinate)
             } else {
                 print("Failed to get the Current Location Coordinate - Search")
-                searchVC.searchListViewModel = SearchListViewModel(documents: [])
+                searchVC.viewModels = SearchListViewModel(documents: [])
             }
             
         case is DiaryViewController:

@@ -55,7 +55,7 @@
 		6585975A2A0CF54300FE4173 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658597592A0CF54300FE4173 /* LocationManager.swift */; };
 		6585975C2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6585975B2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift */; };
 		658FFD7D29EFBBD800C389F6 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */; };
-		65920AF12A36D21F009F358B /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65920AF02A36D21F009F358B /* SearchViewModel.swift */; };
+		65920AF12A36D21F009F358B /* SearchListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65920AF02A36D21F009F358B /* SearchListViewModel.swift */; };
 		65920AF32A382F26009F358B /* SearchMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65920AF22A382F26009F358B /* SearchMapViewController.swift */; };
 		65920AF62A383211009F358B /* SearchMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65920AF52A383211009F358B /* SearchMapViewModel.swift */; };
 		65A8689B29F1311A00251120 /* CALayer+Shadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A8689A29F1311A00251120 /* CALayer+Shadow.swift */; };
@@ -120,7 +120,7 @@
 		658597592A0CF54300FE4173 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		6585975B2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileCollectionView+CompositionalLayout.swift"; sourceTree = "<group>"; };
 		658FFD7C29EFBBD800C389F6 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
-		65920AF02A36D21F009F358B /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		65920AF02A36D21F009F358B /* SearchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListViewModel.swift; sourceTree = "<group>"; };
 		65920AF22A382F26009F358B /* SearchMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMapViewController.swift; sourceTree = "<group>"; };
 		65920AF52A383211009F358B /* SearchMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMapViewModel.swift; sourceTree = "<group>"; };
 		65A8689A29F1311A00251120 /* CALayer+Shadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Shadow.swift"; sourceTree = "<group>"; };
@@ -276,7 +276,7 @@
 			children = (
 				6538DF3B2A3318F300873A0C /* SearchCell.swift */,
 				6538DF392A330C8200873A0C /* SearchViewController.swift */,
-				65920AF02A36D21F009F358B /* SearchViewModel.swift */,
+				65920AF02A36D21F009F358B /* SearchListViewModel.swift */,
 				65920AF42A382F2F009F358B /* SearchMap */,
 			);
 			path = Seach;
@@ -412,7 +412,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					6523D83529BF526D005EFBFF = {
 						CreatedOnToolsVersion = 14.2;
@@ -496,7 +496,7 @@
 				6533F9DF29D5C9E700C66394 /* DiaryView.swift in Sources */,
 				6533F9BB29D4994800C66394 /* DiaryViewController.swift in Sources */,
 				6585975C2A0E1D2A00FE4173 /* ProfileCollectionView+CompositionalLayout.swift in Sources */,
-				65920AF12A36D21F009F358B /* SearchViewModel.swift in Sources */,
+				65920AF12A36D21F009F358B /* SearchListViewModel.swift in Sources */,
 				658FFD7D29EFBBD800C389F6 /* CustomTabBar.swift in Sources */,
 				6523D86029BF5AFD005EFBFF /* ProfileViewController.swift in Sources */,
 				6523D85429BF53EE005EFBFF /* MapViewController.swift in Sources */,
@@ -569,6 +569,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -629,6 +630,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
