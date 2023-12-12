@@ -16,6 +16,9 @@ final class MapViewModel {
     private(set) var currentCoordinate: CLLocationCoordinate2D?
     private(set) var currentRegion: MKCoordinateRegion?
     
+    // popupView를 위한 모델 (diaryModels)
+    private(set) var diaryModels = [DiaryModel]()
+    
     private(set) var allAnnotaions = [CustomAnnotation]()
     private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
     private(set) var mapType: Observable<String> = Observable("표준")
@@ -96,6 +99,8 @@ extension MapViewModel {
             self.allAnnotaions.append(annotation)
             
             self.selectedAnnotation.value = annotation
+                        
+            self.diaryModels.append(diaryModel)
         }
         
         // ProfileVC에서 삭제 버튼을 누를 때 UUID를 전달하는 노티피케이션
@@ -145,6 +150,17 @@ extension MapViewModel {
     func loadAllAnnotations() -> [MKAnnotation] {
         return self.allAnnotaions
     }
+    
+    func annotationTapped(with view: MapPopupView, annotation: CustomAnnotation) {
+        guard let data = self.diaryModels.filter({ $0.identifier == annotation.identifier }).first else { return }
+        
+        DispatchQueue.main.async {
+            view.imageView.image = annotation.image
+            view.placeLabel.text = data.placeName
+            view.dateLabel.text = DateFormatter.custom(date: data.date)
+            view.detailLabel.text = data.detailText
+        }
+    }
 }
 
 // MARK: - dataBase & UserDefault
@@ -159,6 +175,10 @@ extension MapViewModel {
     // 처음 시작할 때, 한번만 데이터베이스에 저장된 데이터를 받아옵니다.
     private func loadDatabase() {
         let databaseModels = RealmManager.shared.load(RealmModel.self)
+        
+        let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
+        self.diaryModels = diaryModels
+        
         // LazyMapSequence이기 때문에 먼저 배열로 감싸줘서 [CustomAnnotation]으로 만들어주는 작업이 필요하다.
         let annotaions = Array(databaseModels).map { CustomAnnotation(databaseModel: $0, process: .save) }
         

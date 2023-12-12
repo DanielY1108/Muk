@@ -17,6 +17,8 @@ final class MapViewController: UIViewController {
     
     private let mapView = MKMapView()
     
+    private let popupView = MapPopupView()
+    
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
@@ -48,6 +50,7 @@ extension MapViewController {
         
         self.setupMapView()
         self.setupCurrnetLocationButton()
+        self.setupPopupView()
         
         // 커스텁 탭바의 버튼들의 델리게이트 설정 세팅
         guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
@@ -89,6 +92,13 @@ extension MapViewController {
                 mapCenteredOnKorea()
             }
         }
+    }
+    
+    // popupView를 미리 로드시켜둔다. 현재 레이아웃은 화면 밖에 위치
+    private func setupPopupView() {
+        self.view.addSubview(popupView)
+        
+        popupView.initialSetupLayout(view)
     }
     
     private func whenAuthorizationStatusAllowed(action completion: () -> Void) {
@@ -280,16 +290,24 @@ extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("어노테이션이 클릭 됨")
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
             view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.popupView.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height/4 - 100)
         }
+        
+        // popupView로 데이터 바이딩
+        let customAnnotaion = view.annotation as? CustomAnnotation
+        viewModel.annotationTapped(with: self.popupView, annotation: customAnnotaion!)
     }
+    
+    
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("어노테이션이 클릭 해제됨")
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             view.transform = CGAffineTransform.identity
+            self.popupView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height/4)
         }
     }
 }
