@@ -39,6 +39,8 @@ final class ProfileViewController: UIViewController {
         // 만약 텍스트뷰를 열어놨다면, 종료 시 닫아서 다시 킬 때 초기상태로 만듬
         guard let visibleCells = collectionView.visibleCells as? [ProfileCell] else { return }
         visibleCells.forEach { $0.showHideButton(isOn: false) }
+        
+        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
     
     // MARK: - Method

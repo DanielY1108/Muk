@@ -97,7 +97,7 @@ extension MapViewController {
     // popupView를 미리 로드시켜둔다. 현재 레이아웃은 화면 밖에 위치
     private func setupPopupView() {
         self.view.addSubview(popupView)
-        
+        self.popupView.delegate = self
         popupView.initialSetupLayout(view)
     }
     
@@ -292,12 +292,13 @@ extension MapViewController: MKMapViewDelegate {
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
             view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            self.popupView.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height/4 - 100)
+            self.popupView.showPopupView()
         }
         
         // popupView로 데이터 바이딩
-        let customAnnotaion = view.annotation as? CustomAnnotation
-        viewModel.annotationTapped(with: self.popupView, annotation: customAnnotaion!)
+        guard let customAnnotaion = view.annotation as? CustomAnnotation else { return }
+        viewModel.annotationTapped(with: self.popupView, annotation: customAnnotaion)
+        viewModel.updateModelIndex(annotaion: customAnnotaion)
     }
     
     
@@ -307,8 +308,16 @@ extension MapViewController: MKMapViewDelegate {
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             view.transform = CGAffineTransform.identity
-            self.popupView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height/4)
+            self.popupView.hidePopupView()
         }
+    }
+}
+
+extension MapViewController: MapPopupViewDelegate {
+    func tappedGoProfileButton() {
+        mapView.deselectAnnotation(nil, animated: true)
+        
+        viewModel.goToNextVC(currnetVC: self)
     }
 }
 

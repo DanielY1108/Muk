@@ -18,6 +18,7 @@ final class MapViewModel {
     
     // popupView를 위한 모델 (diaryModels)
     private(set) var diaryModels = [DiaryModel]()
+    private(set) var selectedModelIndex = 0
     
     private(set) var allAnnotaions = [CustomAnnotation]()
     private(set) var selectedAnnotation: Observable<CustomAnnotation> = Observable(CustomAnnotation())
@@ -97,9 +98,8 @@ extension MapViewModel {
                                               process: .save)
             
             self.allAnnotaions.append(annotation)
-            
             self.selectedAnnotation.value = annotation
-                        
+            
             self.diaryModels.append(diaryModel)
         }
         
@@ -161,6 +161,44 @@ extension MapViewModel {
             view.detailLabel.text = data.detailText
         }
     }
+    
+    func updateModelIndex(annotaion: CustomAnnotation) {
+        let isAscending = UserDefaults.standard.bool(forKey: "SortMenuAscending")
+        sortDiaryModel(isAscending: isAscending)
+        
+        selectedModelIndex = 0
+        
+        for model in diaryModels {
+            if model.identifier != annotaion.identifier {
+                self.selectedModelIndex += 1
+            } else {
+                return
+            }
+        }
+    }
+    
+    // 데이터의 순서(오름차순, 내림차순)에 따른 모델 정리
+    private func sortDiaryModel(isAscending: Bool) {
+        switch isAscending {
+        case true:
+            diaryModels.sort { $0.date < $1.date }
+        case false:
+            diaryModels.sort { $0.date > $1.date }
+        }
+    }
+    
+    func goToNextVC(currnetVC: UIViewController) {
+        // 탭바 전환 시, 애니메이션 효과가 없다. 직접 만듬 + 선택한 셀의 위치로 이동
+        guard let navVC = currnetVC.tabBarController?.viewControllers?.last as? UINavigationController,
+              let profileVC = navVC.viewControllers.last as? ProfileViewController,
+              let fromView = currnetVC.view,
+              let toView = navVC.view else { return }
+        
+        currnetVC.tabBarController?.selectedViewController = navVC
+        UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionCrossDissolve]) { _ in
+            profileVC.collectionView.scrollToItem(at: IndexPath(row: self.selectedModelIndex, section: 0), at: .top, animated: true)
+        }
+    }
 }
 
 // MARK: - dataBase & UserDefault
@@ -174,7 +212,8 @@ extension MapViewModel {
   
     // 처음 시작할 때, 한번만 데이터베이스에 저장된 데이터를 받아옵니다.
     private func loadDatabase() {
-        let databaseModels = RealmManager.shared.load(RealmModel.self)
+        let isAscending = UserDefaults.standard.bool(forKey: "SortMenuAscending")
+        let databaseModels = RealmManager.shared.sort((RealmModel.self), by: "date", ascending: isAscending)
         
         let diaryModels = Array(databaseModels.map { DiaryModel(dataBaseModel: $0) })
         self.diaryModels = diaryModels

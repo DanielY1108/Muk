@@ -77,10 +77,10 @@ final class CustomTabBarController: UITabBarController {
         }
         
         // DiaryVC에서 델리게이트로 데이터를 전달하려면 profileVC를 한번은 실행시켜줘야 델리게이트가 동작
-//        self.selectedViewController = self.viewControllers?[TabBarItems.profileVC.rawValue]
-//        DispatchQueue.main.async {
-//            self.selectedViewController = self.viewControllers?[TabBarItems.mapVC.rawValue]
-//        }
+        self.selectedViewController = self.viewControllers?[TabBarItems.profileVC.rawValue]
+        DispatchQueue.main.async {
+            self.selectedViewController = self.viewControllers?[TabBarItems.mapVC.rawValue]
+        }
     }
     
     private func viewControllerForTabBarItem(_ itme: TabBarItems) -> UIViewController {

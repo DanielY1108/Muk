@@ -146,13 +146,11 @@ extension ProfileViewModel {
     func sortDiaryModel(ascending: Bool) {
         switch ascending {
         case true:
-            let model = diaryModels.value.sorted { $0.date < $1.date }
-            diaryModels.value = model
+            // 밸류가 업데이트되면서 바인딩에 의해서 자동으로 셀이 리로드 됨!
+            diaryModels.value.sort { $0.date < $1.date }
             UserDefaults.standard.setValue(true, forKey: "SortMenuAscending")
         case false:
-            let model = diaryModels.value.sorted { $0.date > $1.date }
-            // 밸류를 업데이트하면 바인딩에 의해서 자동으로 셀이 리로드 됨!
-            diaryModels.value = model
+            diaryModels.value.sort { $0.date > $1.date }
             UserDefaults.standard.setValue(false, forKey: "SortMenuAscending")
         }
     }

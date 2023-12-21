@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol MapPopupViewDelegate: AnyObject {
+    func tappedGoProfileButton()
+}
+
 final class MapPopupView: UIView {
+    
+    weak var delegate: MapPopupViewDelegate?
     
     let imageView: UIImageView = {
         let view = UIImageView()
@@ -45,7 +51,7 @@ final class MapPopupView: UIView {
         return label
     }()
     
-    let goToProfileButton: UIButton = {
+    let goProfileButton: UIButton = {
         var buttonConfig = UIButton.Configuration.filled()
         buttonConfig.baseBackgroundColor = HexCode.unselected.color
         buttonConfig.baseForegroundColor = HexCode.selected.color
@@ -71,6 +77,8 @@ final class MapPopupView: UIView {
         layer.borderWidth = 1
         layer.cornerRadius = 10
         clipsToBounds = true
+        
+        goProfileButton.addTarget(self, action: #selector(tappedGoProfileButton), for: .touchUpInside)
     }
     
     private func setupLayout() {
@@ -86,7 +94,7 @@ final class MapPopupView: UIView {
         dateLabel.snp.makeConstraints {
             $0.height.equalTo(15)
         }
-        goToProfileButton.snp.makeConstraints {
+        goProfileButton.snp.makeConstraints {
             $0.height.equalTo(30)
         }
         
@@ -96,7 +104,7 @@ final class MapPopupView: UIView {
             $0.height.equalTo(1)
         }
 
-        let vStack = UIStackView(arrangedSubviews: [placeLabel, lineView, dateLabel, lineView, detailLabel, goToProfileButton])
+        let vStack = UIStackView(arrangedSubviews: [placeLabel, lineView, dateLabel, lineView, detailLabel, goProfileButton])
         vStack.spacing = 8
         vStack.axis = .vertical
         
@@ -116,6 +124,19 @@ final class MapPopupView: UIView {
             $0.leading.trailing.equalTo(currentView).inset(10)
             $0.bottom.equalTo(currentView).offset(currentView.bounds.height/4)
         }
+    }
+    
+    @objc func tappedGoProfileButton() {
+        delegate?.tappedGoProfileButton()
+    }
+    
+    func showPopupView() {
+        guard let screen = window?.windowScene?.screen else { return }
+        self.transform = CGAffineTransform(translationX: 0, y: -screen.bounds.height/4 - 100)
+    }
+    
+    func hidePopupView() {
+        self.transform = .identity
     }
 }
 
