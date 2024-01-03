@@ -40,7 +40,9 @@ final class ProfileViewController: UIViewController {
         guard let visibleCells = collectionView.visibleCells as? [ProfileCell] else { return }
         visibleCells.forEach { $0.showHideButton(isOn: false) }
         
-        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        // 네비게이션바 때문에 100만큼 아래서쪽에서 나타나기 때문에 y: -100 이 최상단이 된다.
+        // (아마도 스크롤뷰가 포함되있어서 반대로 뒤집힌 것 같다?!)
+        collectionView.setContentOffset(CGPoint(x: 0, y: -100), animated: true)
     }
     
     // MARK: - Method
