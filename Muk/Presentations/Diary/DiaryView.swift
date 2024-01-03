@@ -22,7 +22,10 @@ final class DiaryView: UIView {
     let saveOrEditButton = UIFactory.createSaveOrEditButton()
     
     private let titleLabel = UIFactory.createDiaryLabel(title: "추억하기")
+    
+    private let dateLabel = UIFactory.createDiaryLabel(title: "날짜")
     let dateTextField = UnderLindTextField()
+    private lazy var dateStackView = UIFactory.createDiaryStackView(arrangedSubviews: [dateLabel, dateTextField])
     
     private let placeNameLabel = UIFactory.createDiaryLabel(title: "장소")
     let placeTextField = UnderLindTextField()
@@ -99,15 +102,15 @@ final class DiaryView: UIView {
             $0.trailing.equalToSuperview()
         }
         
-        self.addSubview(dateTextField)
-        dateTextField.snp.makeConstraints {
+        self.addSubview(dateStackView)
+        dateStackView.snp.makeConstraints {
             $0.top.equalTo(photoStackView.snp.bottom).offset(titleGap)
             $0.centerX.equalToSuperview()
         }
         
         self.addSubview(placeNameStackView)
         placeNameStackView.snp.makeConstraints {
-            $0.top.equalTo(dateTextField.snp.bottom).offset(titleGap)
+            $0.top.equalTo(dateStackView.snp.bottom).offset(titleGap)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
         }
         
