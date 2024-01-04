@@ -9,7 +9,8 @@ import UIKit
 import SnapKit
 
 protocol CustomTabBarDelegate: AnyObject {
-    func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController)
+    func didSelectPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController)
+    func didSelectTabBarButtons(_ tabBar: CustomTabBarController)
 }
 
 final class CustomTabBarController: UITabBarController {
@@ -25,7 +26,7 @@ final class CustomTabBarController: UITabBarController {
     private lazy var middleButton = UIFactory.createMiddleButton(size: middleButtonSize)
     
     // 중간 버튼 클릭 시 Bool로 동작을 제어하기 위해 플래그를 박아둠
-    private var middleButtonTapped = false
+    private(set) var middleButtonTapped = false
     
     // pop 버튼을 탭바에 사용할 수 있도록 프로퍼티로 생성
     private var popButtons = PopButtons()
@@ -132,7 +133,7 @@ extension CustomTabBarController: UITabBarControllerDelegate {
     
     // 만약 UserVC를 선택 시 버튼이 "X"로 변경되는 애니메이션 처리
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        middleButtonAnimationEnd(anitaion: false)
+        middleButtonAnimationEnd()
         
         switch viewController {
         case is MapViewController:
@@ -141,11 +142,13 @@ extension CustomTabBarController: UITabBarControllerDelegate {
             // 버튼을 disable하면 틴트색이 회색으로 변한다. 틴트 조절을 하기 위해 UIGraphicsImageRenderer 작업이 필요하지만,
             // 이렇게 터치만 안되게 설정만들어 주면 틴트 설정을 건드릴 필요 없이 코드가 짧아진다.
             middleButton.isUserInteractionEnabled = false
-            middleButtonAnimationStart(anitaion: true)
+            middleButtonAnimationStart()
             
             // profileVC에 접근하면, 항상 네이게이션의 최하단 부분으로 이동!
             guard let profileNav = viewController as? UINavigationController else { return }
             profileNav.popToRootViewController(animated: false)
+            
+            customTabBarDelegate?.didSelectTabBarButtons(self)
         }
     }
 }
@@ -183,20 +186,20 @@ extension CustomTabBarController {
         
         if !middleButtonTapped {
             // 버튼 클릭 시 할 작업 - pop 버튼 생성, 시작 애니메이션
-            middleButtonAnimationStart(anitaion: true)
+            middleButtonAnimationStart()
             
             self.setupPopButton(radius: 80)
-            
         } else {
             // 버튼 취소 시 할 작업 - pop 버튼 제거, 끝 애니메이션
-            middleButtonAnimationEnd(anitaion: false)
+            middleButtonAnimationEnd()
         }
+        customTabBarDelegate?.didSelectTabBarButtons(self)
     }
     
     // 중간 버튼 시작 애니메이션
-    func middleButtonAnimationStart(anitaion: Bool) {
+    func middleButtonAnimationStart() {
         
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.3) {
             // pi = 180°, 4로 나눠준다면 45° 회전
             let transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
             self.middleButton.transform = transform
@@ -208,14 +211,14 @@ extension CustomTabBarController {
             self.middleButton.layer.borderWidth = 2
             self.middleButton.layer.borderColor = HexCode.selected.color.cgColor
             
-            self.middleButtonTapped = anitaion
+            self.middleButtonTapped = true
         }
     }
     
     // 중간 버튼 끝 애니메이션
-    func middleButtonAnimationEnd(anitaion: Bool) {
+    func middleButtonAnimationEnd() {
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.2) {
             self.middleButton.transform = CGAffineTransform.identity
             // 버튼 색상 설정
             self.middleButton.tintColor = HexCode.unselected.color
@@ -224,7 +227,7 @@ extension CustomTabBarController {
             // 버튼 테두리 설정
             self.middleButton.layer.borderWidth = 0
             
-            self.middleButtonTapped = anitaion
+            self.middleButtonTapped = false
         }
         
         // 버튼 취소 시 할 작업 (pop 버튼 제거)
@@ -281,20 +284,20 @@ extension CustomTabBarController {
     // pop 버튼 핸들러
     @objc func popButtonHandler(sender: UIButton) {
         
-        middleButtonAnimationEnd(anitaion: false)
+        middleButtonAnimationEnd()
         
         switch sender.tag {
         case 0:
             print("Search")
             let searchVC = SearchViewController()
             searchVC.modalPresentationStyle = .fullScreen
-            customTabBarDelegate?.didSelectedPopButton(self, presentController: searchVC)
+            customTabBarDelegate?.didSelectPopButton(self, presentController: searchVC)
             show(searchVC, sender: nil)
         case 1:
             // Current Location Button Tapped
             let diaryVC = DiaryViewController()
             diaryVC.modalPresentationStyle = .fullScreen
-            customTabBarDelegate?.didSelectedPopButton(self, presentController: diaryVC)
+            customTabBarDelegate?.didSelectPopButton(self, presentController: diaryVC)
             self.present(diaryVC, animated: true)
         default:
             print("Pin")

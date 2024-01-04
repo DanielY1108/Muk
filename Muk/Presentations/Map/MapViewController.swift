@@ -19,6 +19,8 @@ final class MapViewController: UIViewController {
     
     private let popupView = MapPopupView()
     
+    private var selectedAnnotationView: MKAnnotationView?
+    
     // MARK: - LifeCycles
     
     override func viewDidLoad() {
@@ -186,12 +188,22 @@ extension MapViewController {
             self.viewModel.setupCurrentRegion()
         }
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let customTabBarController = tabBarController as? CustomTabBarController else { return }
+        customTabBarController.middleButtonAnimationEnd()
+    }
 }
 
-
-// pop 버튼 델리게이트 핸들러
+// 탭바 델리게이트 핸들러
 extension MapViewController: CustomTabBarDelegate {
-    func didSelectedPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
+    func didSelectTabBarButtons(_ tabBar: CustomTabBarController) {
+        guard let annotationView = selectedAnnotationView else { return }
+        mapView(mapView, didDeselect: annotationView)
+    }
+    
+    // 데이터 전달
+    func didSelectPopButton(_ tabBar: CustomTabBarController, presentController: UIViewController) {
         
         switch presentController {
         case is SearchViewController:
@@ -289,11 +301,9 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("어노테이션이 클릭 됨")
-        
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-            view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            self.popupView.showPopupView()
-        }
+        selectedAnnotationView = view
+
+        showPopView(view)
         
         // popupView로 데이터 바이딩
         guard let customAnnotaion = view.annotation as? CustomAnnotation else { return }
@@ -305,9 +315,23 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("어노테이션이 클릭 해제됨")
+        selectedAnnotationView = nil
+
+        hidePopView(view)
+    }
+    
+    private func showPopView(_ annotationView: UIView) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            annotationView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.popupView.showPopupView()
+        }
+    }
+    
+    private func hidePopView(_ annotationView: UIView) {
+        mapView.deselectAnnotation(nil, animated: true)
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
-            view.transform = CGAffineTransform.identity
+            annotationView.transform = CGAffineTransform.identity
             self.popupView.hidePopupView()
         }
     }

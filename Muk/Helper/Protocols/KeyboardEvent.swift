@@ -38,17 +38,19 @@ extension KeyboardEvent where Self: UIViewController {
               let currentTextView = UIResponder.currentResponder as? UITextView else { return }
         
         let keyboardTopY = keyboardFrame.cgRectValue.origin.y
-        let convertedTextViewFrame = view.convert(currentTextView.frame,
+        let convertedTextViewFrame = transformView.convert(currentTextView.frame,
                                                   from: currentTextView.superview)
         // 텍스트 카운트 label 높이 ~= 20
         let textViewBottomY = convertedTextViewFrame.origin.y + convertedTextViewFrame.size.height + 20
 
         // 텍스트뷰 바텀 위치가 키보드 탑 위치보다 클 때 (즉, 텍스트뷰가 키보드에 가려질 때)
         if textViewBottomY > keyboardTopY {
+            // 만약 키보드가 올라간 상태에서 textView를 클릭하게 되면, 닫히고 열리면서 호출이 2번 되는 것 처럼보임 (처음 값을 초기화시켜 줌)
+            transformView.frame.origin.y = 0
             let textViewTopY = convertedTextViewFrame.origin.y
             // 노가다를 통해서 모든 기종에 적절한 크기를 설정함.
             let newFrame = textViewTopY - keyboardTopY/1.6
-            view.frame.origin.y -= newFrame
+            transformView.frame.origin.y -= newFrame
         }
     }
     

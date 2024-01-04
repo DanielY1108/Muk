@@ -362,7 +362,6 @@ extension DiaryViewController: UITextViewDelegate {
         textView.layer.borderWidth = 1
         
         if textView.text == diaryView.detailTextViewPlaceHolder {
-            print(1)
             diaryView.detailTextView.text = nil
         }
         
